@@ -1,0 +1,20 @@
+{% load i18n %}
+{% trans "New Support Ticket" %}
+
+{% trans "A new support ticket has been submitted and requires attention." %}
+
+{% trans "Description:" %}
+{{ ticket.description }}
+
+{% trans "Ticket Information:" %}
+{% trans "Ticket ID:" %} #{{ ticket.id }}
+{% trans "Title:" %} {{ ticket.title }}
+{% trans "Status:" %} {{ ticket.get_status_display }}
+{% trans "Priority:" %} {{ ticket.get_priority_display }}
+{% trans "Created:" %} {{ ticket.created_at|date:"d/m/Y H:i" }}
+{% if ticket.category %}{% trans "Category:" %} {{ ticket.category }}{% endif %}
+{% if ticket.branch %}{% trans "Branch:" %} {{ ticket.get_branch_display }}{% endif %}
+
+{% trans "This ticket is currently unassigned. Please review and assign it to the appropriate agent." %}
+
+{% trans "View ticket at:" %} {{ ticket_url }}

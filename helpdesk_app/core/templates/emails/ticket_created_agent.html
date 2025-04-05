@@ -1,0 +1,14 @@
+{% extends "emails/base_email.html" %}
+{% load i18n %}
+
+{% block content %}
+<h2>{% trans "New Support Ticket" %}</h2>
+<p>{% trans "A new support ticket has been submitted and requires attention." %}</p>
+
+<div style="margin: 20px 0; padding: 15px; background-color: #f0f0f0; border-left: 4px solid #244583;">
+    <p><strong>{% trans "Description:" %}</strong></p>
+    <p>{{ ticket.description|linebreaks }}</p>
+</div>
+
+<p>{% trans "This ticket is currently unassigned. Please review and assign it to the appropriate agent." %}</p>
+{% endblock %}

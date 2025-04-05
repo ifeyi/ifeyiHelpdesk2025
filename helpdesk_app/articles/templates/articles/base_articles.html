@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% load i18n %}
+
+{% block meta_title %}{% block title %}{% endblock %} - {% trans "Knowledge Base" %}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+{% endblock %}
+
+{% block sidebar %}
+<div class="sidebar-nav">
+  <h4>{% trans "Knowledge Base" %}</h4>
+  
+  <div class="search-box mb-4">
+    <form action="{% url 'articles:article-search' %}" method="get">
+      <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder='{% trans "Search articles..." %}' value="{{ request.GET.q|default:'' }}">
+        <button type="submit" class="btn btn-primary">
+          <i class="fa fa-search"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+  
+  <h5>{% trans "Categories" %}</h5>
+  <ul class="nav flex-column">
+    {% for category in categories %}
+      <li class="nav-item">
+        <a class="nav-link{% if current_category == category %} active{% endif %}" 
+           href="{% url 'articles:article-category-detail' category.slug %}">
+          {% if category.icon %}<i class="{{ category.icon }}"></i>{% endif %}
+          {{ category.name }}
+        </a>
+        
+        {% if category.subcategories.exists %}
+          <ul class="nav flex-column ml-3">
+            {% for subcategory in category.subcategories.all %}
+              <li class="nav-item">
+                <a class="nav-link{% if current_category == subcategory %} active{% endif %}" 
+                   href="{% url 'articles:article-category-detail' subcategory.slug %}">
+                  {{ subcategory.name }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+  
+  {% if tags %}
+    <h5 class="mt-4">{% trans "Popular Tags" %}</h5>
+    <div class="tags-cloud">
+      {% for tag in tags %}
+        <a href="{% url 'articles:article-tag' tag.slug %}" class="badge badge-pill {% if tag.color %}badge-{{ tag.color }}{% else %}badge-secondary{% endif %} mb-1">
+          {{ tag.name }}
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+  
+  {% if user.is_authenticated %}
+    <div class="mt-4">
+      <a href="{% url 'articles:article-create' %}" class="btn btn-success btn-sm">
+        <i class="fa fa-plus"></i> {% trans "New Article" %}
+      </a>
+      
+      <a href="{% url 'articles:article-drafts' %}" class="btn btn-outline-secondary btn-sm mt-2">
+        <i class="fa fa-file"></i> {% trans "My Drafts" %}
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block content %}
+  <div class="knowledge-base-content">    
+    {% block article_content %}{% endblock %}
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'helpdeskassets/helpdeskscripts/helpdeskarticles.js' %}?v=0.02"></script>
+  <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+  <script src="{% static 'helpdeskassets/helpdeskscripts/markdown-editor.js' %}?v=0.01"></script>
+{% endblock %}

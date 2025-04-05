@@ -1,0 +1,150 @@
+# ticket_created_agent.txt
+{% load i18n %}
+{% trans "New Support Ticket" %}
+
+{% trans "A new support ticket has been submitted and requires attention." %}
+
+{% trans "Description:" %}
+{{ ticket.description }}
+
+{% trans "Ticket Information:" %}
+{% trans "Ticket ID:" %} #{{ ticket.id }}
+{% trans "Title:" %} {{ ticket.title }}
+{% trans "Status:" %} {{ ticket.get_status_display }}
+{% trans "Priority:" %} {{ ticket.get_priority_display }}
+{% trans "Created:" %} {{ ticket.created_at|date:"d/m/Y H:i" }}
+{% if ticket.category %}{% trans "Category:" %} {{ ticket.category }}{% endif %}
+{% if ticket.branch %}{% trans "Branch:" %} {{ ticket.get_branch_display }}{% endif %}
+
+{% trans "This ticket is currently unassigned. Please review and assign it to the appropriate agent." %}
+
+{% trans "View ticket at:" %} {{ ticket_url }}
+
+# ticket_created_customer.txt
+{% load i18n %}
+{% trans "Your Support Ticket Has Been Created" %}
+
+{% trans "Thank you for submitting your support request to CFC Helpdesk. Your ticket has been successfully created and will be processed by our support team." %}
+
+{% trans "Your request:" %}
+{{ ticket.description }}
+
+{% trans "Ticket Information:" %}
+{% trans "Ticket ID:" %} #{{ ticket.id }}
+{% trans "Title:" %} {{ ticket.title }}
+{% trans "Status:" %} {{ ticket.get_status_display }}
+{% trans "Priority:" %} {{ ticket.get_priority_display }}
+{% trans "Created:" %} {{ ticket.created_at|date:"d/m/Y H:i" }}
+{% if ticket.category %}{% trans "Category:" %} {{ ticket.category }}{% endif %}
+{% if ticket.branch %}{% trans "Branch:" %} {{ ticket.get_branch_display }}{% endif %}
+
+{% trans "You will receive further updates on this ticket when our support team responds or when there's a change in status." %}
+
+{% trans "Your ticket reference number is" %} #{{ ticket.id }}. {% trans "Please use this number in any future correspondence regarding this request." %}
+
+{% trans "View ticket at:" %} {{ ticket_url }}
+
+# ticket_assigned.txt
+{% load i18n %}
+{% trans "Ticket Assigned to You" %}
+
+{% trans "A support ticket has been assigned to you." %}
+
+{% trans "Description:" %}
+{{ ticket.description }}
+
+{% trans "Ticket Information:" %}
+{% trans "Ticket ID:" %} #{{ ticket.id }}
+{% trans "Title:" %} {{ ticket.title }}
+{% trans "Status:" %} {{ ticket.get_status_display }}
+{% trans "Priority:" %} {{ ticket.get_priority_display }}
+{% trans "Created:" %} {{ ticket.created_at|date:"d/m/Y H:i" }}
+{% if ticket.category %}{% trans "Category:" %} {{ ticket.category }}{% endif %}
+{% if ticket.branch %}{% trans "Branch:" %} {{ ticket.get_branch_display }}{% endif %}
+
+{% trans "Please review this ticket and take appropriate action. Remember to update the ticket status as you work on it." %}
+
+{% if ticket.priority == 'high' or ticket.priority == 'critical' %}
+{% trans "Note:" %} {% trans "This ticket has a high priority and should be addressed promptly." %}
+{% endif %}
+
+{% trans "View ticket at:" %} {{ ticket_url }}
+
+# ticket_status_update.txt
+{% load i18n %}
+{% trans "Your Ticket Status Has Changed" %}
+
+{% trans "There has been an update to your support ticket." %}
+
+{% trans "The status of your ticket has been changed from" %} {{ change.old_value }} {% trans "to" %} {{ change.new_value }}.
+
+{% if ticket.status == 'resolved' %}
+{% trans "Your issue has been marked as resolved. If you're satisfied with the resolution, no further action is needed. If you still have questions or if the issue persists, please respond to this ticket to reopen it." %}
+{% elif ticket.status == 'waiting' %}
+{% trans "Our support team is waiting for additional information from you. Please review any comments on the ticket and provide the requested information so we can continue working on your issue." %}
+{% elif ticket.status == 'closed' %}
+{% trans "Your ticket has been closed. If you need further assistance or if you have a new issue, please create a new support ticket." %}
+{% else %}
+{% trans "Our support team is actively working on your request. You will receive additional updates as progress is made." %}
+{% endif %}
+
+{% trans "Ticket Information:" %}
+{% trans "Ticket ID:" %} #{{ ticket.id }}
+{% trans "Title:" %} {{ ticket.title }}
+{% trans "Status:" %} {{ ticket.get_status_display }}
+{% trans "Priority:" %} {{ ticket.get_priority_display }}
+{% trans "Created:" %} {{ ticket.created_at|date:"d/m/Y H:i" }}
+{% if ticket.category %}{% trans "Category:" %} {{ ticket.category }}{% endif %}
+{% if ticket.branch %}{% trans "Branch:" %} {{ ticket.get_branch_display }}{% endif %}
+
+{% trans "View ticket at:" %} {{ ticket_url }}
+
+# comment_added.txt
+{% load i18n %}
+{% trans "New Comment on Your Ticket" %}
+
+{% trans "A new comment has been added to your support ticket." %}
+
+{{ author.get_full_name|default:author.email }} {% trans "wrote:" %}
+{{ comment.text }}
+
+{% if comment.attachments.exists %}
+{% trans "Attachments:" %} {% trans "This comment includes file attachments. Please view the ticket online to access them." %}
+{% endif %}
+
+{% trans "Ticket Information:" %}
+{% trans "Ticket ID:" %} #{{ ticket.id }}
+{% trans "Title:" %} {{ ticket.title }}
+{% trans "Status:" %} {{ ticket.get_status_display }}
+{% trans "Priority:" %} {{ ticket.get_priority_display }}
+{% trans "Created:" %} {{ ticket.created_at|date:"d/m/Y H:i" }}
+{% if ticket.category %}{% trans "Category:" %} {{ ticket.category }}{% endif %}
+{% if ticket.branch %}{% trans "Branch:" %} {{ ticket.get_branch_display }}{% endif %}
+
+{% trans "View ticket at:" %} {{ ticket_url }}
+
+# internal_comment_added.txt
+{% load i18n %}
+{% trans "Internal Comment Added" %}
+
+{% trans "An internal comment (not visible to the customer) has been added to a ticket assigned to you." %}
+
+{{ author.get_full_name|default:author.email }} {% trans "wrote (internal):" %}
+{{ comment.text }}
+
+{% if comment.attachments.exists %}
+{% trans "Attachments:" %} {% trans "This comment includes file attachments. Please view the ticket online to access them." %}
+{% endif %}
+
+{% trans "Ticket Information:" %}
+{% trans "Ticket ID:" %} #{{ ticket.id }}
+{% trans "Title:" %} {{ ticket.title }}
+{% trans "Status:" %} {{ ticket.get_status_display }}
+{% trans "Priority:" %} {{ ticket.get_priority_display }}
+{% trans "Created:" %} {{ ticket.created_at|date:"d/m/Y H:i" }}
+{% if ticket.category %}{% trans "Category:" %} {{ ticket.category }}{% endif %}
+{% if ticket.branch %}{% trans "Branch:" %} {{ ticket.get_branch_display }}{% endif %}
+
+{% trans "Please review this comment and take any necessary actions." %}
+
+{% trans "View ticket at:" %} {{ ticket_url }}

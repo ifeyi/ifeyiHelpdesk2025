@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Helpdesk - {% trans "Support Portal" %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if user.is_authenticated %}
+        <div id="helpdesk-welcome" class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h2 class="card-title">{% trans "Welcome" %}, {{ user.get_full_name|default:user.username }}</h2>
+                        <h3 class="card-text">{% trans "How can we help you today?" %}</h3>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'tickets:ticket-create' %}" class="btn btn-primary">{% trans "Submit a Ticket" %}</a>
+                            <a href="{% url 'articles:article-list' %}" class="btn btn-outline-primary">{% trans "Browse Knowledge Base" %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            {% if user.is_staff or user.user_type == 'agent' %}
+                <!-- Agent/Staff Dashboard Summary -->
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">{% trans "Ticket Statistics" %}</h5>
+                            <a href="{% url 'core:dashboard' %}" class="btn btn-sm btn-outline-primary">{% trans "View Dashboard" %}</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-4 mb-3">
+                                    <div class="border rounded p-3">
+                                        <h3 class="text-primary">{{ ticket_stats.new }}</h3>
+                                        <div>{% trans "New" %}</div>
+                                    </div>
+                                </div>
+                                <div class="col-4 mb-3">
+                                    <div class="border rounded p-3">
+                                        <h3 class="text-primary">{{ ticket_stats.open }}</h3>
+                                        <div>{% trans "Open" %}</div>
+                                    </div>
+                                </div>
+                                <div class="col-4 mb-3">
+                                    <div class="border rounded p-3">
+                                        <h3 class="text-primary">{{ ticket_stats.in_progress }}</h3>
+                                        <div>{% trans "In Progress" %}</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <div class="border rounded p-3">
+                                        <h3 class="text-primary">{{ ticket_stats.waiting }}</h3>
+                                        <div>{% trans "Waiting" %}</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <div class="border rounded p-3">
+                                        <h3 class="text-primary">{{ ticket_stats.resolved }}</h3>
+                                        <div>{% trans "Resolved" %}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="mb-0">{% trans "Your Assigned Tickets" %}</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            {% if assigned_tickets %}
+                                <div class="list-group list-group-flush">
+                                    {% for ticket in assigned_tickets %}
+                                        <a href="{% url 'tickets:ticket-detail' ticket.pk %}" class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1">{{ ticket.title }}</h6>
+                                                <small class="text-muted">{{ ticket.created_at|date }}</small>
+                                            </div>
+                                            <p class="mb-1">{{ ticket.description|truncatechars:80 }}</p>
+                                            <div>
+                                                <span class="badge bg-{{ ticket.priority }}">{{ ticket.get_priority_display }}</span>
+                                                <span class="badge bg-secondary">{{ ticket.get_status_display }}</span>
+                                            </div>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                                <div class="card-footer text-center">
+                                    <a href="{% url 'tickets:ticket-list' %}?assigned_to=me" class="btn btn-sm btn-outline-primary">{% trans "View All Assigned Tickets" %}</a>
+                                </div>
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <p class="mb-0">{% trans "You don't have any assigned tickets" %}.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <!-- Customer Dashboard Summary -->
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="mb-0">{% trans "Your Tickets" %}</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            {% if user_tickets %}
+                                <div class="list-group list-group-flush">
+                                    {% for ticket in user_tickets %}
+                                        <a href="{% url 'tickets:ticket-detail' ticket.pk %}" class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1">{{ ticket.title }}</h6>
+                                                <small class="text-muted">{{ ticket.created_at|date }}</small>
+                                            </div>
+                                            <p class="mb-1">{{ ticket.description|truncatechars:80 }}</p>
+                                            <div>
+                                                <span class="badge bg-{{ ticket.status }}">{{ ticket.get_status_display }}</span>
+                                            </div>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                                <div class="card-footer text-center">
+                                    <a href="{% url 'tickets:ticket-list' %}?created_by=me" class="btn btn-sm btn-outline-primary">{% trans "View All Your Tickets" %}</a>
+                                </div>
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <p class="mb-0">{% trans "You haven't submitted any tickets yet" %}.</p>
+                                    <a href="{% url 'tickets:ticket-create' %}" class="btn btn-sm btn-primary mt-2">{% trans "Submit Your First Ticket" %}</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">{% trans "Recent Knowledge Base Articles" %}</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        {% if recent_articles %}
+                            <div class="list-group list-group-flush">
+                                {% for article in recent_articles %}
+                                    <a href="{% url 'articles:article-detail' article.slug %}" class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1">{{ article.title }}</h6>
+                                            <small class="text-muted">{{ article.published_at|date }}</small>
+                                        </div>
+                                        <p class="mb-1">{{ article.summary|default:article.content|truncatechars:80 }}</p>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                            <div class="card-footer text-center">
+                                <a href="{% url 'articles:article-list' %}" class="btn btn-sm btn-outline-primary">{% trans "Browse Knowledge Base" %}</a>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-4">
+                                <p class="mb-0">{% trans "No articles have been published yet" %}.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <!-- Public Landing Page -->
+        <div class="row align-items-center py-5">
+            <div class="col-lg-6">
+                <h1 class="display-5 fw-bold mb-4">{% trans "Welcome to Helpdesk" %}</h1>
+                <p class="lead mb-4">{% trans "This platform is designed to streamline your support requests and provide efficient solutions to your technical and operational inquiries. Our goal is to ensure seamless workflow and empower you to focus on delivering exceptional service to our valued clients. Submit a ticket today and experience prompt, professional assistance" %}.</p>
+                <div class="d-grid gap-2 d-sm-flex">
+                    <a href="{% url 'accounts:ldap' %}" class="btn btn-primary btn-lg px-4 gap-3">{% trans "Sign In" %}</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="{% get_media_prefix %}helpdeskimg/cfcimg.jpg" alt="Helpdesk" class="img-fluid rounded">
+            </div>
+        </div>
+
+        <div class="row my-5">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-ticket-detailed fs-1 mb-3 text-primary"></i>
+                        <h3>{% trans "Support Tickets" %}</h3>
+                        <p>{% trans "Create and manage support tickets, track their progress, and get updates when they change status" %}.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-book fs-1 mb-3 text-primary"></i>
+                        <h3>{% trans "Knowledge Base" %}</h3>
+                        <p>{% trans "Access our extensive knowledge base to find answers to common questions and issues" %}.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-chat-dots fs-1 mb-3 text-primary"></i>
+                        <h3>{% trans "Live Support" %}</h3>
+                        <p>{% trans "Connect with our support agents via live chat for immediate assistance with urgent issues" %}.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

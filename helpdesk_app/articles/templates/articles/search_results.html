@@ -1,0 +1,77 @@
+{% extends "articles/base_articles.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Search Results: {{ query }}{% endblock %}
+
+{% block article_content %}
+  <div class="search-results">
+    <h1>{% trans "Search Results" %}</h1>
+    
+    <div class="search-query mb-4">
+      <form action="{% url 'articles:article-search' %}" method="get" class="form-inline">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" value="{{ query }}" placeholder="{% trans 'Search articles' %}...">
+          <div class="input-group-append">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-search"></i> {% trans "Search" %}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    
+    <div class="search-summary mb-4">
+      <p>{% trans "Found" %} {{ articles|length }} {% trans "result" %}{{ articles|length|pluralize }} {% trans "for" %} <strong>"{{ query }}"</strong></p>
+    </div>
+    
+    {% if articles %}
+      <div class="search-results-list">
+        {% for article in articles %}
+          <div class="search-result-item mb-4 p-3 border-bottom">
+            <h3 class="h5 mb-2">
+              <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+            </h3>
+            
+            <p class="text-muted">
+              {{ article.summary|default:article.content|truncatechars:200 }}
+            </p>
+            
+            <div class="article-meta small">
+              <span class="mr-3">
+                <i class="far fa-calendar-alt"></i> 
+                {{ article.published_at|date:"M d, Y" }}
+              </span>
+              
+              {% if article.categories.exists %}
+                <span class="mr-3">
+                  <i class="far fa-folder"></i>
+                  {% for category in article.categories.all %}
+                    <a href="{% url 'articles:article-category' category.slug %}" class="text-muted">
+                      {{ category.name }}
+                    </a>{% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                </span>
+              {% endif %}
+              
+              {% if article.tags.exists %}
+                <div class="article-tags mt-1">
+                  {% for tag in article.tags.all %}
+                    <a href="{% url 'articles:article-tag' tag.slug %}" class="badge badge-pill {% if tag.color %}badge-{{ tag.color }}{% else %}badge-secondary{% endif %}">
+                      {{ tag.name }}
+                    </a>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="alert alert-info">
+        {% trans "No articles found matching your search. Try using different keywords or" %} 
+        <a href="{% url 'articles:article-list' %}" class="alert-link">{% trans "browse all articles" %}</a>.
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

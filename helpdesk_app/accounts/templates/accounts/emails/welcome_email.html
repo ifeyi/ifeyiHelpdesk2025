@@ -1,0 +1,104 @@
+{# templates/accounts/emails/welcome_email.html #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to CFC Helpdesk</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #0066cc;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        .button {
+            display: inline-block;
+            background-color: #0066cc;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        h1 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to CFC Helpdesk</h1>
+        </div>
+        <div class="content">
+            <p>Hello {% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.username }}{% endif %},</p>
+            
+            <p>Welcome to the CFC Helpdesk System! Your account has been successfully created and you are now logged in.</p>
+            
+            <p><strong>Your account type is:</strong> {{ user_type }}</p>
+            
+            {% if user_type == 'Customer' %}
+            <p>As a customer, you can:</p>
+            <ul>
+                <li>Submit new support tickets</li>
+                <li>Track the status of your existing tickets</li>
+                <li>Communicate with support agents</li>
+                <li>View knowledge base articles</li>
+            </ul>
+            {% elif user_type == 'Agent' %}
+            <p>As a support agent, you can:</p>
+            <ul>
+                <li>View and respond to assigned tickets</li>
+                <li>Update ticket status and priority</li>
+                <li>Collaborate with other agents</li>
+                <li>Access all knowledge base resources</li>
+            </ul>
+            {% elif user_type == 'Admin' %}
+            <p>As an administrator, you have full access to the system, including:</p>
+            <ul>
+                <li>Manage users and their permissions</li>
+                <li>Configure system settings</li>
+                <li>Generate reports and analytics</li>
+                <li>All agent and customer capabilities</li>
+            </ul>
+            {% endif %}
+            
+            <p>We encourage you to explore the system and familiarize yourself with its features.</p>
+            
+            <a href="{{ helpdesk_url }}" class="button">Access Helpdesk System</a>
+            
+            <p>If you have any questions, please contact the IT department.</p>
+            
+            <p>Thank you,<br>
+            CFC Helpdesk Team</p>
+        </div>
+        <div class="footer">
+            <p>This is an automated message from the CFC Helpdesk System.</p>
+            <p>© {{ now.year }} Credit Foncier Cameroun. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

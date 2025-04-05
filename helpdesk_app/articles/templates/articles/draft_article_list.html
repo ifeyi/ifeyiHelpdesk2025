@@ -1,0 +1,62 @@
+{% extends "articles/base_articles.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Draft Articles" %}{% endblock %}
+
+{% block article_content %}
+  <div class="article-list-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>{% trans "Draft Articles" %}</h1>
+      
+      <a href="{% url 'articles:article-create' %}" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i> {% trans "New Article" %}
+      </a>
+    </div>
+    
+    {% if articles %}
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead class="thead-light">
+            <tr>
+              <th>{% trans "Title" %}</th>
+              <th>{% trans "Last Updated" %}</th>
+              <th>{% trans "Categories" %}</th>
+              <th>{% trans "Actions" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for article in articles %}
+              <tr>
+                <td>
+                  <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+                </td>
+                <td>{{ article.updated_at|date:"M d, Y" }}</td>
+                <td>
+                  {% for category in article.categories.all %}
+                    <span class="badge badge-secondary">{{ category.name }}</span>
+                  {% empty %}
+                    <span class="text-muted">{% trans "None" %}</span>
+                  {% endfor %}
+                </td>
+                <td>
+                  <a href="{% url 'articles:article-update' article.slug %}" class="btn btn-sm btn-outline-primary mr-1" title="Edit">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a href="{% url 'articles:article-delete' article.slug %}" class="btn btn-sm btn-outline-danger" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="alert alert-info">
+        {% trans "You don't have any draft articles" %}. 
+        <a href="{% url 'articles:article-create' %}" class="alert-link">{% trans "Create your first article" %}</a>.
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

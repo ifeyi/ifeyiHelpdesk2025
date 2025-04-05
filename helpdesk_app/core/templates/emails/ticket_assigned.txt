@@ -1,0 +1,24 @@
+{% load i18n %}
+{% trans "Ticket Assigned to You" %}
+
+{% trans "A support ticket has been assigned to you." %}
+
+{% trans "Description:" %}
+{{ ticket.description }}
+
+{% trans "Ticket Information:" %}
+{% trans "Ticket ID:" %} #{{ ticket.id }}
+{% trans "Title:" %} {{ ticket.title }}
+{% trans "Status:" %} {{ ticket.get_status_display }}
+{% trans "Priority:" %} {{ ticket.get_priority_display }}
+{% trans "Created:" %} {{ ticket.created_at|date:"d/m/Y H:i" }}
+{% if ticket.category %}{% trans "Category:" %} {{ ticket.category }}{% endif %}
+{% if ticket.branch %}{% trans "Branch:" %} {{ ticket.get_branch_display }}{% endif %}
+
+{% trans "Please review this ticket and take appropriate action. Remember to update the ticket status as you work on it." %}
+
+{% if ticket.priority == 'high' or ticket.priority == 'critical' %}
+{% trans "Note:" %} {% trans "This ticket has a high priority and should be addressed promptly." %}
+{% endif %}
+
+{% trans "View ticket at:" %} {{ ticket_url }}

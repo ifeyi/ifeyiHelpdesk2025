@@ -1,0 +1,154 @@
+{% extends "articles/base_articles.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ category.name }}{% endblock %}
+
+{% block article_content %}
+  <div class="category-articles">
+    <div class="category-header mb-4">
+      <h1>{{ category.name }}</h1>
+      
+      {% if category.description %}
+        <div class="category-description mt-2">
+          {{ category.description }}
+        </div>
+      {% endif %}
+      
+      {% if category.parent %}
+        <div class="category-breadcrumb mt-2">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-light">
+              <li class="breadcrumb-item">
+                <a href="{% url 'articles:article-list' %}">{% trans "Knowledge Base" %}</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a href="{% url 'articles:article-category-detail' category.parent.slug %}">{{ category.parent.name }}</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+            </ol>
+          </nav>
+        </div>
+      {% endif %}
+    </div>
+    
+    {% if category.subcategories.exists %}
+      <div class="subcategories mb-5">
+        <h2 class="h4 mb-3">{% trans "Subcategories" %}</h2>
+        <div class="row">
+          {% for subcategory in category.subcategories.all %}
+            <div class="col-md-4 mb-4">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h3 class="card-title h5">
+                    {% if subcategory.icon %}
+                      <i class="{{ subcategory.icon }}"></i>
+                    {% endif %}
+                    <a href="{% url 'articles:article-category-detail' subcategory.slug %}">{{ subcategory.name }}</a>
+                  </h3>
+                  
+                  {% if subcategory.description %}
+                    <p class="card-text">{{ subcategory.description|truncatechars:120 }}</p>
+                  {% endif %}
+                  
+                  <p class="card-text">
+                    <small class="text-muted">
+                      {{ subcategory.articles.filter.count }} {% trans "article" %}{{ subcategory.articles.count|pluralize }}
+                    </small>
+                  </p>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+    
+    {% if articles %}
+      <div class="category-articles-list">
+        <h2 class="h4 mb-3">{% trans "Articles" %}</h2>
+        
+        {% for article in articles %}
+          <div class="article-card mb-4">
+            <h3 class="h5 mb-2">
+              <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+            </h3>
+            
+            <p class="text-muted">
+              {{ article.summary|default:article.content|truncatechars:160 }}
+            </p>
+            
+            <div class="article-meta">
+              <span class="mr-3">
+                <i class="far fa-calendar-alt"></i> 
+                {{ article.published_at|date:"M d, Y" }}
+              </span>
+              
+              <span class="mr-3">
+                <i class="far fa-eye"></i> 
+                {{ article.view_count }} {% trans "views" %}
+              </span>
+              
+              {% if article.helpful_votes > 0 %}
+                <span class="mr-3">
+                  <i class="far fa-thumbs-up"></i> 
+                  {{ article.helpful_votes }} {% trans "helpful" %}
+                </span>
+              {% endif %}
+              
+              {% if article.tags.exists %}
+                <div class="article-tags mt-2">
+                  {% for tag in article.tags.all %}
+                    <a href="{% url 'articles:article-tag' tag.slug %}" class="badge badge-pill {% if tag.color %}badge-{{ tag.color }}{% else %}badge-secondary{% endif %}">
+                      {{ tag.name }}
+                    </a>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      
+      {% if is_paginated %}
+        <nav aria-label="Article pagination">
+          <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page=1">{% trans "First" %}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{% trans "Previous" %}</a>
+              </li>
+            {% endif %}
+            
+            {% for num in page_obj.paginator.page_range %}
+              {% if page_obj.number == num %}
+                <li class="page-item active">
+                  <span class="page-link">{{ num }}</span>
+                </li>
+              {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% trans "Next" %}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{% trans "Last" %}</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% endif %}
+    {% else %}
+      <div class="alert alert-info">
+        {% trans "No articles have been published in this category yet" %}.
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

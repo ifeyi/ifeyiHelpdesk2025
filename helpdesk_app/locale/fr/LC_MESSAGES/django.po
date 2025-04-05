@@ -1,0 +1,2373 @@
+# Translations for the CFC Helpdesk app
+# Copyright (C) 2025
+# Ifeyi Batindek <ifeyi@batindek.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1 \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-04-05 15:00+0000\n"
+"PO-Revision-Date: 2025-03-30 HO:MI+ZONE\n"
+"Last-Translator: Ifeyi Batindek <ifeyi@batindek.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: helpdesk_app/accounts/admin.py:30
+msgid "Personal info"
+msgstr "Informations personnelles"
+
+#: helpdesk_app/accounts/admin.py:31
+msgid "Helpdesk info"
+msgstr "Helpdesk infos"
+
+#: helpdesk_app/accounts/admin.py:32
+msgid "Permissions"
+msgstr "Permissions"
+
+#: helpdesk_app/accounts/admin.py:35
+msgid "Important dates"
+msgstr "Dates importantes"
+
+#: helpdesk_app/accounts/models.py:12
+msgid "Admin"
+msgstr "Admin"
+
+#: helpdesk_app/accounts/models.py:13
+#: helpdesk_app/core/templates/dashboard.html:118
+msgid "Agent"
+msgstr "Agent"
+
+#: helpdesk_app/accounts/models.py:14
+msgid "Customer"
+msgstr "Utilisateur"
+
+#: helpdesk_app/accounts/models.py:16
+msgid "Email address"
+msgstr "Adresse E-mail"
+
+#: helpdesk_app/accounts/models.py:18
+msgid "User type"
+msgstr "Type d'Utilisateur"
+
+#: helpdesk_app/accounts/models.py:23
+msgid "Department"
+msgstr "Département"
+
+#: helpdesk_app/accounts/models.py:24
+msgid "Phone number"
+msgstr "Numéro de téléphone"
+
+#: helpdesk_app/accounts/models.py:26
+msgid "Profile picture"
+msgstr "Photo de profil"
+
+#: helpdesk_app/accounts/models.py:36 helpdesk_app/articles/models.py:182
+#: helpdesk_app/tickets/models.py:206
+msgid "User"
+msgstr "Utilisateur"
+
+#: helpdesk_app/accounts/models.py:37
+msgid "Users"
+msgstr "Utilisateurs"
+
+#: helpdesk_app/accounts/models.py:66
+msgid "Biography"
+msgstr "Biographies"
+
+#: helpdesk_app/accounts/models.py:67
+msgid "Available"
+msgstr "Disponible"
+
+#: helpdesk_app/accounts/models.py:68
+msgid "Maximum tickets"
+msgstr "Nombre max de tickets"
+
+#: helpdesk_app/accounts/models.py:71
+msgid "Agent Profile"
+msgstr "Profile de l'agent"
+
+#: helpdesk_app/accounts/models.py:72
+msgid "Agent Profiles"
+msgstr "Profils d'agents"
+
+#: helpdesk_app/accounts/models.py:88
+msgid "Company"
+msgstr "Entreprise"
+
+#: helpdesk_app/accounts/models.py:89
+msgid "Account ID"
+msgstr "Identifiant du compte"
+
+#: helpdesk_app/accounts/models.py:90
+msgid "Support Level"
+msgstr "Niveau de support"
+
+#: helpdesk_app/accounts/models.py:93
+msgid "Customer Profile"
+msgstr "Profil de l'utilisateur"
+
+#: helpdesk_app/accounts/models.py:94
+msgid "Customer Profiles"
+msgstr "Profils utilisateurs"
+
+#: helpdesk_app/accounts/signals.py:128
+#, fuzzy
+#| msgid "Welcome to Helpdesk"
+msgid "Welcome to CFC Helpdesk System"
+msgstr "Bienvenue sur le Helpdesk"
+
+#: helpdesk_app/accounts/signals.py:138
+msgid ""
+"\n"
+"Hello {user.get_full_name() or user.username},\n"
+"\n"
+"Welcome to the CFC Helpdesk System! Your account has been successfully "
+"created and you are now logged in.\n"
+"\n"
+"Your account type is: {user.get_user_type_display()}\n"
+"\n"
+"You can access the helpdesk system at: {request.build_absolute_uri('/')}\n"
+"\n"
+"If you have any questions, please contact the IT department.\n"
+"\n"
+"Thank you,\n"
+"CFC Helpdesk Team\n"
+msgstr ""
+"\n"
+"Bonjour {user.get_full_name() ou user.username},\n"
+"\n"
+"Bienvenue sur le portail Helpdesk CFC, votre compte a bien été Crée et vous "
+"êtes maintenant connecté.\n"
+"\n"
+"YVotre compte est de type: {user.get_user_type_display()}\n"
+"\n"
+"Vous pouvez accéder au helpdesk vie: {request.build_absolute_uri('/')}\n"
+"\n"
+"Pour toute préoccupation, vous rapprocher de la SDI.\n"
+"\n"
+"Merci,\n"
+"L'équipe CFC Helpdesk\n"
+
+#: helpdesk_app/accounts/templates/accounts/ldap_login.html:6
+msgid "Authentication"
+msgstr "Connexion"
+
+#: helpdesk_app/accounts/templates/accounts/ldap_login.html:14
+#: helpdesk_app/accounts/templates/accounts/ldap_login.html:38
+#: helpdesk_app/core/templates/account/login.html:6
+msgid "Login"
+msgstr "Connexion"
+
+#: helpdesk_app/accounts/templates/accounts/ldap_login.html:21
+msgid "Username"
+msgstr "Utilisateur"
+
+#: helpdesk_app/accounts/templates/accounts/ldap_login.html:22
+msgid "Your AD username"
+msgstr "Votre nom d'utilisateur"
+
+#: helpdesk_app/accounts/templates/accounts/ldap_login.html:23
+msgid "Enter your Active Directory username (without domain)"
+msgstr "Votre nom d'utilisateur sans le domaine creditfoncier.cm"
+
+#: helpdesk_app/accounts/templates/accounts/ldap_login.html:27
+#: helpdesk_app/core/templates/account/login.html:36
+msgid "Password"
+msgstr "Mot de passe"
+
+#: helpdesk_app/accounts/templates/accounts/ldap_login.html:28
+msgid "Your AD password"
+msgstr "Votre mot de passe"
+
+#: helpdesk_app/accounts/views.py:46
+msgid "You have successfully logged in."
+msgstr "Vous êtes maintenant connecté."
+
+#: helpdesk_app/accounts/views.py:52
+msgid "Invalid username or password."
+msgstr "Mot de passe ou nom d'utilisateur invalide"
+
+#: helpdesk_app/accounts/views.py:54
+msgid "Please provide both username and password."
+msgstr "Renseigner le mot de passe et le nom d'utilisateur s'il vous plaît"
+
+#: helpdesk_app/articles/forms.py:25
+msgid "A brief description of the article that will appear in search results."
+msgstr ""
+"Description brève de l'article qui apparaîtra dans les résultats de la "
+"recherche."
+
+#: helpdesk_app/articles/forms.py:26
+msgid "Featured articles appear prominently on the knowledge base homepage."
+msgstr "Les articles à la une seront mis en avant."
+
+#: helpdesk_app/articles/forms.py:27
+msgid "Select other articles that are related to this one."
+msgstr "Sélectionner des articles liés à celui-ci"
+
+#: helpdesk_app/articles/forms.py:38
+msgid "At least one category is required for published articles."
+msgstr "Choisir une catégorie pour l'article."
+
+#: helpdesk_app/articles/forms.py:63
+msgid "Yes"
+msgstr "Oui"
+
+#: helpdesk_app/articles/forms.py:63
+msgid "No"
+msgstr "Non"
+
+#: helpdesk_app/articles/forms.py:64
+msgid "Tell us why this was or wasn't helpful..."
+msgstr "Dîtes-nous si cet article vous a aidé ou pas..."
+
+#: helpdesk_app/articles/forms.py:67
+#: helpdesk_app/articles/templates/articles/article_detail.html:124
+msgid "Was this article helpful?"
+msgstr "Cet article vous a-t'il été utile?"
+
+#: helpdesk_app/articles/forms.py:68
+msgid "Comments (optional)"
+msgstr "Commentaires (facultatif)"
+
+#: helpdesk_app/articles/models.py:12 helpdesk_app/articles/models.py:150
+#: helpdesk_app/tickets/models.py:10 helpdesk_app/tickets/models.py:226
+#: helpdesk_app/tickets/models.py:242
+msgid "Name"
+msgstr "Nom"
+
+#: helpdesk_app/articles/models.py:13 helpdesk_app/articles/models.py:53
+#: helpdesk_app/articles/models.py:151
+msgid "Slug"
+msgstr "Lien"
+
+#: helpdesk_app/articles/models.py:14 helpdesk_app/articles/models.py:129
+#: helpdesk_app/comments/models.py:68 helpdesk_app/core/admin.py:65
+#: helpdesk_app/core/models.py:67 helpdesk_app/tickets/models.py:11
+#: helpdesk_app/tickets/models.py:73 helpdesk_app/tickets/models.py:181
+#: helpdesk_app/tickets/models.py:243
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:32
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:31
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:29
+msgid "Description"
+msgstr "Description"
+
+#: helpdesk_app/articles/models.py:21 helpdesk_app/tickets/models.py:18
+msgid "Parent category"
+msgstr "Catégore parent"
+
+#: helpdesk_app/articles/models.py:23 helpdesk_app/tickets/models.py:20
+msgid "Icon class"
+msgstr "Classe de l'icône"
+
+#: helpdesk_app/articles/models.py:24
+msgid "Display order"
+msgstr "Ordonner"
+
+#: helpdesk_app/articles/models.py:27
+msgid "Article Category"
+msgstr "Catégorie"
+
+#: helpdesk_app/articles/models.py:28
+msgid "Article Categories"
+msgstr "Catégories"
+
+#: helpdesk_app/articles/models.py:48
+msgid "Draft"
+msgstr "Brouillon"
+
+#: helpdesk_app/articles/models.py:49
+msgid "Published"
+msgstr "Publié"
+
+#: helpdesk_app/articles/models.py:50
+msgid "Archived"
+msgstr "Archivé"
+
+#: helpdesk_app/articles/models.py:52 helpdesk_app/articles/models.py:128
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:22
+#: helpdesk_app/tickets/models.py:72
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:27
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:75
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:25
+msgid "Title"
+msgstr "Titre"
+
+#: helpdesk_app/articles/models.py:54 helpdesk_app/core/models.py:32
+msgid "Content"
+msgstr "Contenu"
+
+#: helpdesk_app/articles/models.py:55
+msgid "Summary"
+msgstr "Résumé"
+
+#: helpdesk_app/articles/models.py:57 helpdesk_app/core/admin.py:32
+#: helpdesk_app/core/models.py:37 helpdesk_app/tickets/models.py:76
+#: helpdesk_app/tickets/templates/tickets/ticket_delete.html:34
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:57
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:20
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:76
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:79
+msgid "Status"
+msgstr "Statut"
+
+#: helpdesk_app/articles/models.py:68
+#: helpdesk_app/articles/templates/articles/base_articles.html:27
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:24
+#: helpdesk_app/tickets/models.py:25
+msgid "Categories"
+msgstr "Catégories"
+
+#: helpdesk_app/articles/models.py:74 helpdesk_app/comments/models.py:26
+#: helpdesk_app/comments/templates/comments/delete_comment.html:17
+msgid "Author"
+msgstr "Auteur"
+
+#: helpdesk_app/articles/models.py:79
+msgid "Related articles"
+msgstr "Articles relatifs"
+
+#: helpdesk_app/articles/models.py:83 helpdesk_app/articles/models.py:188
+#: helpdesk_app/comments/models.py:29 helpdesk_app/tickets/models.py:122
+msgid "Created at"
+msgstr "Crée le"
+
+#: helpdesk_app/articles/models.py:84 helpdesk_app/comments/models.py:30
+#: helpdesk_app/tickets/models.py:123
+msgid "Updated at"
+msgstr "Mise à jour le"
+
+#: helpdesk_app/articles/models.py:85
+msgid "Published at"
+msgstr "Publié le"
+
+#: helpdesk_app/articles/models.py:89
+msgid "Featured article"
+msgstr "Article à la une"
+
+#: helpdesk_app/articles/models.py:90
+msgid "View count"
+msgstr "Vues"
+
+#: helpdesk_app/articles/models.py:91
+msgid "Helpful votes"
+msgstr "Votes positifs"
+
+#: helpdesk_app/articles/models.py:92
+msgid "Not helpful votes"
+msgstr "Votes négatifs"
+
+#: helpdesk_app/articles/models.py:95 helpdesk_app/articles/models.py:125
+#: helpdesk_app/articles/models.py:176
+msgid "Article"
+msgstr "Article"
+
+#: helpdesk_app/articles/models.py:96
+#: helpdesk_app/articles/templates/articles/category_article_list.html:69
+msgid "Articles"
+msgstr "Articles"
+
+#: helpdesk_app/articles/models.py:127 helpdesk_app/comments/models.py:66
+#: helpdesk_app/tickets/models.py:173
+msgid "File"
+msgstr "Dossier"
+
+#: helpdesk_app/articles/models.py:134 helpdesk_app/tickets/models.py:178
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:102
+msgid "Uploaded by"
+msgstr "Téléversé par"
+
+#: helpdesk_app/articles/models.py:136 helpdesk_app/comments/models.py:67
+#: helpdesk_app/tickets/models.py:180
+msgid "Uploaded at"
+msgstr "Téléversé à"
+
+#: helpdesk_app/articles/models.py:139
+msgid "Article Attachment"
+msgstr "Fichier joint"
+
+#: helpdesk_app/articles/models.py:140
+msgid "Article Attachments"
+msgstr "Fichiers joints"
+
+#: helpdesk_app/articles/models.py:152 helpdesk_app/tickets/models.py:21
+#: helpdesk_app/tickets/models.py:227
+msgid "Color"
+msgstr "Couleur"
+
+#: helpdesk_app/articles/models.py:155
+msgid "Article Tag"
+msgstr "Tag"
+
+#: helpdesk_app/articles/models.py:156
+msgid "Article Tags"
+msgstr "Tags"
+
+#: helpdesk_app/articles/models.py:186
+msgid "Was helpful"
+msgstr "Utile"
+
+#: helpdesk_app/articles/models.py:187 helpdesk_app/comments/models.py:41
+#: helpdesk_app/comments/models.py:64
+#: helpdesk_app/comments/templates/comments/delete_comment.html:19
+msgid "Comment"
+msgstr "Commentaire"
+
+#: helpdesk_app/articles/models.py:189
+msgid "IP Address"
+msgstr "Adresse IP"
+
+#: helpdesk_app/articles/models.py:192 helpdesk_app/articles/models.py:193
+msgid "Article Feedback"
+msgstr "Feedback"
+
+#: helpdesk_app/articles/templates/articles/article_confirm_delete.html:6
+#: helpdesk_app/articles/templates/articles/article_confirm_delete.html:30
+msgid "Delete Article"
+msgstr "Supprimer"
+
+#: helpdesk_app/articles/templates/articles/article_confirm_delete.html:12
+msgid "Confirm Deletion"
+msgstr "Confirmer la suppression"
+
+#: helpdesk_app/articles/templates/articles/article_confirm_delete.html:16
+msgid "Are you sure you want to delete the article"
+msgstr "Êtes-vous sûr de vouloir supprimer cet article?"
+
+#: helpdesk_app/articles/templates/articles/article_confirm_delete.html:18
+msgid ""
+"This action cannot be undone. The article will be permanently deleted from "
+"the system"
+msgstr ""
+"Cette action est irréversible. L'article sera définitivement supprimé du "
+"système"
+
+#: helpdesk_app/articles/templates/articles/article_confirm_delete.html:22
+msgid "This is a published article that may be viewed by users"
+msgstr "Ceci est un article publié visible par les utilisateurs"
+
+#: helpdesk_app/articles/templates/articles/article_confirm_delete.html:33
+#: helpdesk_app/articles/templates/articles/article_form.html:155
+#: helpdesk_app/comments/templates/comments/delete_comment.html:30
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:84
+#: helpdesk_app/tickets/templates/tickets/ticket_delete.html:62
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:257
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:113
+msgid "Cancel"
+msgstr "Annuler"
+
+#: helpdesk_app/articles/templates/articles/article_detail.html:18
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:23
+msgid "Edit"
+msgstr "Editer"
+
+#: helpdesk_app/articles/templates/articles/article_detail.html:21
+#: helpdesk_app/comments/templates/comments/delete_comment.html:29
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:298
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:114
+msgid "Delete"
+msgstr "Supprimer"
+
+#: helpdesk_app/articles/templates/articles/article_detail.html:37
+#: helpdesk_app/articles/templates/articles/article_list.html:48
+#: helpdesk_app/articles/templates/articles/article_list.html:81
+#: helpdesk_app/articles/templates/articles/category_article_list.html:89
+msgid "views"
+msgstr "Vues"
+
+#: helpdesk_app/articles/templates/articles/article_detail.html:83
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:37
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:313
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:355
+msgid "Attachments"
+msgstr "Pièce jointes"
+
+#: helpdesk_app/articles/templates/articles/article_detail.html:105
+msgid "Related Articles"
+msgstr "Articles relatifs"
+
+#: helpdesk_app/articles/templates/articles/article_detail.html:141
+msgid "Submit Feedback"
+msgstr "Faire un feedback"
+
+#: helpdesk_app/articles/templates/articles/article_form.html:6
+#: helpdesk_app/articles/templates/articles/article_form.html:15
+msgid "Edit Article"
+msgstr "Modifier"
+
+#: helpdesk_app/articles/templates/articles/article_form.html:6
+#: helpdesk_app/articles/templates/articles/article_list.html:22
+#: helpdesk_app/articles/templates/articles/base_articles.html:67
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:13
+msgid "New Article"
+msgstr "Nouveau"
+
+#: helpdesk_app/articles/templates/articles/article_form.html:15
+msgid "Create New Article"
+msgstr "Nouvel Article"
+
+#: helpdesk_app/articles/templates/articles/article_form.html:153
+msgid "Create Article"
+msgstr "Créer un article"
+
+#: helpdesk_app/articles/templates/articles/article_list.html:5
+#: helpdesk_app/articles/templates/articles/article_list.html:16
+#: helpdesk_app/articles/templates/articles/base_articles.html:6
+#: helpdesk_app/articles/templates/articles/base_articles.html:14
+#: helpdesk_app/articles/templates/articles/category_article_list.html:23
+#: helpdesk_app/core/templates/base.html:39
+#: helpdesk_app/core/templates/index.html:200
+msgid "Knowledge Base"
+msgstr "Base de connaissances"
+
+#: helpdesk_app/articles/templates/articles/article_list.html:35
+msgid "Featured Articles"
+msgstr "Article à la une"
+
+#: helpdesk_app/articles/templates/articles/article_list.html:87
+#: helpdesk_app/articles/templates/articles/category_article_list.html:95
+msgid "helpful"
+msgstr "Utile"
+
+#: helpdesk_app/articles/templates/articles/article_list.html:121
+#: helpdesk_app/articles/templates/articles/category_article_list.html:118
+msgid "First"
+msgstr "Premier"
+
+#: helpdesk_app/articles/templates/articles/article_list.html:124
+#: helpdesk_app/articles/templates/articles/category_article_list.html:121
+msgid "Previous"
+msgstr "Précédent"
+
+#: helpdesk_app/articles/templates/articles/article_list.html:142
+#: helpdesk_app/articles/templates/articles/category_article_list.html:139
+msgid "Next"
+msgstr "Suivant"
+
+#: helpdesk_app/articles/templates/articles/article_list.html:145
+#: helpdesk_app/articles/templates/articles/category_article_list.html:142
+msgid "Last"
+msgstr "Dernier"
+
+#: helpdesk_app/articles/templates/articles/article_list.html:155
+msgid "No articles found matching"
+msgstr "Aucun article n'a été trouvé"
+
+#: helpdesk_app/articles/templates/articles/article_list.html:157
+msgid "No articles found in this category"
+msgstr "Aucun articles trouvé dans cette catégorie"
+
+#: helpdesk_app/articles/templates/articles/article_list.html:159
+msgid "No articles found with this tag"
+msgstr "Aucun article trouvé dans ce tag"
+
+#: helpdesk_app/articles/templates/articles/article_list.html:161
+#: helpdesk_app/core/templates/index.html:164
+msgid "No articles have been published yet"
+msgstr "Aucun artile n'a été publié"
+
+#: helpdesk_app/articles/templates/articles/base_articles.html:19
+msgid "Search articles..."
+msgstr "Chercher un article"
+
+#: helpdesk_app/articles/templates/articles/base_articles.html:54
+msgid "Popular Tags"
+msgstr "Tag populaires"
+
+#: helpdesk_app/articles/templates/articles/base_articles.html:71
+msgid "My Drafts"
+msgstr "Mes Brouillons"
+
+#: helpdesk_app/articles/templates/articles/category_article_list.html:37
+msgid "Subcategories"
+msgstr "Sous catégories"
+
+#: helpdesk_app/articles/templates/articles/category_article_list.html:56
+msgid "article"
+msgstr "Article"
+
+#: helpdesk_app/articles/templates/articles/category_article_list.html:150
+msgid "No articles have been published in this category yet"
+msgstr "Aucun artile n'a été publié dans cette catégorie"
+
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:5
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:10
+msgid "Draft Articles"
+msgstr "Brouillons"
+
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:23
+msgid "Last Updated"
+msgstr "Mise à jour le"
+
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:25
+msgid "Actions"
+msgstr "Actions"
+
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:39
+msgid "None"
+msgstr "Aucun"
+
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:57
+msgid "You don't have any draft articles"
+msgstr "Vous n'avez aucun brouillon"
+
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:58
+msgid "Create your first article"
+msgstr "Article votre premier article"
+
+#: helpdesk_app/articles/templates/articles/search_results.html:9
+msgid "Search Results"
+msgstr "Résultats de la recherche"
+
+#: helpdesk_app/articles/templates/articles/search_results.html:14
+msgid "Search articles"
+msgstr "Chercher un article"
+
+#: helpdesk_app/articles/templates/articles/search_results.html:17
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:56
+msgid "Search"
+msgstr "Rechercher"
+
+#: helpdesk_app/articles/templates/articles/search_results.html:25
+msgid "Found"
+msgstr "Trouvé"
+
+#: helpdesk_app/articles/templates/articles/search_results.html:25
+msgid "result"
+msgstr "résultat"
+
+#: helpdesk_app/articles/templates/articles/search_results.html:25
+msgid "for"
+msgstr "pour"
+
+#: helpdesk_app/articles/templates/articles/search_results.html:72
+msgid "No articles found matching your search. Try using different keywords or"
+msgstr ""
+"Aucun article ne correspond à votre recherche. Essayez un autre mot clé"
+
+#: helpdesk_app/articles/templates/articles/search_results.html:73
+msgid "browse all articles"
+msgstr "Tous les articles"
+
+#: helpdesk_app/comments/models.py:16
+msgid "Content type"
+msgstr "Type de contenu"
+
+#: helpdesk_app/comments/models.py:18
+msgid "Object ID"
+msgstr "ID"
+
+#: helpdesk_app/comments/models.py:28
+msgid "Text"
+msgstr "Texte"
+
+#: helpdesk_app/comments/models.py:34
+msgid "Internal comment"
+msgstr "Commentaire interne"
+
+#: helpdesk_app/comments/models.py:36
+msgid "Internal comments are only visible to staff members"
+msgstr ""
+"Les commentaires internes sont uniquement visibles par les membres du staff"
+
+#: helpdesk_app/comments/models.py:38
+msgid "Edited"
+msgstr "Edité"
+
+#: helpdesk_app/comments/models.py:42
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:269
+msgid "Comments"
+msgstr "Commentaires"
+
+#: helpdesk_app/comments/models.py:49
+msgid "Can view internal comments"
+msgstr "Peut voir les commentaires internes"
+
+#: helpdesk_app/comments/models.py:71
+msgid "Comment Attachment"
+msgstr "Pièce jointe"
+
+#: helpdesk_app/comments/models.py:72
+msgid "Comment Attachments"
+msgstr "Pièces jointes"
+
+#: helpdesk_app/comments/templates/comments/delete_comment.html:4
+#: helpdesk_app/comments/templates/comments/delete_comment.html:10
+msgid "Delete Comment"
+msgstr "Supprimer"
+
+#: helpdesk_app/comments/templates/comments/delete_comment.html:13
+#, fuzzy
+msgid "Are you sure you want to delete this comment?"
+msgstr "Êtes-vous sûr de vouloit supprimer ce commentaire?"
+
+#: helpdesk_app/comments/templates/comments/delete_comment.html:18
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:160
+msgid "Date"
+msgstr "Date"
+
+#: helpdesk_app/comments/views.py:28
+#, fuzzy
+#| msgid "Invalid content type or object."
+msgid "Invalid model type."
+msgstr "Format de fichier ivalide."
+
+#: helpdesk_app/comments/views.py:37
+msgid "Object not found."
+msgstr ""
+
+#: helpdesk_app/comments/views.py:42 helpdesk_app/comments/views.py:135
+msgid "Comment text cannot be empty."
+msgstr "Le commentaire ne peut être vide."
+
+#: helpdesk_app/comments/views.py:81
+msgid "Comment added successfully."
+msgstr "Le commentaire a été ajouté avec succès."
+
+#: helpdesk_app/comments/views.py:96
+msgid "You don't have permission to delete this comment."
+msgstr "Vous n'avez pas la permission de supprimer ce commentaire."
+
+#: helpdesk_app/comments/views.py:106
+msgid "Comment deleted successfully."
+msgstr "Le comentaire a été supprimé avec succès."
+
+#: helpdesk_app/comments/views.py:127
+msgid "You don't have permission to edit this comment."
+msgstr "Vous n'avez pas la permission de modifier ce commentaire."
+
+#: helpdesk_app/comments/views.py:157
+msgid "Comment updated successfully."
+msgstr "Le commentaire a été mis à jour avec succès."
+
+#: helpdesk_app/core/admin.py:18 helpdesk_app/core/models.py:25
+msgid "Email Type"
+msgstr "Adresse E-mail"
+
+#: helpdesk_app/core/admin.py:22 helpdesk_app/core/models.py:30
+msgid "Subject"
+msgstr "Sujet"
+
+#: helpdesk_app/core/admin.py:38
+msgid "Selected Agent"
+msgstr "Agent sélectionné"
+
+#: helpdesk_app/core/admin.py:39 helpdesk_app/core/models.py:88
+msgid "Selected Agents"
+msgstr "Agents sélectionnés"
+
+#: helpdesk_app/core/admin.py:51
+msgid "Agent Notifications"
+msgstr "Notifications pour les agents"
+
+#: helpdesk_app/core/admin.py:55
+msgid "Customer Notifications"
+msgstr "Notifications pour les utilisateurs"
+
+#: helpdesk_app/core/models.py:11
+msgid "Ticket Created"
+msgstr "Ticket crée"
+
+#: helpdesk_app/core/models.py:12
+msgid "Ticket Assigned"
+msgstr "Ticket assigné"
+
+#: helpdesk_app/core/models.py:13
+msgid "Ticket Updated"
+msgstr "Ticket mis à jour"
+
+#: helpdesk_app/core/models.py:14
+msgid "Comment Added"
+msgstr "Commentaire ajouté"
+
+#: helpdesk_app/core/models.py:15
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:349
+msgid "Internal Comment"
+msgstr "Commentaire interne"
+
+#: helpdesk_app/core/models.py:16
+msgid "Status Change"
+msgstr "Changer le status"
+
+#: helpdesk_app/core/models.py:17
+msgid "Other"
+msgstr "Autre"
+
+#: helpdesk_app/core/models.py:20
+msgid "Pending"
+msgstr "En attente"
+
+#: helpdesk_app/core/models.py:21
+msgid "Sent"
+msgstr "Envoyé"
+
+#: helpdesk_app/core/models.py:22
+msgid "Failed"
+msgstr "Echoué"
+
+#: helpdesk_app/core/models.py:31
+msgid "Recipient"
+msgstr "Récepteur"
+
+#: helpdesk_app/core/models.py:33
+msgid "Related Object ID"
+msgstr "ID relatif"
+
+#: helpdesk_app/core/models.py:34
+msgid "Related Object Type"
+msgstr "Type relatif"
+
+#: helpdesk_app/core/models.py:42
+msgid "Error Message"
+msgstr "Erreur"
+
+#: helpdesk_app/core/models.py:44
+msgid "Created At"
+msgstr "Crée le"
+
+#: helpdesk_app/core/models.py:45
+msgid "Sent At"
+msgstr "Envoyé le"
+
+#: helpdesk_app/core/models.py:48
+msgid "Email Log"
+msgstr "E-mail log"
+
+#: helpdesk_app/core/models.py:49
+msgid "Email Logs"
+msgstr "E-mail logs"
+
+#: helpdesk_app/core/models.py:66
+msgid "Setting Name"
+msgstr "Définir le nom"
+
+#: helpdesk_app/core/models.py:68
+msgid "Enabled"
+msgstr "Activé"
+
+#: helpdesk_app/core/models.py:71
+msgid "Email Signature"
+msgstr "Signature E-mail"
+
+#: helpdesk_app/core/models.py:72
+msgid "Signature to append to all emails"
+msgstr "Signature ) mettre sur tous les e-mails"
+
+#: helpdesk_app/core/models.py:76
+msgid "Notify all agents on new ticket"
+msgstr "Notifier tous les agens sur les nouveaux tickets"
+
+#: helpdesk_app/core/models.py:80
+msgid "Notify only selected agents"
+msgstr "Notifier certains agents"
+
+#: helpdesk_app/core/models.py:82
+msgid "If enabled, only agents in selected_agents will be notified"
+msgstr "Si activé, Seuls les agents sélectionnés seront notifiés"
+
+#: helpdesk_app/core/models.py:94
+msgid "Notify customer when ticket is created"
+msgstr "Notifier l'utilsiateur quand un ticket est crée"
+
+#: helpdesk_app/core/models.py:98
+msgid "Notify customer on status change"
+msgstr "Notifier l'utilisateur quand un statut change"
+
+#: helpdesk_app/core/models.py:102
+msgid "Notify customer when comment is added"
+msgstr "Notifier l'utlisateur quand un commentaire est ajouté"
+
+#: helpdesk_app/core/models.py:108
+msgid "Notify agent when ticket is assigned"
+msgstr "Notifier l'agent qaudn ticket lui est assigné"
+
+#: helpdesk_app/core/models.py:112
+msgid "Notify agent when comment is added"
+msgstr "Notifier l'agent quand un commentaire est ajouté"
+
+#: helpdesk_app/core/models.py:117
+msgid "Email Setting"
+msgstr "Paremètre email"
+
+#: helpdesk_app/core/models.py:118
+msgid "Email Settings"
+msgstr "Paramtres emails"
+
+#: helpdesk_app/core/templates/account/login.html:14
+msgid "Login to Helpdesk"
+msgstr "Connexion au Helpdesk"
+
+#: helpdesk_app/core/templates/account/login.html:22
+msgid "Your username and password didn't match. Please try again."
+msgstr ""
+"Votre nom d'utlisateur et votre mot de passe ne correspondent pas. Essayez à "
+"nouveau, s'il vous plaît."
+
+#: helpdesk_app/core/templates/account/login.html:31
+msgid "Username or Email"
+msgstr "Nom d'utlisateur ou e-mail"
+
+#: helpdesk_app/core/templates/account/login.html:49
+msgid "Remember Me"
+msgstr "Se souvenir de moi"
+
+#: helpdesk_app/core/templates/account/login.html:53
+#: helpdesk_app/core/templates/index.html:178
+msgid "Sign In"
+msgstr "Se connecter"
+
+#: helpdesk_app/core/templates/account/logout.html:6
+msgid "Logout"
+msgstr "Se déconnecter"
+
+#: helpdesk_app/core/templates/account/logout.html:14
+msgid "Logout to Helpdesk"
+msgstr "Se déconnecter du Helpdesk"
+
+#: helpdesk_app/core/templates/account/logout.html:19
+msgid "Are you sure you want to sign out?"
+msgstr "Êtes-vous sûr de vouloir vous déconnecter?"
+
+#: helpdesk_app/core/templates/account/logout.html:21
+msgid "Sign out"
+msgstr "Se déconnecter"
+
+#: helpdesk_app/core/templates/base.html:31
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:11
+#: helpdesk_app/tickets/templates/tickets/ticket_delete.html:10
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:11
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:10
+msgid "Home"
+msgstr "Accueil"
+
+#: helpdesk_app/core/templates/base.html:35 helpdesk_app/tickets/apps.py:8
+#: helpdesk_app/tickets/models.py:135
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:12
+#: helpdesk_app/tickets/templates/tickets/ticket_delete.html:11
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:12
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:11
+msgid "Tickets"
+msgstr "Tickets"
+
+#: helpdesk_app/core/templates/base.html:50
+msgid "Profile"
+msgstr "Profil"
+
+#: helpdesk_app/core/templates/base.html:56
+msgid "Log Out"
+msgstr "Se déconnecter"
+
+#: helpdesk_app/core/templates/base.html:62
+msgid "Log In"
+msgstr "Se connecter"
+
+#: helpdesk_app/core/templates/base.html:115
+msgid "All rights reserved."
+msgstr "Tous droits réservés"
+
+#: helpdesk_app/core/templates/dashboard.html:5
+#: helpdesk_app/core/templates/dashboard.html:13
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+#: helpdesk_app/core/templates/dashboard.html:14
+msgid "Overview of helpdesk performance and metrics"
+msgstr "Aperçu des persfomances du helpdesk"
+
+#: helpdesk_app/core/templates/dashboard.html:28
+msgid "Total Open Tickets"
+msgstr "Total des tickets ouverts"
+
+#: helpdesk_app/core/templates/dashboard.html:45
+msgid "Resolved This Week"
+msgstr "Résolu cette semaine"
+
+#: helpdesk_app/core/templates/dashboard.html:62
+msgid "Avg. Response Time"
+msgstr "Temps de réponse moyen"
+
+#: helpdesk_app/core/templates/dashboard.html:63
+#: helpdesk_app/core/templates/dashboard.html:131
+#: helpdesk_app/core/templates/dashboard.html:132
+#: helpdesk_app/core/templates/dashboard.html:182
+msgid "hrs"
+msgstr "Heures"
+
+#: helpdesk_app/core/templates/dashboard.html:80
+msgid "Tickets by Status"
+msgstr "Tickets par statuts"
+
+#: helpdesk_app/core/templates/dashboard.html:94
+msgid "Tickets by Category"
+msgstr "Tickets par catégories"
+
+#: helpdesk_app/core/templates/dashboard.html:111
+msgid "Agent Performance"
+msgstr "Performance des agents"
+
+#: helpdesk_app/core/templates/dashboard.html:119
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:192
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:214
+msgid "Assigned"
+msgstr "Assigné"
+
+#: helpdesk_app/core/templates/dashboard.html:120
+#: helpdesk_app/core/templates/dashboard.html:172
+#: helpdesk_app/core/templates/dashboard.html:272
+#: helpdesk_app/core/templates/dashboard.html:385
+#: helpdesk_app/core/templates/index.html:63 helpdesk_app/tickets/models.py:49
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:68
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:99
+msgid "Resolved"
+msgstr "Résolus"
+
+#: helpdesk_app/core/templates/dashboard.html:121
+msgid "Avg. Response"
+msgstr "Réponse moyenne"
+
+#: helpdesk_app/core/templates/dashboard.html:122
+msgid "Avg. Resolution"
+msgstr "Résolution moyenne"
+
+#: helpdesk_app/core/templates/dashboard.html:146
+msgid "Weekly Ticket Trends"
+msgstr "Tendances hebdomadaires"
+
+#: helpdesk_app/core/templates/dashboard.html:163
+msgid "Branch Performance"
+msgstr "Performance par agences"
+
+#: helpdesk_app/core/templates/dashboard.html:170
+#: helpdesk_app/tickets/models.py:83
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:54
+#: helpdesk_app/tickets/templates/tickets/ticket_delete.html:40
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:75
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:29
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:77
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:56
+msgid "Branch"
+msgstr "Agence"
+
+#: helpdesk_app/core/templates/dashboard.html:171
+msgid "Open Tickets"
+msgstr "Tickets ouverts"
+
+#: helpdesk_app/core/templates/dashboard.html:173
+msgid "Avg. Resolution Time"
+msgstr "Temps de résolution moyen"
+
+#: helpdesk_app/core/templates/dashboard.html:199
+msgid "Recent Activity"
+msgstr "Activités récentes"
+
+#: helpdesk_app/core/templates/dashboard.html:207
+msgid "ago"
+msgstr " "
+
+#: helpdesk_app/core/templates/dashboard.html:210
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:147
+msgid "by"
+msgstr "Par"
+
+#: helpdesk_app/core/templates/dashboard.html:214
+msgid "No recent activities to display"
+msgstr "Aucune activité récente"
+
+#: helpdesk_app/core/templates/dashboard.html:226
+msgid "Critical Issues"
+msgstr "Critique"
+
+#: helpdesk_app/core/templates/dashboard.html:240
+#: helpdesk_app/tickets/models.py:108
+msgid "Assigned to"
+msgstr "Assigné à"
+
+#: helpdesk_app/core/templates/dashboard.html:242
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:198
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:217
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:152
+msgid "Unassigned"
+msgstr "Non assigné"
+
+#: helpdesk_app/core/templates/dashboard.html:250
+msgid "No critical issues at this time"
+msgstr "Aucun probleème critique trouvé"
+
+#: helpdesk_app/core/templates/dashboard.html:268
+#: helpdesk_app/core/templates/index.html:39 helpdesk_app/tickets/models.py:45
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:60
+msgid "New"
+msgstr "Nouveau"
+
+#: helpdesk_app/core/templates/dashboard.html:269
+#: helpdesk_app/core/templates/index.html:45 helpdesk_app/tickets/models.py:46
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:62
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:93
+msgid "Open"
+msgstr "Ouverts"
+
+#: helpdesk_app/core/templates/dashboard.html:270
+#: helpdesk_app/core/templates/index.html:51 helpdesk_app/tickets/models.py:47
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:64
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:95
+msgid "In Progress"
+msgstr "En cours"
+
+#: helpdesk_app/core/templates/dashboard.html:271
+#: helpdesk_app/core/templates/index.html:57
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:66
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:97
+msgid "Waiting"
+msgstr "En attente"
+
+#: helpdesk_app/core/templates/dashboard.html:273
+#: helpdesk_app/tickets/models.py:50
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:70
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:101
+msgid "Closed"
+msgstr "Fermé"
+
+#: helpdesk_app/core/templates/dashboard.html:340
+msgid "Number of Tickets"
+msgstr "Nombre de tickets"
+
+#: helpdesk_app/core/templates/dashboard.html:371
+#: helpdesk_app/tickets/templates/tickets/ticket_delete.html:52
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:139
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:80
+msgid "Created"
+msgstr "Crée"
+
+#: helpdesk_app/core/templates/emails/comment_added.html:5
+#: helpdesk_app/core/templates/emails/comment_added.txt:2
+#: helpdesk_app/core/templates/emails/text_templates.txt:104
+msgid "New Comment on Your Ticket"
+msgstr "Nouveau commentaire sur votre ticket"
+
+#: helpdesk_app/core/templates/emails/comment_added.html:6
+#: helpdesk_app/core/templates/emails/comment_added.txt:4
+#: helpdesk_app/core/templates/emails/text_templates.txt:106
+msgid "A new comment has been added to your support ticket."
+msgstr "Un nouveau commentaire a été ajouté sur votre ticket."
+
+#: helpdesk_app/core/templates/emails/comment_added.html:9
+#: helpdesk_app/core/templates/emails/comment_added.txt:6
+#: helpdesk_app/core/templates/emails/text_templates.txt:108
+msgid "wrote:"
+msgstr "Ecrit:"
+
+#: helpdesk_app/core/templates/emails/comment_added.html:15
+#: helpdesk_app/core/templates/emails/comment_added.txt:10
+#: helpdesk_app/core/templates/emails/internal_comment_added.html:15
+#: helpdesk_app/core/templates/emails/internal_comment_added.txt:10
+#: helpdesk_app/core/templates/emails/text_templates.txt:112
+#: helpdesk_app/core/templates/emails/text_templates.txt:136
+msgid "Attachments:"
+msgstr "Pièce jointes"
+
+#: helpdesk_app/core/templates/emails/comment_added.html:15
+#: helpdesk_app/core/templates/emails/comment_added.txt:10
+#: helpdesk_app/core/templates/emails/internal_comment_added.html:15
+#: helpdesk_app/core/templates/emails/internal_comment_added.txt:10
+#: helpdesk_app/core/templates/emails/text_templates.txt:112
+#: helpdesk_app/core/templates/emails/text_templates.txt:136
+msgid ""
+"This comment includes file attachments. Please view the ticket online to "
+"access them."
+msgstr ""
+"Ce commentaire inclus des pièces jointes. Regarder le ticket en ligne pour y "
+"accéder."
+
+#: helpdesk_app/core/templates/emails/comment_added.html:18
+msgid ""
+"You can view the full conversation and respond by clicking the button below."
+msgstr ""
+"Vous pouvez lire la conversation complète et y accéder en cliquant sur le "
+"bouton plus bas."
+
+#: helpdesk_app/core/templates/emails/comment_added.txt:13
+#: helpdesk_app/core/templates/emails/internal_comment_added.txt:13
+#: helpdesk_app/core/templates/emails/text_templates.txt:10
+#: helpdesk_app/core/templates/emails/text_templates.txt:32
+#: helpdesk_app/core/templates/emails/text_templates.txt:56
+#: helpdesk_app/core/templates/emails/text_templates.txt:91
+#: helpdesk_app/core/templates/emails/text_templates.txt:115
+#: helpdesk_app/core/templates/emails/text_templates.txt:139
+#: helpdesk_app/core/templates/emails/ticket_assigned.txt:9
+#: helpdesk_app/core/templates/emails/ticket_created_agent.txt:9
+#: helpdesk_app/core/templates/emails/ticket_created_customer.txt:9
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:18
+msgid "Ticket Information:"
+msgstr "Informations sur le ticket:"
+
+#: helpdesk_app/core/templates/emails/comment_added.txt:14
+#: helpdesk_app/core/templates/emails/internal_comment_added.txt:14
+#: helpdesk_app/core/templates/emails/text_templates.txt:11
+#: helpdesk_app/core/templates/emails/text_templates.txt:33
+#: helpdesk_app/core/templates/emails/text_templates.txt:57
+#: helpdesk_app/core/templates/emails/text_templates.txt:92
+#: helpdesk_app/core/templates/emails/text_templates.txt:116
+#: helpdesk_app/core/templates/emails/text_templates.txt:140
+#: helpdesk_app/core/templates/emails/ticket_assigned.txt:10
+#: helpdesk_app/core/templates/emails/ticket_created_agent.txt:10
+#: helpdesk_app/core/templates/emails/ticket_created_customer.txt:10
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:19
+msgid "Ticket ID:"
+msgstr "Numéro de Ticket"
+
+#: helpdesk_app/core/templates/emails/comment_added.txt:15
+#: helpdesk_app/core/templates/emails/internal_comment_added.txt:15
+#: helpdesk_app/core/templates/emails/text_templates.txt:12
+#: helpdesk_app/core/templates/emails/text_templates.txt:34
+#: helpdesk_app/core/templates/emails/text_templates.txt:58
+#: helpdesk_app/core/templates/emails/text_templates.txt:93
+#: helpdesk_app/core/templates/emails/text_templates.txt:117
+#: helpdesk_app/core/templates/emails/text_templates.txt:141
+#: helpdesk_app/core/templates/emails/ticket_assigned.txt:11
+#: helpdesk_app/core/templates/emails/ticket_created_agent.txt:11
+#: helpdesk_app/core/templates/emails/ticket_created_customer.txt:11
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:20
+msgid "Title:"
+msgstr "Titre"
+
+#: helpdesk_app/core/templates/emails/comment_added.txt:16
+#: helpdesk_app/core/templates/emails/internal_comment_added.txt:16
+#: helpdesk_app/core/templates/emails/text_templates.txt:13
+#: helpdesk_app/core/templates/emails/text_templates.txt:35
+#: helpdesk_app/core/templates/emails/text_templates.txt:59
+#: helpdesk_app/core/templates/emails/text_templates.txt:94
+#: helpdesk_app/core/templates/emails/text_templates.txt:118
+#: helpdesk_app/core/templates/emails/text_templates.txt:142
+#: helpdesk_app/core/templates/emails/ticket_assigned.txt:12
+#: helpdesk_app/core/templates/emails/ticket_created_agent.txt:12
+#: helpdesk_app/core/templates/emails/ticket_created_customer.txt:12
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:21
+msgid "Status:"
+msgstr "Statut"
+
+#: helpdesk_app/core/templates/emails/comment_added.txt:17
+#: helpdesk_app/core/templates/emails/internal_comment_added.txt:17
+#: helpdesk_app/core/templates/emails/text_templates.txt:14
+#: helpdesk_app/core/templates/emails/text_templates.txt:36
+#: helpdesk_app/core/templates/emails/text_templates.txt:60
+#: helpdesk_app/core/templates/emails/text_templates.txt:95
+#: helpdesk_app/core/templates/emails/text_templates.txt:119
+#: helpdesk_app/core/templates/emails/text_templates.txt:143
+#: helpdesk_app/core/templates/emails/ticket_assigned.txt:13
+#: helpdesk_app/core/templates/emails/ticket_created_agent.txt:13
+#: helpdesk_app/core/templates/emails/ticket_created_customer.txt:13
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:22
+msgid "Priority:"
+msgstr "Priotité"
+
+#: helpdesk_app/core/templates/emails/comment_added.txt:18
+#: helpdesk_app/core/templates/emails/internal_comment_added.txt:18
+#: helpdesk_app/core/templates/emails/text_templates.txt:15
+#: helpdesk_app/core/templates/emails/text_templates.txt:37
+#: helpdesk_app/core/templates/emails/text_templates.txt:61
+#: helpdesk_app/core/templates/emails/text_templates.txt:96
+#: helpdesk_app/core/templates/emails/text_templates.txt:120
+#: helpdesk_app/core/templates/emails/text_templates.txt:144
+#: helpdesk_app/core/templates/emails/ticket_assigned.txt:14
+#: helpdesk_app/core/templates/emails/ticket_created_agent.txt:14
+#: helpdesk_app/core/templates/emails/ticket_created_customer.txt:14
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:23
+msgid "Created:"
+msgstr "Crée"
+
+#: helpdesk_app/core/templates/emails/comment_added.txt:19
+#: helpdesk_app/core/templates/emails/internal_comment_added.txt:19
+#: helpdesk_app/core/templates/emails/text_templates.txt:16
+#: helpdesk_app/core/templates/emails/text_templates.txt:38
+#: helpdesk_app/core/templates/emails/text_templates.txt:62
+#: helpdesk_app/core/templates/emails/text_templates.txt:97
+#: helpdesk_app/core/templates/emails/text_templates.txt:121
+#: helpdesk_app/core/templates/emails/text_templates.txt:145
+#: helpdesk_app/core/templates/emails/ticket_assigned.txt:15
+#: helpdesk_app/core/templates/emails/ticket_created_agent.txt:15
+#: helpdesk_app/core/templates/emails/ticket_created_customer.txt:15
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:24
+msgid "Category:"
+msgstr "Catégorie"
+
+#: helpdesk_app/core/templates/emails/comment_added.txt:20
+#: helpdesk_app/core/templates/emails/internal_comment_added.txt:20
+#: helpdesk_app/core/templates/emails/text_templates.txt:17
+#: helpdesk_app/core/templates/emails/text_templates.txt:39
+#: helpdesk_app/core/templates/emails/text_templates.txt:63
+#: helpdesk_app/core/templates/emails/text_templates.txt:98
+#: helpdesk_app/core/templates/emails/text_templates.txt:122
+#: helpdesk_app/core/templates/emails/text_templates.txt:146
+#: helpdesk_app/core/templates/emails/ticket_assigned.txt:16
+#: helpdesk_app/core/templates/emails/ticket_created_agent.txt:16
+#: helpdesk_app/core/templates/emails/ticket_created_customer.txt:16
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:25
+msgid "Branch:"
+msgstr "Agence"
+
+#: helpdesk_app/core/templates/emails/comment_added.txt:22
+#: helpdesk_app/core/templates/emails/internal_comment_added.txt:24
+#: helpdesk_app/core/templates/emails/text_templates.txt:21
+#: helpdesk_app/core/templates/emails/text_templates.txt:45
+#: helpdesk_app/core/templates/emails/text_templates.txt:71
+#: helpdesk_app/core/templates/emails/text_templates.txt:100
+#: helpdesk_app/core/templates/emails/text_templates.txt:124
+#: helpdesk_app/core/templates/emails/text_templates.txt:150
+#: helpdesk_app/core/templates/emails/ticket_assigned.txt:24
+#: helpdesk_app/core/templates/emails/ticket_created_agent.txt:20
+#: helpdesk_app/core/templates/emails/ticket_created_customer.txt:22
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:27
+msgid "View ticket at:"
+msgstr "Boir le ticket à:"
+
+#: helpdesk_app/core/templates/emails/internal_comment_added.html:5
+#: helpdesk_app/core/templates/emails/internal_comment_added.txt:2
+#: helpdesk_app/core/templates/emails/text_templates.txt:128
+msgid "Internal Comment Added"
+msgstr "Commentaire interne ajouté"
+
+#: helpdesk_app/core/templates/emails/internal_comment_added.html:6
+#: helpdesk_app/core/templates/emails/internal_comment_added.txt:4
+#: helpdesk_app/core/templates/emails/text_templates.txt:130
+msgid ""
+"An internal comment (not visible to the customer) has been added to a ticket "
+"assigned to you."
+msgstr ""
+"Un commentaire internet(invisible aux utilisateurs) a été ajouté au ticket "
+"qui vous a été assigné."
+
+#: helpdesk_app/core/templates/emails/internal_comment_added.html:9
+#: helpdesk_app/core/templates/emails/internal_comment_added.txt:6
+#: helpdesk_app/core/templates/emails/text_templates.txt:132
+msgid "wrote (internal):"
+msgstr "Ecrit (interne):"
+
+#: helpdesk_app/core/templates/emails/internal_comment_added.html:18
+#: helpdesk_app/core/templates/emails/internal_comment_added.txt:22
+#: helpdesk_app/core/templates/emails/text_templates.txt:148
+msgid "Please review this comment and take any necessary actions."
+msgstr ""
+"S'il vous plaît prenez connaissance de ce commentaire et prenez les "
+"dispositions nécessaires."
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:3
+#: helpdesk_app/core/templates/emails/ticket_created_agent.html:5
+#: helpdesk_app/core/templates/emails/ticket_created_agent.txt:2
+msgid "New Support Ticket"
+msgstr "Nouveau Tickets"
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:5
+#: helpdesk_app/core/templates/emails/ticket_created_agent.html:6
+#: helpdesk_app/core/templates/emails/ticket_created_agent.txt:4
+msgid "A new support ticket has been submitted and requires attention."
+msgstr "A nouveau ticket a été crée et demande votre attention."
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:7
+#: helpdesk_app/core/templates/emails/text_templates.txt:53
+#: helpdesk_app/core/templates/emails/ticket_assigned.html:9
+#: helpdesk_app/core/templates/emails/ticket_assigned.txt:6
+#: helpdesk_app/core/templates/emails/ticket_created_agent.html:9
+#: helpdesk_app/core/templates/emails/ticket_created_agent.txt:6
+msgid "Description:"
+msgstr "Description:"
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:19
+#: helpdesk_app/core/templates/emails/ticket_created_agent.html:13
+#: helpdesk_app/core/templates/emails/ticket_created_agent.txt:18
+msgid ""
+"This ticket is currently unassigned. Please review and assign it to the "
+"appropriate agent."
+msgstr ""
+"Ce ticket n'a pas encore ete assigné. Examinez et assignez à l'agent "
+"aaproprié s'il vous plaît."
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:25
+#: helpdesk_app/core/templates/emails/ticket_created_customer.html:5
+#: helpdesk_app/core/templates/emails/ticket_created_customer.txt:2
+msgid "Your Support Ticket Has Been Created"
+msgstr "Votre ticket a été crée"
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:27
+#: helpdesk_app/core/templates/emails/ticket_created_customer.html:6
+#: helpdesk_app/core/templates/emails/ticket_created_customer.txt:4
+msgid ""
+"Thank you for submitting your support request to CFC Helpdesk. Your ticket "
+"has been successfully created and will be processed by our support team."
+msgstr ""
+"Merci d'avoir crée un ticket sur CFC Helpdesk. Votre ticket a été bien reçu "
+"par notre système et sera examiné au plus vite."
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:29
+#: helpdesk_app/core/templates/emails/ticket_created_customer.html:9
+#: helpdesk_app/core/templates/emails/ticket_created_customer.txt:6
+msgid "Your request:"
+msgstr "Votre requête:"
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:41
+#: helpdesk_app/core/templates/emails/ticket_created_customer.txt:18
+msgid ""
+"You will receive further updates on this ticket when our support team "
+"responds or when there's a change in status."
+msgstr ""
+"Vous allez recevoir des mises à jour sur ce ticket quand notre équipe aura "
+"répondu ou changera son statut."
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:43
+#: helpdesk_app/core/templates/emails/ticket_created_customer.html:15
+#: helpdesk_app/core/templates/emails/ticket_created_customer.txt:20
+msgid "Your ticket reference number is"
+msgstr "Le numéro de votre ticket est"
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:43
+#: helpdesk_app/core/templates/emails/ticket_created_customer.html:15
+#: helpdesk_app/core/templates/emails/ticket_created_customer.txt:20
+msgid ""
+"Please use this number in any future correspondence regarding this request."
+msgstr ""
+"Utilisez ce numéro à chaque correspondance concernant cette requête s'il "
+"vous plaît."
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:49
+#: helpdesk_app/core/templates/emails/ticket_assigned.html:5
+#: helpdesk_app/core/templates/emails/ticket_assigned.txt:2
+msgid "Ticket Assigned to You"
+msgstr "Les tickets qui vous sont assignés"
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:51
+#: helpdesk_app/core/templates/emails/ticket_assigned.html:6
+#: helpdesk_app/core/templates/emails/ticket_assigned.txt:4
+msgid "A support ticket has been assigned to you."
+msgstr "Un ticket vous a été assigné."
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:65
+#: helpdesk_app/core/templates/emails/ticket_assigned.html:13
+#: helpdesk_app/core/templates/emails/ticket_assigned.txt:18
+msgid ""
+"Please review this ticket and take appropriate action. Remember to update "
+"the ticket status as you work on it."
+msgstr ""
+"Examinez ce ticket et n'oubliez pas de mettre à jour. Le statut du ticket "
+"pendant que vous travaillez dessus, s'il vous plaît."
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:68
+#: helpdesk_app/core/templates/emails/ticket_assigned.html:16
+#: helpdesk_app/core/templates/emails/ticket_assigned.txt:21
+msgid "Note:"
+msgstr "Note:"
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:68
+#: helpdesk_app/core/templates/emails/ticket_assigned.html:16
+#: helpdesk_app/core/templates/emails/ticket_assigned.txt:21
+msgid "This ticket has a high priority and should be addressed promptly."
+msgstr "Ce tocket est urgent et doit être adréssé au plus vite."
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:75
+#: helpdesk_app/core/templates/emails/ticket_status_update.html:5
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:2
+msgid "Your Ticket Status Has Changed"
+msgstr "Le statut de votre ticket a changé"
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:77
+#: helpdesk_app/core/templates/emails/ticket_status_update.html:6
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:4
+msgid "There has been an update to your support ticket."
+msgstr "Il y'a eu une mise à jour sur votre ticket."
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:79
+#: helpdesk_app/core/templates/emails/ticket_status_update.html:9
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:6
+msgid "The status of your ticket has been changed from"
+msgstr "Le statut de votre ticket a été changé de"
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:79
+#: helpdesk_app/core/templates/emails/ticket_status_update.html:9
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:6
+msgid "to"
+msgstr "à"
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:82
+#: helpdesk_app/core/templates/emails/ticket_status_update.html:13
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:9
+msgid ""
+"Your issue has been marked as resolved. If you're satisfied with the "
+"resolution, no further action is needed. If you still have questions or if "
+"the issue persists, please respond to this ticket to reopen it."
+msgstr ""
+"Votre ticket a été marqué résolu. Si vous petes satisfait aucune action ne "
+"vous est demandée. Si vous avez toujours des questions ou si le problème "
+"persiste, répondez au ticket pour l'ouvrir à nouveau."
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:84
+#: helpdesk_app/core/templates/emails/ticket_status_update.html:15
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:11
+msgid ""
+"Our support team is waiting for additional information from you. Please "
+"review any comments on the ticket and provide the requested information so "
+"we can continue working on your issue."
+msgstr ""
+"Notre équipe est dans l'attente d'informations additionnelles de otre part. "
+"S'il vous plaît Liez les commentaires sur le ticket et fournissez les "
+"informations sollicitées pour que nous puissios continuer de travailler sur "
+"votre problème."
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:86
+#: helpdesk_app/core/templates/emails/ticket_status_update.html:17
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:13
+msgid ""
+"Your ticket has been closed. If you need further assistance or if you have a "
+"new issue, please create a new support ticket."
+msgstr ""
+"Votre ticket a été fermé. Si ous avez besoin d'assitance ou si vous avez un "
+"nnouveau problème, s'il vous plaît créez un nouveau ticket."
+
+#: helpdesk_app/core/templates/emails/text_templates.txt:88
+#: helpdesk_app/core/templates/emails/ticket_status_update.html:19
+#: helpdesk_app/core/templates/emails/ticket_status_update.txt:15
+msgid ""
+"Our support team is actively working on your request. You will receive "
+"additional updates as progress is made."
+msgstr ""
+"Notre équipe est entrain de travailler sur votre requête. Vous allez "
+"recevoir des mises à jour additionnelles au fûr et à mesure que des progrès "
+"seront faits."
+
+#: helpdesk_app/core/templates/emails/ticket_created_customer.html:13
+msgid ""
+"You will receive further updates on this ticket when our support team "
+"responds or when there's a change in status. You can also check your ticket "
+"status by clicking the button below."
+msgstr ""
+"Vous allez recevoir des mises à jour sur ce ticket quand notre équipe "
+"répondra ou quand le status du ticket sera changé. Vous pouvez aussi "
+"vérifier votre le status de votre ticket en cliquant sur le lien plus bas."
+
+#: helpdesk_app/core/templates/emails/ticket_status_update.html:22
+msgid ""
+"You can view the full details and history of your ticket by clicking the "
+"button below."
+msgstr ""
+"Vous pouvez voir tous les détails sur votre ticket en cliquant sur le bouton "
+"plus bas."
+
+#: helpdesk_app/core/templates/index.html:5
+msgid "Support Portal"
+msgstr "Portail d'assistance"
+
+#: helpdesk_app/core/templates/index.html:14
+msgid "Welcome"
+msgstr "Bienvenue"
+
+#: helpdesk_app/core/templates/index.html:15
+msgid "How can we help you today?"
+msgstr "Comment pouvons-nous vous aider aujourd'hui?"
+
+#: helpdesk_app/core/templates/index.html:17
+msgid "Submit a Ticket"
+msgstr "Créer un ticket"
+
+#: helpdesk_app/core/templates/index.html:18
+#: helpdesk_app/core/templates/index.html:160
+msgid "Browse Knowledge Base"
+msgstr "Parcourir la base de connaissances"
+
+#: helpdesk_app/core/templates/index.html:31
+msgid "Ticket Statistics"
+msgstr "Statistiques du ticket"
+
+#: helpdesk_app/core/templates/index.html:32
+msgid "View Dashboard"
+msgstr "Tableau de bord"
+
+#: helpdesk_app/core/templates/index.html:74
+msgid "Your Assigned Tickets"
+msgstr "Les tickets qui vous ont été attribués"
+
+#: helpdesk_app/core/templates/index.html:94
+msgid "View All Assigned Tickets"
+msgstr "Voir tous les tickets attribués"
+
+#: helpdesk_app/core/templates/index.html:98
+msgid "You don't have any assigned tickets"
+msgstr "Vous n'avez aucun ticket"
+
+#: helpdesk_app/core/templates/index.html:109
+msgid "Your Tickets"
+msgstr "Vos tickets"
+
+#: helpdesk_app/core/templates/index.html:128
+msgid "View All Your Tickets"
+msgstr "Voir tous vos tickets"
+
+#: helpdesk_app/core/templates/index.html:132
+msgid "You haven't submitted any tickets yet"
+msgstr "Vous n'avez crée aucun ticket"
+
+#: helpdesk_app/core/templates/index.html:133
+msgid "Submit Your First Ticket"
+msgstr "Créer votre premier ticket"
+
+#: helpdesk_app/core/templates/index.html:144
+msgid "Recent Knowledge Base Articles"
+msgstr "Articles récents"
+
+#: helpdesk_app/core/templates/index.html:175
+msgid "Welcome to Helpdesk"
+msgstr "Bienvenue sur le Helpdesk"
+
+#: helpdesk_app/core/templates/index.html:176
+msgid ""
+"This platform is designed to streamline your support requests and provide "
+"efficient solutions to your technical and operational inquiries. Our goal is "
+"to ensure seamless workflow and empower you to focus on delivering "
+"exceptional service to our valued clients. Submit a ticket today and "
+"experience prompt, professional assistance"
+msgstr ""
+"Cette plateforme est conçue pour rationaliser vos demandes de support et "
+"fournir des solutions efficaces à vos questions techniques et "
+"opérationnelles. Notre objectif est d'assurer un flux de travail fluide et "
+"de vous permettre de vous concentrer sur la prestation d'un service "
+"exceptionnel à nos précieux clients. Soumettez un ticket dès aujourd'hui et "
+"bénéficiez d'une assistance rapide et professionnelle"
+
+#: helpdesk_app/core/templates/index.html:191
+msgid "Support Tickets"
+msgstr "Tickets"
+
+#: helpdesk_app/core/templates/index.html:192
+msgid ""
+"Create and manage support tickets, track their progress, and get updates "
+"when they change status"
+msgstr ""
+"Créez et gérez des tickets d'assistance, suivez leur évolution et recevez "
+"des mises à jourlorsqu'ils changent de statut"
+
+#: helpdesk_app/core/templates/index.html:201
+msgid ""
+"Access our extensive knowledge base to find answers to common questions and "
+"issues"
+msgstr ""
+"Accédez à notre vaste base de connaissances pour trouver des réponses aux "
+"questions et problèmes"
+
+#: helpdesk_app/core/templates/index.html:209
+msgid "Live Support"
+msgstr "Assistance en ligne"
+
+#: helpdesk_app/core/templates/index.html:210
+msgid ""
+"Connect with our support agents via live chat for immediate assistance with "
+"urgent issues"
+msgstr ""
+"Connectez-vous avec les agents de la SDI pour obtenir une aide immédiate en "
+"cas deproblèmes urgents"
+
+#: helpdesk_app/core/views.py:496
+#, fuzzy
+#| msgid "Ticket #{ticket.id} created successfully."
+msgid "Email settings updated successfully."
+msgstr "Le ticket #{ticket.id} a été crée."
+
+#: helpdesk_app/helpdesk/settings.py:157
+msgid "English"
+msgstr ""
+
+#: helpdesk_app/helpdesk/settings.py:158
+msgid "Français"
+msgstr ""
+
+#: helpdesk_app/helpdesk/urls.py:36
+msgid "admin/"
+msgstr ""
+
+#: helpdesk_app/helpdesk/urls.py:38
+msgid "tickets/"
+msgstr ""
+
+#: helpdesk_app/helpdesk/urls.py:39
+#, fuzzy
+#| msgid "Users"
+msgid "users/"
+msgstr "Utilisateurs/"
+
+#: helpdesk_app/helpdesk/urls.py:40
+msgid "accounts/"
+msgstr "comptes/"
+
+#: helpdesk_app/helpdesk/urls.py:41
+msgid "articles/"
+msgstr ""
+
+#: helpdesk_app/helpdesk/urls.py:42
+msgid "health/"
+msgstr "sante/"
+
+#: helpdesk_app/helpdesk/urls.py:43
+msgid "metrics/"
+msgstr "statistiqes/"
+
+#: helpdesk_app/helpdesk/urls.py:44
+msgid "api/docs/"
+msgstr ""
+
+#: helpdesk_app/helpdesk/urls.py:45
+msgid "core/"
+msgstr ""
+
+#: helpdesk_app/helpdesk/urls.py:47
+#, fuzzy
+#| msgid "Comments"
+msgid "comments/"
+msgstr "Commentaires/"
+
+#: helpdesk_app/tickets/models.py:24 helpdesk_app/tickets/models.py:116
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:117
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:47
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:79
+msgid "Category"
+msgstr "Catégorie"
+
+#: helpdesk_app/tickets/models.py:48
+msgid "Waiting on Customer"
+msgstr "En attente de l'utilisateur"
+
+#: helpdesk_app/tickets/models.py:53
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:78
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:106
+msgid "Headquarters"
+msgstr "Siège"
+
+#: helpdesk_app/tickets/models.py:54
+msgid "Yaoundé"
+msgstr "Yaoundé"
+
+#: helpdesk_app/tickets/models.py:55
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:82
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:110
+msgid "Douala"
+msgstr ""
+
+#: helpdesk_app/tickets/models.py:56
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:90
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:118
+msgid "Buea"
+msgstr ""
+
+#: helpdesk_app/tickets/models.py:57
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:98
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:126
+msgid "Bamenda"
+msgstr ""
+
+#: helpdesk_app/tickets/models.py:58
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:96
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:124
+msgid "Ngaoundere"
+msgstr "Ngaoundéré"
+
+#: helpdesk_app/tickets/models.py:59
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:94
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:122
+msgid "Garoua"
+msgstr ""
+
+#: helpdesk_app/tickets/models.py:60
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:92
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:120
+msgid "Maroua"
+msgstr ""
+
+#: helpdesk_app/tickets/models.py:61
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:88
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:116
+msgid "Bafoussam"
+msgstr ""
+
+#: helpdesk_app/tickets/models.py:62
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:86
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:114
+msgid "Ebolowa"
+msgstr ""
+
+#: helpdesk_app/tickets/models.py:63
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:84
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:112
+msgid "Bertoua"
+msgstr ""
+
+#: helpdesk_app/tickets/models.py:66
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:106
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:131
+msgid "Low"
+msgstr "Bas"
+
+#: helpdesk_app/tickets/models.py:67
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:108
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:133
+msgid "Medium"
+msgstr "Moyen"
+
+#: helpdesk_app/tickets/models.py:68
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:110
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:135
+msgid "High"
+msgstr "Elevé"
+
+#: helpdesk_app/tickets/models.py:69
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:112
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:137
+msgid "Critical"
+msgstr "Critique"
+
+#: helpdesk_app/tickets/models.py:74
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:70
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:72
+msgid "Office Door Number"
+msgstr ""
+
+#: helpdesk_app/tickets/models.py:74
+msgid "Optional: Enter the office door number for on-site visits"
+msgstr ""
+
+#: helpdesk_app/tickets/models.py:90
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:62
+#: helpdesk_app/tickets/templates/tickets/ticket_delete.html:46
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:103
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:38
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:78
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:64
+msgid "Priority"
+msgstr "Priotité"
+
+#: helpdesk_app/tickets/models.py:102
+msgid "Created by"
+msgstr "Crée par"
+
+#: helpdesk_app/tickets/models.py:124
+msgid "Due date"
+msgstr "Echéance"
+
+#: helpdesk_app/tickets/models.py:125
+msgid "Resolved at"
+msgstr "Résolu le"
+
+#: helpdesk_app/tickets/models.py:126
+msgid "Closed at"
+msgstr "Fermé le"
+
+#: helpdesk_app/tickets/models.py:130
+msgid "SLA Breach"
+msgstr "Violation de l'ANS"
+
+#: helpdesk_app/tickets/models.py:131
+msgid "Public ticket"
+msgstr "Ticket public"
+
+#: helpdesk_app/tickets/models.py:134 helpdesk_app/tickets/models.py:171
+#: helpdesk_app/tickets/models.py:200
+#: helpdesk_app/tickets/templates/tickets/ticket_delete.html:12
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:13
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:12
+msgid "Ticket"
+msgstr "Ticket"
+
+#: helpdesk_app/tickets/models.py:138
+msgid "Can assign ticket to agent"
+msgstr "Peut attribuer un ticket à un agent"
+
+#: helpdesk_app/tickets/models.py:139
+msgid "Can change ticket status"
+msgstr "Peut changer le statut du ticket"
+
+#: helpdesk_app/tickets/models.py:140
+msgid "Can view all tickets"
+msgstr "Peut voir tous les tickets"
+
+#: helpdesk_app/tickets/models.py:184
+msgid "Ticket Attachment"
+msgstr "Pièce jointe"
+
+#: helpdesk_app/tickets/models.py:185
+msgid "Ticket Attachments"
+msgstr "Pièces jointes"
+
+#: helpdesk_app/tickets/models.py:208
+msgid "Timestamp"
+msgstr "Horodatage"
+
+#: helpdesk_app/tickets/models.py:209
+msgid "Field changed"
+msgstr "Modification du champ"
+
+#: helpdesk_app/tickets/models.py:210
+msgid "Old value"
+msgstr "Ancienne valeur"
+
+#: helpdesk_app/tickets/models.py:211
+msgid "New value"
+msgstr "Nouvelle valeur"
+
+#: helpdesk_app/tickets/models.py:214 helpdesk_app/tickets/models.py:215
+msgid "Ticket History"
+msgstr "Historique"
+
+#: helpdesk_app/tickets/models.py:230
+msgid "Tag"
+msgstr "Tag"
+
+#: helpdesk_app/tickets/models.py:231
+msgid "Tags"
+msgstr "Tags"
+
+#: helpdesk_app/tickets/models.py:246
+msgid "Response time for low priority (hours)"
+msgstr "Temps de réponse pour une priorité faible (heures)"
+
+#: helpdesk_app/tickets/models.py:247
+msgid "Response time for medium priority (hours)"
+msgstr "Temps de réponse pour une priorité moyenne (heures)"
+
+#: helpdesk_app/tickets/models.py:248
+msgid "Response time for high priority (hours)"
+msgstr "Temps de réponse pour une priorité haute (heures)"
+
+#: helpdesk_app/tickets/models.py:249
+msgid "Response time for critical priority (hours)"
+msgstr "Temps de réponse pour une priorité critique (heures)"
+
+#: helpdesk_app/tickets/models.py:252
+msgid "Resolution time for low priority (hours)"
+msgstr "Temps de réponse pour une priorité faible (heures)"
+
+#: helpdesk_app/tickets/models.py:253
+msgid "Resolution time for medium priority (hours)"
+msgstr "Temps de réponse pour une priorité moyenne (heures)"
+
+#: helpdesk_app/tickets/models.py:254
+msgid "Resolution time for high priority (hours)"
+msgstr "Temps de réponse pour une priorité haute (heures)"
+
+#: helpdesk_app/tickets/models.py:255
+msgid "Resolution time for critical priority (hours)"
+msgstr "Temps de réponse pour une priorité critique (heures)"
+
+#: helpdesk_app/tickets/models.py:258
+msgid "Business hours only"
+msgstr "Heures ouvrables uniquement"
+
+#: helpdesk_app/tickets/models.py:261
+msgid "SLA"
+msgstr "ANS"
+
+#: helpdesk_app/tickets/models.py:262
+msgid "SLAs"
+msgstr "ANS"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:4
+msgid "Create Ticket"
+msgstr "Créer un ticket"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:13
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:20
+msgid "Create New Ticket"
+msgstr "Nouveau ticket"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:34
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:31
+msgid "Please provide as much detail as possible to help us assist you"
+msgstr ""
+"Veuillez fournir le plus de détails possible pour nous aider à vous aider"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:39
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:36
+#, fuzzy
+#| msgid "Category"
+msgid "Main Category"
+msgstr "Catégorie"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:41
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:38
+msgid "Select Category"
+msgstr "Choisir une catégorie"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:48
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:45
+#, fuzzy
+#| msgid "Subcategories"
+msgid "Subcategory"
+msgstr "Sous catégories"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:50
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:113
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:47
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:144
+#, fuzzy
+#| msgid "Select Category"
+msgid "Select Subcategory"
+msgstr "Choisir une catégorie"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:70
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:72
+msgid "Optional"
+msgstr ""
+
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:72
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:74
+msgid "e.g. A-203"
+msgstr ""
+
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:73
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:75
+msgid "Enter the door number for on-site technical support"
+msgstr ""
+
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:78
+msgid "Attachments (Optional)"
+msgstr "Pièces jointes (facultatif)"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:80
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:91
+msgid "You can attach screenshots or other relevant files"
+msgstr ""
+"Vous pouvez joindre des captures d'écran ou d'autres fichiers pertinents."
+
+#: helpdesk_app/tickets/templates/tickets/ticket_create.html:85
+msgid "Submit Ticket"
+msgstr "Envoyer"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_delete.html:13
+#: helpdesk_app/tickets/templates/tickets/ticket_delete.html:19
+msgid "Delete Ticket"
+msgstr "Supprimer"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_delete.html:24
+msgid ""
+"Are you sure you want to delete this ticket? This action cannot be undone"
+msgstr ""
+"Êtes-vous sûr de vouloir supprimer ce ticket ? Cette action ne peut pas être "
+"annulée"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_delete.html:63
+msgid "Confirm Delete"
+msgstr "Confirmer la suppression"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:25
+msgid "Back to List"
+msgstr "Retour"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:43
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:319
+msgid "Download"
+msgstr "Télécharger"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:53
+msgid "Ticket Details"
+msgstr "Détails"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:80
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:108
+msgid "Yaounde"
+msgstr "Yaoundé"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:126
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:148
+msgid "Uncategorized"
+msgstr "Pas de catégorie"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:131
+msgid "Created By"
+msgstr "Crée par"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:135
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:81
+msgid "Assigned To"
+msgstr "Assigné à"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:144
+#, fuzzy
+#| msgid "Last Updated"
+msgid "Last Edited"
+msgstr "Mise à jour le"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:152
+#, fuzzy
+#| msgid "Last Updated"
+msgid "Last Edit"
+msgstr "Mise à jour le"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:159
+#, fuzzy
+#| msgid "Edit"
+msgid "Editor"
+msgstr "Editer"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:161
+#, fuzzy
+#| msgid "Save Changes"
+msgid "Changed"
+msgstr "Sauvegarder"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:162
+msgid "From"
+msgstr ""
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:163
+msgid "To"
+msgstr ""
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:170
+msgid "Due Date"
+msgstr "Echéance"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:185
+msgid "Assignment"
+msgstr "Assignation"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:195
+msgid "tickets assigned"
+msgstr "Assignés"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:199
+msgid "No agent assigned to this ticket"
+msgstr "Aucun agent assigné à ce ticket"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:204
+msgid "Assign Agent"
+msgstr "Assigner un agent"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:207
+msgid "Auto-Assign"
+msgstr "Automatique"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:218
+msgid "No agent assigned yet"
+msgstr "Aucun agent assigné"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:233
+msgid "Assign Ticket to Agent"
+msgstr "Assigner à un agent"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:238
+msgid "Select Agent"
+msgstr "Sélectionner un agent"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:240
+msgid "Unassign Ticket"
+msgstr "Désassigner"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:244
+msgid "tickets"
+msgstr "tickets"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:246
+msgid "Expertise"
+msgstr "Expertise"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:258
+msgid "Assign"
+msgstr "Assigner"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:282
+msgid "Internal"
+msgstr "Commentaire interne"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:285
+msgid "edited"
+msgstr "Edité"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:332
+msgid "No comments yet."
+msgstr "Aucun commentaire pour le moment."
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:338
+msgid "Add a Comment"
+msgstr "Ajouter uncommentaire"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:342
+msgid "Write your comment here..."
+msgstr "Ecrivez votre commentaire ici..."
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:349
+msgid "Only visible to staff"
+msgstr "Visible uniquement par le staff"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:359
+msgid "Post Comment"
+msgstr "Commenter"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:11
+msgid "New Ticket"
+msgstr "Nouveau ticket"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:22
+msgid "All Statuses"
+msgstr "Tous les status"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:31
+msgid "All Branches"
+msgstr "Toutes les agences"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:40
+msgid "All Priorities"
+msgstr "Toutes les priorités"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:49
+msgid "All Categories"
+msgstr "Toutes les catégories"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:58
+msgid "Search tickets..."
+msgstr "Chercher un ticket"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:160
+msgid "No tickets found matching your criteria"
+msgstr "Aucun ticket en correspond à vos critères"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:13
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:19
+msgid "Update Ticket"
+msgstr "Mettre à jour"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:89
+msgid "Add Attachments (Optional)"
+msgstr "Ajouter une pièce jointe (Factultatif)"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:95
+msgid "Current Attachments"
+msgstr "Pièces jointes"
+
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:116
+msgid "Save Changes"
+msgstr "Sauvegarder"
+
+#: helpdesk_app/tickets/views.py:133 helpdesk_app/tickets/views.py:216
+msgid "Please fill out all required fields."
+msgstr "Bien vouloir remplir tous les champs."
+
+#: helpdesk_app/tickets/views.py:181
+#, python-brace-format
+msgid "Ticket #{ticket.id} created successfully."
+msgstr "Le ticket #{ticket.id} a été crée."
+
+#: helpdesk_app/tickets/views.py:323
+#, python-brace-format
+msgid "Ticket #{ticket_id} has been deleted."
+msgstr "le ticket #{ticket_id} a été supprimé."
+
+#: helpdesk_app/tickets/views.py:337
+msgid "You don't have permission to change ticket status."
+msgstr "Vous n'avez pas la permission de changer le status du ticket."
+
+#: helpdesk_app/tickets/views.py:371
+msgid "Ticket status updated to {dict(Ticket.Status.choices)[new_status]}."
+msgstr ""
+"Le statut du ticket a été mis à jour pour {dict(Ticket.Status.choices)"
+"[new_status]}."
+
+#: helpdesk_app/tickets/views.py:373
+msgid "Invalid status selected."
+msgstr "Statut invalide sélectionné."
+
+#: helpdesk_app/tickets/views.py:382 helpdesk_app/tickets/views.py:491
+msgid "You don't have permission to assign tickets."
+msgstr "Vous n'avez pas la permission d'assigner des tickets."
+
+#: helpdesk_app/tickets/views.py:422
+msgid "Ticket #{ticket.id} assigned to {agent.get_full_name() or agent.email}."
+msgstr ""
+"Le ticket #{ticket.id} a été assigné à {agent.get_full_name() ou agent."
+"email}."
+
+#: helpdesk_app/tickets/views.py:424
+msgid "Selected agent does not exist."
+msgstr "L'agent sélectionné n'existe pas."
+
+#: helpdesk_app/tickets/views.py:441
+#, python-brace-format
+msgid "Ticket #{ticket.id} has been unassigned."
+msgstr "Le ticket #{ticket.id} a été désassigné."
+
+#: helpdesk_app/tickets/views.py:528
+msgid ""
+"Ticket #{ticket.id} automatically assigned to {agent.get_full_name() or "
+"agent.email}."
+msgstr ""
+"le ticket #{ticket.id} a été assigné automatiquement à {agent."
+"get_full_name() ou agent.email}."
+
+#: helpdesk_app/tickets/views.py:530
+msgid "No available agents found. Please assign manually."
+msgstr "Aucun agent disponible trouvé. Bien vouloir assigner automatiquement."
+
+#~ msgid "All required fields must be provided."
+#~ msgstr "Tous les champs obligatoires doivent petre remplis."
+
+#~ msgid "Privacy Policy"
+#~ msgstr "Politique de confidentialité"
+
+#~ msgid "Terms of Service"
+#~ msgstr "Conditions d'utilisation"
+
+#~ msgid "Contact Us"
+#~ msgstr "Nous contacter"
+
+#~ msgid "Authentication successful"
+#~ msgstr "Connexion réussie"
+
+#~ msgid "You don't have permission to comment on this item."
+#~ msgstr "Vous n'avez pas la permission de commenter."
+
+#~ msgid "Comment has been deleted."
+#~ msgstr "Le commentaire a été supprimé."
+
+#, fuzzy
+#~| msgid "You don't have permission to change ticket status."
+#~ msgid ""
+#~ "You don't have permission to access this page. Please log in with an "
+#~ "account that has access."
+#~ msgstr "Vous n'avez pas la permission de changer le status du ticket."
+
+#, fuzzy
+#~| msgid "Enter your Active Directory username (without domain)"
+#~ msgid "Use your Active Directory credentials to login"
+#~ msgstr "Votre nom d'utilisateur sans le domaine creditfoncier.cm"
+
+#~ msgid "SLA Breaches"
+#~ msgstr "Violation de l'ANS"
+
+#~ msgid "SLA Compliance"
+#~ msgstr "Conformité à l'ANS"
+
+#~ msgid "SLA Compliance by Priority"
+#~ msgstr "Conformité à l'ANS par priorité"
+
+#~ msgid "Low Priority"
+#~ msgstr "Priotité basse"
+
+#~ msgid "Medium Priority"
+#~ msgstr "Priotité moyenne"
+
+#~ msgid "High Priority"
+#~ msgstr "Priotité haute"
+
+#~ msgid "Critical Priority"
+#~ msgstr "priorité critique"
+
+#~ msgid "Comment functionality will be implemented later"
+#~ msgstr "La fonctionnalité de commentaire sera mise en œuvre ultérieurement"
+
+#~ msgid "Sign Up"
+#~ msgstr "S'inscrire"
+
+#~ msgid "Register"
+#~ msgstr "S'inscrire"
+
+#~ msgid ""
+#~ "The comprehensive solution for all your customer support needs. Get help "
+#~ "faster, track issues easily, and access our knowledge base"
+#~ msgstr ""
+#~ "La solution complète pour tous vos besoins en matière d'assistance à la "
+#~ "clientèle. Obtenez de l'aideplus rapidement, suivez les problèmes "
+#~ "facilement et accédez à notre base de connaissances"

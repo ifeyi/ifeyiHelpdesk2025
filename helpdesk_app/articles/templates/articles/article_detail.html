@@ -1,0 +1,145 @@
+{% extends "articles/base_articles.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block meta_description %}{{ article.summary }}{% endblock %}
+
+{% block article_content %}
+  <article class="kb-article">
+    <div class="article-header mb-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <h1 class="article-title">{{ article.title }}</h1>
+        
+        {% if user.is_authenticated and user == article.author or user.is_staff %}
+          <div class="article-actions">
+            <a href="{% url 'articles:article-update' article.slug %}" class="btn btn-sm btn-outline-primary">
+              <i class="fas fa-edit"></i> {% trans "Edit" %}
+            </a>
+            <a href="{% url 'articles:article-delete' article.slug %}" class="btn btn-sm btn-outline-danger">
+              <i class="fas fa-trash"></i> {% trans "Delete" %}
+            </a>
+          </div>
+        {% endif %}
+      </div>
+      
+      <div class="article-meta text-muted mt-2">
+        <span class="mr-3">
+          <i class="far fa-user"></i> {{ article.author.get_full_name|default:article.author.username }}
+        </span>
+        
+        <span class="mr-3">
+          <i class="far fa-calendar-alt"></i> {{ article.published_at|date:"F d, Y" }}
+        </span>
+        
+        <span class="mr-3">
+          <i class="far fa-eye"></i> {{ article.view_count }} {% trans "views" %}
+        </span>
+        
+        {% if article.helpful_votes > 0 or article.not_helpful_votes > 0 %}
+          <span class="article-feedback">
+            <i class="far fa-thumbs-up"></i> {{ article.helpful_votes }}
+            <i class="far fa-thumbs-down ml-2"></i> {{ article.not_helpful_votes }}
+          </span>
+        {% endif %}
+      </div>
+      
+      {% if article.categories.exists %}
+        <div class="article-categories mt-2">
+          <i class="far fa-folder"></i>
+          {% for category in article.categories.all %}
+            <a href="{% url 'articles:article-category' category.slug %}" class="category-link">
+              {{ category.name }}
+            </a>{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+      
+      {% if article.tags.exists %}
+        <div class="article-tags mt-2">
+          {% for tag in article.tags.all %}
+            <a href="{% url 'articles:article-tag' tag.slug %}" class="badge badge-pill {% if tag.color %}badge-{{ tag.color }}{% else %}badge-secondary{% endif %}">
+              {{ tag.name }}
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    
+    {% if article.summary %}
+      <div class="article-summary mb-4 p-3 bg-light border-left border-primary">
+        {{ article.summary }}
+      </div>
+    {% endif %}
+    
+    <div class="article-content">
+      <!--{{ article.content|safe }}-->
+      {{ article_html|safe }}
+    </div>
+    
+    {% if article.attachments.exists %}
+      <div class="article-attachments mt-5">
+        <h3 class="h5">{% trans "Attachments" %}</h3>
+        <ul class="list-group">
+          {% for attachment in article.attachments.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <i class="fas fa-paperclip"></i>
+                <a href="{{ attachment.file.url }}" target="_blank">
+                  {{ attachment.title }}
+                </a>
+                {% if attachment.description %}
+                  <small class="text-muted d-block">{{ attachment.description }}</small>
+                {% endif %}
+              </div>
+              <span class="badge badge-primary badge-pill">{{ attachment.file.size|filesizeformat }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+    
+    {% if related_articles %}
+      <div class="related-articles mt-5">
+        <h3 class="h5 mb-3">{% trans "Related Articles" %}</h3>
+        <div class="row">
+          {% for related in related_articles %}
+            <div class="col-md-4 mb-3">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h5 class="card-title h6">
+                    <a href="{{ related.get_absolute_url }}">{{ related.title }}</a>
+                  </h5>
+                  <p class="card-text small text-muted">{{ related.summary|default:related.content|truncatechars:100 }}</p>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+    
+    <div class="article-feedback-form mt-5 p-4 bg-light rounded">
+      <h3 class="h5 mb-3">{% trans "Was this article helpful?" %}</h3>
+      <form method="post" action="">
+        {% csrf_token %}
+        <div class="form-group">
+          {{ feedback_form.helpful }}
+        </div>
+        
+        <div class="form-group">
+          {{ feedback_form.comment.label_tag }}
+          {{ feedback_form.comment }}
+          {% if feedback_form.comment.errors %}
+            <div class="invalid-feedback d-block">
+              {{ feedback_form.comment.errors }}
+            </div>
+          {% endif %}
+        </div>
+        
+        <button type="submit" class="btn btn-primary">{% trans "Submit Feedback" %}</button>
+      </form>
+    </div>
+  </article>
+{% endblock %}

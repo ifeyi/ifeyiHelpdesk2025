@@ -1,0 +1,27 @@
+{% load i18n %}
+{% trans "Your Ticket Status Has Changed" %}
+
+{% trans "There has been an update to your support ticket." %}
+
+{% trans "The status of your ticket has been changed from" %} {{ change.old_value }} {% trans "to" %} {{ change.new_value }}.
+
+{% if ticket.status == 'resolved' %}
+{% trans "Your issue has been marked as resolved. If you're satisfied with the resolution, no further action is needed. If you still have questions or if the issue persists, please respond to this ticket to reopen it." %}
+{% elif ticket.status == 'waiting' %}
+{% trans "Our support team is waiting for additional information from you. Please review any comments on the ticket and provide the requested information so we can continue working on your issue." %}
+{% elif ticket.status == 'closed' %}
+{% trans "Your ticket has been closed. If you need further assistance or if you have a new issue, please create a new support ticket." %}
+{% else %}
+{% trans "Our support team is actively working on your request. You will receive additional updates as progress is made." %}
+{% endif %}
+
+{% trans "Ticket Information:" %}
+{% trans "Ticket ID:" %} #{{ ticket.id }}
+{% trans "Title:" %} {{ ticket.title }}
+{% trans "Status:" %} {{ ticket.get_status_display }}
+{% trans "Priority:" %} {{ ticket.get_priority_display }}
+{% trans "Created:" %} {{ ticket.created_at|date:"d/m/Y H:i" }}
+{% if ticket.category %}{% trans "Category:" %} {{ ticket.category }}{% endif %}
+{% if ticket.branch %}{% trans "Branch:" %} {{ ticket.get_branch_display }}{% endif %}
+
+{% trans "View ticket at:" %} {{ ticket_url }}

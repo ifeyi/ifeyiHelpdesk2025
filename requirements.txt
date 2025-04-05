@@ -1,0 +1,46 @@
+# Core
+Django==4.2.10
+djangorestframework==3.14.0
+django-filter==23.5
+django-cors-headers==4.3.1
+markdown==3.5.1
+django-guardian==2.4.0
+
+# Database
+psycopg2-binary==2.9.9
+django-redis==5.4.0
+
+# Production
+gunicorn==21.2.0
+whitenoise==6.6.0
+
+# Monitoring
+django-prometheus==2.3.1
+prometheus-client==0.18.0
+sentry-sdk==1.39.1
+
+# Authentication
+django-allauth==0.58.2
+
+# Development & Testing
+pytest==7.4.3
+pytest-django==4.7.0
+django-debug-toolbar==4.2.0
+Faker==22.0.0
+
+# Documentation
+drf-yasg==1.21.7
+
+# Images
+Pillow==10.1.0
+
+# Task Queue
+celery==5.3.1 
+
+django-crispy-forms==2.3.0
+crispy-bootstrap5==2024.10
+
+django-auth-ldap==4.1.0
+python-ldap==3.4.0
+
+django-modeltranslation>=0.18.9

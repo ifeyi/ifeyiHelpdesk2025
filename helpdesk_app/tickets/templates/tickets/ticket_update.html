@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}Update Ticket - Helpdesk{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">{% trans "Home" %}</a></li>
+                <li class="breadcrumb-item"><a href="/tickets/">{% trans "Tickets" %}</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'tickets:ticket-detail' pk=ticket.pk %}">{% trans "Ticket" %} #{{ ticket.pk }}</a></li>
+                <li class="breadcrumb-item active">{% trans "Update Ticket" %}</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">{% trans "Update Ticket" %} #{{ ticket.pk }}</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="title" class="form-label">{% trans "Title" %}</label>
+                    <input type="text" class="form-control" id="title" name="title" value="{{ ticket.title }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">{% trans "Description" %}</label>
+                    <textarea class="form-control" id="description" name="description" rows="5" required>{{ ticket.description }}</textarea>
+                    <div class="form-text">{% trans "Please provide as much detail as possible to help us assist you" %}.</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="parent_category" class="form-label">{% trans "Main Category" %}</label>
+                        <select class="form-select" id="parent_category" name="parent_category">
+                            <option value="">-- {% trans "Select Category" %} --</option>
+                            {% for category in parent_categories %}
+                                <option value="{{ category.id }}" {% if ticket.category and ticket.category.parent and ticket.category.parent.id == category.id %}selected{% elif ticket.category and not ticket.category.parent and ticket.category.id == category.id %}selected{% endif %}>{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="sub_category" class="form-label">{% trans "Subcategory" %}</label>
+                        <select class="form-select" id="sub_category" name="category" {% if not ticket.category or not ticket.category.parent %}disabled{% endif %}>
+                            <option value="">-- {% trans "Select Subcategory" %} --</option>
+                            {% if ticket.category and ticket.category.parent %}
+                                {% for subcategory in ticket.category.parent.subcategories.all %}
+                                    <option value="{{ subcategory.id }}" {% if ticket.category.id == subcategory.id %}selected{% endif %}>{{ subcategory.name }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="branch" class="form-label">{% trans "Branch" %}</label>
+                        <select class="form-select" id="branch" name="branch">
+                            {% for value, label in branch_choices %}
+                                <option value="{{ value }}" {% if ticket.branch == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="priority" class="form-label">{% trans "Priority" %}</label>
+                        <select class="form-select" id="priority" name="priority">
+                            {% for value, label in priority_choices %}
+                                <option value="{{ value }}" {% if ticket.priority == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="office_door_number" class="form-label">{% trans "Office Door Number" %} ({% trans "Optional" %})</label>
+                        <input type="text" class="form-control" id="office_door_number" name="office_door_number" 
+                               value="{{ ticket.office_door_number|default:'' }}" placeholder="{% trans 'e.g. A-203' %}">
+                        <div class="form-text">{% trans "Enter the door number for on-site technical support" %}.</div>
+                    </div>
+                    {% if user.is_staff or user.agent_profile %}
+                    <div class="col-md-4">
+                        <label for="status" class="form-label">{% trans "Status" %}</label>
+                        <select class="form-select" id="status" name="status">
+                            {% for value, label in status_choices %}
+                                <option value="{{ value }}" {% if ticket.status == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="file" class="form-label">{% trans "Add Attachments (Optional)" %}</label>
+                    <input type="file" class="form-control" id="file" name="file" multiple>
+                    <div class="form-text">{% trans "You can attach screenshots or other relevant files" %}.</div>
+                </div>
+{% if ticket.attachments.all %}
+            <div class="mb-3">
+                <label class="form-label">{% trans "Current Attachments" %}</label>
+                <div class="list-group">
+                    {% for attachment in ticket.attachments.all %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="bi bi-paperclip me-2"></i>
+                                <a href="{{ attachment.file.url }}" target="_blank">{{ attachment.description|default:attachment.file.name }}</a>
+                                <small class="text-muted ms-2">{% trans "Uploaded by" %} {{ attachment.uploaded_by.get_full_name|default:attachment.uploaded_by.username }}</small>
+                            </div>
+                            <span class="text-muted small">{{ attachment.uploaded_at|date:"M d, Y" }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="d-flex justify-content-between mt-4">
+                <div>
+                    <a href="{% url 'tickets:ticket-detail' pk=ticket.pk %}" class="btn btn-outline-secondary">{% trans "Cancel" %}</a>
+                    <a href="{% url 'tickets:ticket-delete' pk=ticket.pk %}" class="btn btn-outline-danger ms-2">{% trans "Delete" %}</a>
+                </div>
+                <button type="submit" class="btn btn-primary">{% trans "Save Changes" %}</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const parentCategorySelect = document.getElementById('parent_category');
+    const subCategorySelect = document.getElementById('sub_category');
+    
+    // Category data structure
+    const categoryData = {
+        {% for category in parent_categories %}
+            "{{ category.id }}": [
+                {% for subcategory in category.subcategories.all %}
+                    {id: "{{ subcategory.id }}", name: "{{ subcategory.name }}"},
+                {% endfor %}
+            ],
+        {% endfor %}
+    };
+    
+    parentCategorySelect.addEventListener('change', function() {
+        const parentId = this.value;
+        
+        // Clear current options
+        subCategorySelect.innerHTML = '<option value="">-- {% trans "Select Subcategory" %} --</option>';
+        
+        if (parentId) {
+            // Enable subcategory select
+            subCategorySelect.disabled = false;
+            
+            // Fetch subcategories via AJAX
+            fetch(`/tickets/api/subcategories/${parentId}/`)
+                .then(response => response.json())
+                .then(subcategories => {
+                    subcategories.forEach(function(subcategory) {
+                        const option = document.createElement('option');
+                        option.value = subcategory.id;
+                        option.textContent = subcategory.name;
+                        subCategorySelect.appendChild(option);
+                    });
+                });
+        } else {
+            // Disable if no parent selected
+            subCategorySelect.disabled = true;
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "emails/base_email.html" %}
+{% load i18n %}
+
+{% block content %}
+<h2>{% trans "Ticket Assigned to You" %}</h2>
+<p>{% trans "A support ticket has been assigned to you." %}</p>
+
+<div style="margin: 20px 0; padding: 15px; background-color: #f0f0f0; border-left: 4px solid #244583;">
+    <p><strong>{% trans "Description:" %}</strong></p>
+    <p>{{ ticket.description|linebreaks }}</p>
+</div>
+
+<p>{% trans "Please review this ticket and take appropriate action. Remember to update the ticket status as you work on it." %}</p>
+
+{% if ticket.priority == 'high' or ticket.priority == 'critical' %}
+<p><strong>{% trans "Note:" %}</strong> {% trans "This ticket has a high priority and should be addressed promptly." %}</p>
+{% endif %}
+{% endblock %}

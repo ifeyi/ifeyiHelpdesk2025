@@ -1,0 +1,1 @@
+docker-compose exec django python helpdesk_app/manage.py compilemessages

@@ -1,0 +1,419 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Helpdesk - {% trans "Dashboard" %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h2>{% trans "Dashboard" %}</h2>
+                    <p class="text-muted">{% trans "Overview of helpdesk performance and metrics" %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-primary h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                {% trans "Total Open Tickets" %}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ open_tickets.count }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-ticket-perforated fs-2 text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-success h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                {% trans "Resolved This Week" %}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ tickets_resolved_this_week }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-check-circle fs-2 text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-warning h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                {% trans "Avg. Response Time" %}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ avg_response_time|floatformat:1 }} {% trans "hrs" %}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-clock-history fs-2 text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <!-- Tickets by Status Chart -->
+        <div class="col-xl-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">{% trans "Tickets by Status" %}</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="ticketsByStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tickets by Category Chart -->
+        <div class="col-xl-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">{% trans "Tickets by Category" %}</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="ticketsByCategoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agent Performance and Ticket Trends -->
+    <div class="row mb-4">
+        <!-- Agent Performance Table -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">{% trans "Agent Performance" %}</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>{% trans "Agent" %}</th>
+                                    <th>{% trans "Assigned" %}</th>
+                                    <th>{% trans "Resolved" %}</th>
+                                    <th>{% trans "Avg. Response" %}</th>
+                                    <th>{% trans "Avg. Resolution" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for agent in agent_performance %}
+                                <tr>
+                                    <td>{{ agent.name }}</td>
+                                    <td>{{ agent.assigned }}</td>
+                                    <td>{{ agent.resolved }}</td>
+                                    <td>{{ agent.avg_response|floatformat:1 }} {% trans "hrs" %}</td>
+                                    <td>{{ agent.avg_resolution|floatformat:1 }} {% trans "hrs" %}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weekly Ticket Trends -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">{% trans "Weekly Ticket Trends" %}</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="weeklyTicketTrends"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Branch Performance and SLA Compliance -->
+    <div class="row mb-4">
+        <!-- Branch Performance -->
+        <div class="col-xl-12 mb-12">
+            <div class="card h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">{% trans "Branch Performance" %}</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>{% trans "Branch" %}</th>
+                                    <th>{% trans "Open Tickets" %}</th>
+                                    <th>{% trans "Resolved" %}</th>
+                                    <th>{% trans "Avg. Resolution Time" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for branch in branch_performance %}
+                                <tr>
+                                    <td>{{ branch.name }}</td>
+                                    <td>{{ branch.open }}</td>
+                                    <td>{{ branch.resolved }}</td>
+                                    <td>{{ branch.avg_resolution|floatformat:1 }} {% trans "hrs" %}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity and Critical Issues -->
+    <div class="row">
+        <!-- Recent Activity Table -->
+        <div class="col-lg-7 mb-4">
+            <div class="card h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">{% trans "Recent Activity" %}</h6>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for activity in recent_activities %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ activity.title }}</h6>
+                                <small class="text-muted">{{ activity.timestamp|timesince }} {% trans "ago" %}</small>
+                            </div>
+                            <p class="mb-1">{{ activity.description }}</p>
+                            <small class="text-muted">{% trans "by" %} {{ activity.user }}</small>
+                        </div>
+                        {% empty %}
+                        <div class="list-group-item">
+                            <p class="mb-0 text-center">{% trans "No recent activities to display" %}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Critical Issues -->
+        <div class="col-lg-5 mb-4">
+            <div class="card h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">{% trans "Critical Issues" %}</h6>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for issue in critical_issues %}
+                        <a href="{% url 'tickets:ticket-detail' issue.pk %}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ issue.title }}</h6>
+                                <span class="badge bg-danger">{{ issue.get_priority_display }}</span>
+                            </div>
+                            <p class="mb-1">{{ issue.description|truncatechars:120 }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    {% if issue.assigned_to %}
+                                    {% trans "Assigned to" %} {{ issue.assigned_to.get_full_name|default:issue.assigned_to.username }}
+                                    {% else %}
+                                    {% trans "Unassigned" %}
+                                    {% endif %}
+                                </small>
+                                <small class="text-muted">{{ issue.created_at|date:"M d, Y" }}</small>
+                            </div>
+                        </a>
+                        {% empty %}
+                        <div class="list-group-item">
+                            <p class="mb-0 text-center">{% trans "No critical issues at this time" %}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tickets by Status Chart
+        const statusCtx = document.getElementById('ticketsByStatusChart').getContext('2d');
+        const statusLabels = [
+            '{% trans "New" %}', 
+            '{% trans "Open" %}', 
+            '{% trans "In Progress" %}', 
+            '{% trans "Waiting" %}', 
+            '{% trans "Resolved" %}', 
+            '{% trans "Closed" %}'
+        ];
+        const statusData = [
+            {{ ticket_counts.new|default:0 }}, 
+            {{ ticket_counts.open|default:0 }}, 
+            {{ ticket_counts.in_progress|default:0 }}, 
+            {{ ticket_counts.waiting|default:0 }}, 
+            {{ ticket_counts.resolved|default:0 }}, 
+            {{ ticket_counts.closed|default:0 }}
+        ];
+        const statusColors = [
+            '#4e73df', // New - Primary blue
+            '#36b9cc', // Open - Info cyan
+            '#1cc88a', // In Progress - Success green
+            '#f6c23e', // Waiting - Warning yellow
+            '#6f42c1', // Resolved - Purple
+            '#858796'  // Closed - Secondary gray
+        ];
+
+        new Chart(statusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    data: statusData,
+                    backgroundColor: statusColors,
+                    hoverBackgroundColor: statusColors,
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                cutout: '60%',
+            },
+        });
+
+        // Tickets by Category Chart
+        const categoryCtx = document.getElementById('ticketsByCategoryChart').getContext('2d');
+        const categoryLabels = [];
+        const categoryData = [];
+
+        {% for category in tickets_by_category %}
+            categoryLabels.push("{{ category.category__name|default:'Uncategorized'|escapejs }}");
+            categoryData.push({{ category.count }});
+        {% endfor %}
+
+        new Chart(categoryCtx, {
+            type: 'bar',
+            data: {
+                labels: categoryLabels,
+                datasets: [{
+                    label: '{% trans "Number of Tickets" %}',
+                    data: categoryData,
+                    backgroundColor: 'rgba(78, 115, 223, 0.7)',
+                    borderColor: 'rgba(78, 115, 223, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+
+        // Weekly Ticket Trends
+        const trendCtx = document.getElementById('weeklyTicketTrends').getContext('2d');
+        const weeklyLabels = JSON.parse('{{ weekly_labels|escapejs }}');
+        const weeklyCreated = JSON.parse('{{ weekly_created|escapejs }}');
+        const weeklyResolved = JSON.parse('{{ weekly_resolved|escapejs }}');
+
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: weeklyLabels,
+                datasets: [{
+                    label: '{% trans "Created" %}',
+                    data: weeklyCreated,
+                    borderColor: '#4e73df',
+                    backgroundColor: 'rgba(78, 115, 223, 0.1)',
+                    pointBackgroundColor: '#4e73df',
+                    pointBorderColor: '#4e73df',
+                    pointHoverRadius: 3,
+                    pointHoverBackgroundColor: '#4e73df',
+                    pointHoverBorderColor: '#4e73df',
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2,
+                    tension: 0.3,
+                    fill: true
+                }, {
+                    label: '{% trans "Resolved" %}',
+                    data: weeklyResolved,
+                    borderColor: '#1cc88a',
+                    backgroundColor: 'rgba(28, 200, 138, 0.1)',
+                    pointBackgroundColor: '#1cc88a',
+                    pointBorderColor: '#1cc88a',
+                    pointHoverRadius: 3,
+                    pointHoverBackgroundColor: '#1cc88a',
+                    pointHoverBorderColor: '#1cc88a',
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% load i18n %}
+{% trans "Internal Comment Added" %}
+
+{% trans "An internal comment (not visible to the customer) has been added to a ticket assigned to you." %}
+
+{{ author.get_full_name|default:author.email }} {% trans "wrote (internal):" %}
+{{ comment.text }}
+
+{% if comment.attachments.exists %}
+{% trans "Attachments:" %} {% trans "This comment includes file attachments. Please view the ticket online to access them." %}
+{% endif %}
+
+{% trans "Ticket Information:" %}
+{% trans "Ticket ID:" %} #{{ ticket.id }}
+{% trans "Title:" %} {{ ticket.title }}
+{% trans "Status:" %} {{ ticket.get_status_display }}
+{% trans "Priority:" %} {{ ticket.get_priority_display }}
+{% trans "Created:" %} {{ ticket.created_at|date:"d/m/Y H:i" }}
+{% if ticket.category %}{% trans "Category:" %} {{ ticket.category }}{% endif %}
+{% if ticket.branch %}{% trans "Branch:" %} {{ ticket.get_branch_display }}{% endif %}
+
+{% trans "Please review this comment and take any necessary actions." %}
+
+{% trans "View ticket at:" %} {{ ticket_url }}

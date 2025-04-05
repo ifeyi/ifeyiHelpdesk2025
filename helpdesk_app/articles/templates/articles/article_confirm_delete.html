@@ -1,0 +1,40 @@
+{% extends "articles/base_articles.html" %}
+{% load static %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Delete Article" %}{% endblock %}
+
+{% block article_content %}
+  <div class="delete-confirmation">
+    <div class="card border-danger">
+      <div class="card-header bg-danger text-white">
+        <h2 class="h4 mb-0">{% trans "Confirm Deletion" %}</h2>
+      </div>
+      
+      <div class="card-body">
+        <h3 class="h5 mb-3">{% trans "Are you sure you want to delete the article" %} "{{ article.title }}"?</h3>
+        
+        <p>{% trans "This action cannot be undone. The article will be permanently deleted from the system" %}.</p>
+        
+        {% if article.status == 'published' %}
+          <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i> {% trans "This is a published article that may be viewed by users" %}.
+          </div>
+        {% endif %}
+        
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-actions mt-4">
+            <button type="submit" class="btn btn-danger">
+              <i class="fas fa-trash"></i> {% trans "Delete Article" %}
+            </button>
+            <a href="{{ article.get_absolute_url }}" class="btn btn-outline-secondary ml-2">
+              {% trans "Cancel" %}
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

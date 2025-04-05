@@ -1,0 +1,125 @@
+{% load static %}
+
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Helpdesk{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'helpdeskassets/helpdeskstyles/helpdeskcss.css' %}?v=0.91"/>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header id="helpdeskheader">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <!-- Fixed: Changed 'home' to '/' direct URL -->
+                <a class="navbar-brand helpdesk-flex" href="/">
+                    <img src="{% get_media_prefix %}helpdeskimg/helpdesklogo/logo-cfc-no-bg.png" alt="Helpdesk" class="d-inline-block align-text-top">
+                    <h1>Helpdesk</h1>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">{% trans "Home" %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <!-- Fixed: Use direct URL -->
+                            <a class="nav-link" href="{% url 'tickets:ticket-list' %}">{% trans "Tickets" %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <!-- Fixed: Use direct URL -->
+                            <a class="nav-link" href="{% url 'articles:article-list' %}">{% trans "Knowledge Base" %}</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto">
+                        {% if user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    {{ user.get_full_name|default:user.username }}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <!-- Fixed: Use direct URL 
+                                    <li><a class="dropdown-item" href="/accounts/profile/">{% trans "Profile" %}</a></li>
+                                    {% if user.is_staff %}
+                                        <li><a class="dropdown-item" href="/admin/">{% trans Admin %}</a></li>
+                                    {% endif %}
+                                    <li><hr class="dropdown-divider"></li>-->
+                                    <!-- Fixed: Use direct URL -->
+                                    <li><a class="dropdown-item" href="/users/logout/">{% trans "Log Out" %}</a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <!-- Fixed: Use direct URL -->
+                                <a class="nav-link" href="{% url 'accounts:ldap' %}">{% trans "Log In" %}</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                      {% if request.LANGUAGE_CODE == 'fr' %}
+                        Fr
+                      {% else %}
+                        En
+                      {% endif %}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                      <form action="{% url 'set_language' %}" method="post" id="language-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        
+                        <li>
+                          <button type="submit" name="language" value="en" class="dropdown-item {% if LANGUAGE_CODE == 'en' %}active{% endif %}">
+                            English
+                          </button>
+                        </li>
+                        <li>
+                          <button type="submit" name="language" value="fr" class="dropdown-item {% if LANGUAGE_CODE == 'fr' %}active{% endif %}">
+                            Français
+                          </button>
+                        </li>
+                      </form>
+                    </ul>
+                  </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="helpdesk-main" class="container py-4">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer id="helpdesk-footer" class="py-4 mt-auto">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; {% now "Y" %} Helpdesk. {% trans "All rights reserved." %}</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'helpdeskassets/helpdeskscripts/helpdeskmain.js' %}?v=0.17"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

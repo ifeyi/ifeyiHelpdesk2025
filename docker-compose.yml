@@ -1,0 +1,130 @@
+services:
+  django:
+    build: .
+    container_name: django
+    hostname: django
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./helpdesk_app:/app/helpdesk_app
+      - ./helpdesk_app/static:/app/static
+      - ./helpdesk_app/media:/app/media
+    environment:
+      - DJANGO_SETTINGS_MODULE=helpdesk.settings
+      - DEBUG=True
+      - ALLOWED_HOSTS=*      
+      - DJANGO_SECRET_KEY_FILE=/run/secrets/django_secret_key
+      - DB_PASSWORD_FILE=/run/secrets/db_password
+      - DB_HOST=postgres
+      - DB_NAME=cfchelpdeskdb
+      - DB_USER=cfchelpdeskuser
+      - REDIS_HOST=redis
+    secrets:
+      - django_secret_key
+      - db_password
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    command: ["python", "helpdesk_app/manage.py", "runserver", "0.0.0.0:8000"]
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=cfchelpdeskuser
+      - POSTGRES_DB=cfchelpdeskdb
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password
+    secrets:
+      - db_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./config/nginx:/etc/nginx/conf.d
+      - ./helpdesk_app/static:/app/static
+      - ./helpdesk_app/media:/app/media
+    depends_on:
+      - django
+
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./config/prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+    depends_on:
+      - django
+
+  grafana:
+    image: grafana/grafana:10.0.0
+    container_name: grafana
+    restart: unless-stopped
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - prometheus
+
+  adminer:
+    image: adminer:4.8.1
+    container_name: adminer
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+
+secrets:
+  django_secret_key:
+    file: ./secrets/django_secret_key.txt
+  db_password:
+    file: ./secrets/db_password.txt

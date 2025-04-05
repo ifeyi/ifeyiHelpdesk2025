@@ -1,0 +1,23 @@
+{% extends "emails/base_email.html" %}
+{% load i18n %}
+
+{% block content %}
+<h2>{% trans "Your Ticket Status Has Changed" %}</h2>
+<p>{% trans "There has been an update to your support ticket." %}</p>
+
+<div style="margin: 20px 0; padding: 15px; background-color: #f0f0f0; border-left: 4px solid #244583;">
+    <p>{% trans "The status of your ticket has been changed from" %} <strong>{{ change.old_value }}</strong> {% trans "to" %} <strong>{{ change.new_value }}</strong>.</p>
+</div>
+
+{% if ticket.status == 'resolved' %}
+<p>{% trans "Your issue has been marked as resolved. If you're satisfied with the resolution, no further action is needed. If you still have questions or if the issue persists, please respond to this ticket to reopen it." %}</p>
+{% elif ticket.status == 'waiting' %}
+<p>{% trans "Our support team is waiting for additional information from you. Please review any comments on the ticket and provide the requested information so we can continue working on your issue." %}</p>
+{% elif ticket.status == 'closed' %}
+<p>{% trans "Your ticket has been closed. If you need further assistance or if you have a new issue, please create a new support ticket." %}</p>
+{% else %}
+<p>{% trans "Our support team is actively working on your request. You will receive additional updates as progress is made." %}</p>
+{% endif %}
+
+<p>{% trans "You can view the full details and history of your ticket by clicking the button below." %}</p>
+{% endblock %}

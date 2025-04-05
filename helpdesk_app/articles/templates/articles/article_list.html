@@ -1,0 +1,166 @@
+{% extends "articles/base_articles.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Knowledge Base" %}{% endblock %}
+
+{% block article_content %}
+  <div class="article-list-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>
+        {% if current_category %}
+          {{ current_category.name }}
+        {% elif current_tag %}
+          Articles tagged "{{ current_tag.name }}"
+        {% else %}
+        {% trans "Knowledge Base" %}
+        {% endif %}
+      </h1>
+      
+      {% if user.is_authenticated %}
+        <a href="{% url 'articles:article-create' %}" class="btn btn-primary">
+          <i class="fas fa-plus-circle"></i> {% trans "New Article" %}
+        </a>
+      {% endif %}
+    </div>
+    
+    {% if current_category and current_category.description %}
+      <div class="category-description mb-4">
+        {{ current_category.description }}
+      </div>
+    {% endif %}
+    
+    {% if featured_articles and not current_category and not current_tag and not request.GET.q %}
+      <div class="featured-articles mb-5">
+        <h2 class="h4 mb-3">{% trans "Featured Articles" %}</h2>
+        <div class="row">
+          {% for article in featured_articles %}
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+                  </h5>
+                  <p class="card-text text-muted">{{ article.summary|truncatechars:100 }}</p>
+                </div>
+                <div class="card-footer bg-transparent">
+                  <small class="text-muted">
+                    <i class="far fa-eye"></i> {{ article.view_count }} {% trans "views" %}
+                    {% if article.helpful_votes > 0 %}
+                    · <i class="far fa-thumbs-up"></i> {{ article.helpful_votes }}
+                    {% endif %}
+                  </small>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+    
+    {% if articles %}
+      <div class="articles-list">
+        {% for article in articles %}
+          <div class="article-card mb-4">
+            <h2 class="h5 mb-2">
+              <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+            </h2>
+            
+            <p class="text-muted">
+              {{ article.summary|default:article.content|truncatechars:160 }}
+            </p>
+            
+            <div class="article-meta">
+              <span class="mr-3">
+                <i class="far fa-calendar-alt"></i> 
+                {{ article.published_at|date:"M d, Y" }}
+              </span>
+              
+              <span class="mr-3">
+                <i class="far fa-eye"></i> 
+                {{ article.view_count }} {% trans "views" %}
+              </span>
+              
+              {% if article.helpful_votes > 0 %}
+                <span class="mr-3">
+                  <i class="far fa-thumbs-up"></i> 
+                  {{ article.helpful_votes }} {% trans "helpful" %}
+                </span>
+              {% endif %}
+              
+              {% if article.categories.exists %}
+                <span class="mr-3">
+                  <i class="far fa-folder"></i>
+                  {% for category in article.categories.all %}
+                    <a href="{% url 'articles:article-category' category.slug %}" class="text-muted">
+                      {{ category.name }}
+                    </a>{% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                </span>
+              {% endif %}
+              
+              {% if article.tags.exists %}
+                <div class="article-tags mt-2">
+                  {% for tag in article.tags.all %}
+                    <a href="{% url 'articles:article-tag' tag.slug %}" class="badge badge-pill {% if tag.color %}badge-{{ tag.color }}{% else %}badge-secondary{% endif %}">
+                      {{ tag.name }}
+                    </a>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      
+      {% if is_paginated %}
+        <nav aria-label="Article pagination">
+          <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page=1">{% trans "First" %}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{% trans "Previous" %}</a>
+              </li>
+            {% endif %}
+            
+            {% for num in page_obj.paginator.page_range %}
+              {% if page_obj.number == num %}
+                <li class="page-item active">
+                  <span class="page-link">{{ num }}</span>
+                </li>
+              {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% trans "Next" %}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{% trans "Last" %}</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% endif %}
+      
+    {% else %}
+      <div class="alert alert-info">
+        {% if request.GET.q %}
+          {% trans "No articles found matching" %} "{{ request.GET.q }}".
+        {% elif current_category %}
+          {% trans "No articles found in this category" %}.
+        {% elif current_tag %}
+          {% trans "No articles found with this tag" %}.
+        {% else %}
+          {% trans "No articles have been published yet" %}.
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

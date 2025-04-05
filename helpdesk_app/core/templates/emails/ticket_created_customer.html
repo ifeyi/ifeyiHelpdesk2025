@@ -1,0 +1,16 @@
+{% extends "emails/base_email.html" %}
+{% load i18n %}
+
+{% block content %}
+<h2>{% trans "Your Support Ticket Has Been Created" %}</h2>
+<p>{% trans "Thank you for submitting your support request to CFC Helpdesk. Your ticket has been successfully created and will be processed by our support team." %}</p>
+
+<div style="margin: 20px 0; padding: 15px; background-color: #f0f0f0; border-left: 4px solid #244583;">
+    <p><strong>{% trans "Your request:" %}</strong></p>
+    <p>{{ ticket.description|linebreaks }}</p>
+</div>
+
+<p>{% trans "You will receive further updates on this ticket when our support team responds or when there's a change in status. You can also check your ticket status by clicking the button below." %}</p>
+
+<p>{% trans "Your ticket reference number is" %} <strong>#{{ ticket.id }}</strong>. {% trans "Please use this number in any future correspondence regarding this request." %}</p>
+{% endblock %}
