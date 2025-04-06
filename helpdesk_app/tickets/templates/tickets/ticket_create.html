@@ -69,8 +69,8 @@
                     <div class="col-md-4">
                         <label for="office_door_number" class="form-label">{% trans "Office Door Number" %} ({% trans "Optional" %})</label>
                         <input type="text" class="form-control" id="office_door_number" name="office_door_number" 
-                               value="{{ ticket.office_door_number|default:'' }}" placeholder="{% trans 'e.g. A-203' %}">
-                        <div class="form-text">{% trans "Enter the door number for on-site technical support" %}.</div>
+                               value="{{ ticket.office_door_number|default:'' }}" placeholder="{% trans 'e.g. 203' %}">
+                        <div class="form-text">{% trans "Enter the door number" %}.</div>
                     </div>
                 </div>
                 

@@ -71,7 +71,7 @@ class Ticket(models.Model):
     # Basic Fields
     title = models.CharField(_('Title'), max_length=255)
     description = models.TextField(_('Description'))
-    office_door_number = models.CharField(_('Office Door Number'), max_length=20, blank=True, null=True, help_text=_('Optional: Enter the office door number for on-site visits'))
+    office_door_number = models.CharField(_('Office Door Number'), max_length=20, blank=True, null=True, help_text=_('Optional: Enter the office door number'))
     status = models.CharField(
         _('Status'),
         max_length=20,
