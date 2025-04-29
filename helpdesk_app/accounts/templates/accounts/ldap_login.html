@@ -1,26 +1,38 @@
-{# Create this at templates/accounts/ldap_login_test.html #}
 {% extends "base.html" %}
 {% load i18n %}
 {% load crispy_forms_tags %}
-
 {% block title %}{% trans "Authentication" %}{% endblock %}
-
 {% block content %}
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div  id="helpdesk-login-card" class="card shadow-sm">
+            <div id="helpdesk-login-card" class="card shadow-sm">
                 <div id="helpdeskCardHeader" class="card-header bg-primary text-white">
                     <h3 class="mb-0">{% trans "Login" %}</h3>
                 </div>
-                <div class="card-body">                    
+                <div class="card-body">
+                    {% if messages %}
+                    <div class="messages mb-4">
+                        {% for message in messages %}
+                        <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
                     <form method="post">
                         {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ redirect_field_value }}">
                         
                         <div class="mb-3">
                             <label for="username" class="form-label">{% trans "Username" %}</label>
-                            <input type="text" class="form-control" id="username" name="username" placeholder="{% trans 'Your AD username' %}">
-                            <div class="form-text">{% trans "Enter your Active Directory username (without domain)" %}</div>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   placeholder="{% trans 'Your AD username' %}" required>
+                            <div class="form-text">
+                                {% trans "Enter your username only (without domain)" %}<br>
+                                {% trans "Example:" %} <code>jsmith</code>
+                            </div>
                         </div>
                         
                         <div class="mb-3">
@@ -38,6 +50,21 @@
                         <button type="submit" class="btn btn-primary">{% trans "Login" %}</button>
                     </form>
                 </div>
+                
+                {% if DEBUG %}
+                <div class="card-footer bg-light">
+                    <div class="text-muted small">
+                        <p class="mb-0">
+                            {% trans "Having trouble logging in?" %}
+                        </p>
+                        <ul class="mb-0">
+                            <li>{% trans "Make sure you're using your Active Directory username (without domain)" %}</li>
+                            <li>{% trans "Your username is typically the same as your email prefix (before the @)" %}</li>
+                            <li>{% trans "Contact IT support if you continue to experience issues" %}</li>
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>

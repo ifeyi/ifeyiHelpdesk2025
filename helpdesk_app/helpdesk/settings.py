@@ -10,15 +10,27 @@ import logging
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Read secret from file
-def read_secret(secret_name):
+def read_secret(secret_name, default=''):
+    # Check for file in secrets directory (2 levels up from settings.py)
+    secrets_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'secrets')
+    secrets_file = os.path.join(secrets_dir, secret_name.lower())
+    
+    # First try: Direct path in secrets directory
+    if os.path.isfile(secrets_file):
+        with open(secrets_file) as f:
+            return f.read().strip()
+            
+    # Second try: Environment variable pointing to a file
     filename = os.environ.get(f'{secret_name}_FILE')
     if filename and os.path.isfile(filename):
         with open(filename) as f:
             return f.read().strip()
-    return os.environ.get(secret_name, '')
+            
+    # Final fallback: Environment variable or default
+    return os.environ.get(secret_name, default)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = read_secret('django_secret_key') or 'django-insecure-key-for-dev'
+SECRET_KEY = read_secret('DJANGO_SECRET_KEY', 'django-insecure-key-for-dev')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
@@ -104,11 +116,11 @@ WSGI_APPLICATION = 'helpdesk.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'cfchelpdeskdb'),
-        'USER': os.environ.get('DB_USER', 'cfchelpdeskuser'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'cfcD_bl0cag5sPass'),
-        'HOST': os.environ.get('DB_HOST', 'postgres'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+        'NAME': read_secret('DB_NAME', 'cfchelpdeskdb'),
+        'USER': read_secret('DB_USER', 'cfchelpdeskuser'),
+        'PASSWORD': read_secret('DB_PASSWORD', ''),
+        'HOST': read_secret('DB_HOST', 'postgres'),
+        'PORT': read_secret('DB_PORT', '5432'),
         'CONN_MAX_AGE': 60,
         'OPTIONS': {
             'connect_timeout': 10,
@@ -220,52 +232,48 @@ CSRF_COOKIE_SECURE = False
 # ---------------------------------------------
 
 # LDAP server URI
-AUTH_LDAP_SERVER_URI = "ldap://192.168.6.90"  # Replace with your actual AD server address
+AUTH_LDAP_SERVER_URI = read_secret('LDAP_SERVER_URI', "ldap://192.168.6.90")
 
 # Service account for LDAP queries
-AUTH_LDAP_BIND_DN = "CN=Ifeyi BATINDEK BATOANEN admin,OU=IT-ADMIN,OU=CFC-Users,DC=creditfoncier,DC=cm"
-AUTH_LDAP_BIND_PASSWORD = os.environ.get('AD_BIND_PASSWORD', '@dm1n_CFC')
+AUTH_LDAP_BIND_DN = read_secret('LDAP_BIND_DN', "CN=Ifeyi BATINDEK BATOANEN admin,OU=IT-ADMIN,OU=CFC-Users,DC=creditfoncier,DC=cm")
+AUTH_LDAP_BIND_PASSWORD = read_secret('LDAP_BIND_PASSWORD', '')
 
 # User search configuration - adjust the search base to match your AD structure
 AUTH_LDAP_USER_SEARCH = LDAPSearch(
-    "OU=CFC-Users,DC=creditfoncier,DC=cm",  # Base DN - modify to match your AD structure
+    read_secret('LDAP_SEARCH_BASE', "OU=CFC-Users,DC=creditfoncier,DC=cm"),  # Base DN
     ldap.SCOPE_SUBTREE,
     "(sAMAccountName=%(user)s)",  # Filter to find the user
 )
 
 # Active Directory specific settings
 AUTH_LDAP_CONNECTION_OPTIONS = {
-    ldap.OPT_REFERRALS: 0,  # Required for Active Directory
-    ldap.OPT_X_TLS_REQUIRE_CERT: ldap.OPT_X_TLS_NEVER,  # Skip certificate validation if needed
+    ldap.OPT_REFERRALS: 0,        # Required for Active Directory
+    ldap.OPT_X_TLS_REQUIRE_CERT: ldap.OPT_X_TLS_NEVER,  # Skip certificate validation
+    ldap.OPT_NETWORK_TIMEOUT: 10,  # Prevent hanging on network issues
+    ldap.OPT_TIMEOUT: 15,          # General timeout
 }
 
 AUTH_LDAP_USER_ATTR_MAP = {
     "first_name": "givenName",
     "last_name": "sn",
     "email": "mail",
-    "username": "sAMAccountName",  # This is critical - must match login username
+    "username": "sAMAccountName", 
 }
 
 AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
-    "OU=CFC-Users,DC=creditfoncier,DC=cm", 
+    read_secret('LDAP_GROUP_SEARCH_BASE', "DC=creditfoncier,DC=cm"), 
     ldap.SCOPE_SUBTREE,
     "(objectClass=group)",
 )
 AUTH_LDAP_GROUP_TYPE = ActiveDirectoryGroupType()
 
-# Replace your current AUTH_LDAP_USER_FLAGS_BY_GROUP section with this:
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {}
 
-# Map Active Directory groups to user flags
-AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-    "is_active": "CN=Active Users,OU=CFC-Users,DC=creditfoncier,DC=cm",  # All domain users are active
-    "is_staff": "CN=Staff Users,OU=CFC-Users,DC=creditfoncier,DC=cm",   # IT admins are staff
-    "is_superuser": "CN=Super Users,OU=CFC-Users,DC=creditfoncier,DC=cm"  # Domain admins are superusers
-}
+# Create users that don't exist 
+AUTH_LDAP_ALWAYS_UPDATE_USER = True
 
-# Add these new settings for mapping AD groups to user types
-AUTH_LDAP_FIND_GROUP_PERMS = True
-
-AUTH_LDAP_ALWAYS_UPDATE_USER = True  
+# Don't require specific group permissions initially - simplifies troubleshooting
+AUTH_LDAP_FIND_GROUP_PERMS = False
 
 AUTHENTICATION_BACKENDS = [
     'accounts.ldap_backend.CustomLDAPBackend',  # Add the LDAP backend first
@@ -286,10 +294,15 @@ ldap_handler.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ldap_handler.setFormatter(formatter)
 
-# Optional: Set up logging for troubleshooting LDAP
-logger = logging.getLogger('django_auth_ldap')
-logger.addHandler(logging.StreamHandler())
-logger.setLevel(logging.DEBUG)  
+for logger_name in ['django_auth_ldap', 'accounts.ldap_backend', 'django.contrib.auth']:
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(ldap_handler)
+    # Add console output for immediate feedback
+    console = logging.StreamHandler()
+    console.setLevel(logging.DEBUG)
+    console.setFormatter(formatter)
+    logger.addHandler(console)
 
 auth_logger = logging.getLogger('django.contrib.auth')
 auth_logger.addHandler(logging.StreamHandler())
@@ -297,16 +310,10 @@ auth_logger.setLevel(logging.DEBUG)
 
 # Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'mail.creditfoncier.cm'  
-EMAIL_PORT = 587  
-EMAIL_USE_TLS = True  
-EMAIL_HOST_USER = 'cfc_cloud@creditfoncier.cm'  
-EMAIL_HOST_PASSWORD = 'Pa$$w0rd'  
-DEFAULT_FROM_EMAIL = 'cfc_cloud@creditfoncier.cm'
-SITE_URL = 'http://192.168.6.38'
-
-# For development/testing, you can use the console backend to see emails in the console
-
-
-# Add this to the TEMPLATES section in settings.py
-# Replace the existing context_processors with this updated one
+EMAIL_HOST = read_secret('EMAIL_HOST', 'mail.creditfoncier.cm')
+EMAIL_PORT = int(read_secret('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = read_secret('EMAIL_USE_TLS', 'True').lower() == 'true'
+EMAIL_HOST_USER = read_secret('EMAIL_USER', 'cfc_cloud@creditfoncier.cm')
+EMAIL_HOST_PASSWORD = read_secret('EMAIL_PASSWORD', '')
+DEFAULT_FROM_EMAIL = read_secret('DEFAULT_FROM_EMAIL', 'cfc_cloud@creditfoncier.cm')
+SITE_URL = read_secret('SITE_URL', 'http://192.168.6.38')

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, Count, F
 from django.db import models
-from .models import Ticket, Category, Tag, TicketAttachment, TicketHistory
+from .models import Ticket, Category, Tag, TicketAttachment, TicketHistory, Department, SubDepartment
 from accounts.models import User
 from django.utils.translation import gettext as _
 from django.contrib.contenttypes.models import ContentType
@@ -19,7 +19,7 @@ def ticket_list(request):
     For agents/staff: Shows tickets based on filters
     """
     # Base queryset
-    tickets = Ticket.objects.all().select_related('created_by', 'assigned_to', 'category')
+    tickets = Ticket.objects.all().select_related('created_by', 'assigned_to', 'category', 'department', 'subdepartment')
     
     # Filter by user type
     if not request.user.is_staff and not hasattr(request.user, 'agent_profile'):
@@ -43,6 +43,16 @@ def ticket_list(request):
     if category_filter and category_filter.isdigit():
         tickets = tickets.filter(category_id=category_filter)
     
+    # Department filter
+    department_filter = request.GET.get('department')
+    if department_filter and department_filter.isdigit():
+        tickets = tickets.filter(department_id=department_filter)
+    
+    # Sub-department filter
+    subdepartment_filter = request.GET.get('subdepartment')
+    if subdepartment_filter and subdepartment_filter.isdigit():
+        tickets = tickets.filter(subdepartment_id=subdepartment_filter)
+    
     # Search functionality
     search_query = request.GET.get('q')
     if search_query:
@@ -53,6 +63,7 @@ def ticket_list(request):
     
     # Get filter options
     categories = Category.objects.all()
+    departments = Department.objects.all().prefetch_related('subdepartments')
     
     context = {
         'tickets': tickets,
@@ -60,10 +71,13 @@ def ticket_list(request):
         'branch_choices': Ticket.Branch.choices,
         'priority_choices': Ticket.Priority.choices,
         'categories': categories,
+        'departments': departments,
         'current_status': status_filter,
         'current_branch': branch_filter,
         'current_priority': priority_filter,
         'current_category': category_filter,
+        'current_department': department_filter,
+        'current_subdepartment': subdepartment_filter,
         'search_query': search_query,
     }
     
@@ -75,9 +89,12 @@ def ticket_detail(request, pk):
 
     # For staff, get any ticket; for customers, only their own tickets
     if request.user.is_staff or hasattr(request.user, 'agent_profile'):
-        ticket = get_object_or_404(Ticket.objects.select_related('created_by', 'assigned_to', 'category'), pk=pk)
+        ticket = get_object_or_404(Ticket.objects.select_related(
+            'created_by', 'assigned_to', 'category', 'department', 'subdepartment'), pk=pk)
     else:
-        ticket = get_object_or_404(Ticket.objects.select_related('created_by', 'assigned_to', 'category'), pk=pk, created_by=request.user)
+        ticket = get_object_or_404(Ticket.objects.select_related(
+            'created_by', 'assigned_to', 'category', 'department', 'subdepartment'), 
+            pk=pk, created_by=request.user)
         
     ticket_type = ContentType.objects.get_for_model(Ticket)
     comments = Comment.objects.filter(
@@ -117,8 +134,8 @@ def ticket_detail(request, pk):
 def ticket_create(request):
     
     parent_categories = Category.objects.filter(parent__isnull=True)
-    
     categories = Category.objects.all()
+    departments = Department.objects.all().prefetch_related('subdepartments')
     
     if request.method == 'POST':
         # Process the form data
@@ -127,7 +144,9 @@ def ticket_create(request):
         category_id = request.POST.get('category')
         branch = request.POST.get('branch')
         priority = request.POST.get('priority')
-        office_door_number = request.POST.get('office_door_number')  # Get the new field
+        office_door_number = request.POST.get('office_door_number')
+        department_id = request.POST.get('department')
+        subdepartment_id = request.POST.get('subdepartment')
 
         # Validate required fields
         if not title or not description:
@@ -135,6 +154,7 @@ def ticket_create(request):
             context = {
                 'parent_categories': parent_categories,
                 'categories': categories,
+                'departments': departments,
                 'branch_choices': Ticket.Branch.choices,
                 'priority_choices': Ticket.Priority.choices,
                 'form_data': request.POST,  # Return form data for repopulation
@@ -149,7 +169,7 @@ def ticket_create(request):
             priority=priority or Ticket.Priority.MEDIUM,
             created_by=request.user,
             status=Ticket.Status.NEW,
-            office_door_number=office_door_number,  # Set the new field
+            office_door_number=office_door_number,
         )
         
         # Set category if provided
@@ -160,6 +180,42 @@ def ticket_create(request):
                 ticket.save()
             except Category.DoesNotExist:
                 pass
+        
+        # Set department if provided
+        if department_id:
+            try:
+                department = Department.objects.get(id=department_id)
+                ticket.department = department
+                # Record in history
+                TicketHistory.objects.create(
+                    ticket=ticket,
+                    user=request.user,
+                    field_changed='department',
+                    old_value='',
+                    new_value=str(department)
+                )
+            except Department.DoesNotExist:
+                pass
+        
+        # Set subdepartment if provided
+        if subdepartment_id:
+            try:
+                subdepartment = SubDepartment.objects.get(id=subdepartment_id)
+                # Check if subdepartment belongs to selected department
+                if not department_id or subdepartment.department_id == int(department_id):
+                    ticket.subdepartment = subdepartment
+                    # Record in history
+                    TicketHistory.objects.create(
+                        ticket=ticket,
+                        user=request.user,
+                        field_changed='subdepartment',
+                        old_value='',
+                        new_value=str(subdepartment)
+                    )
+            except SubDepartment.DoesNotExist:
+                pass
+        
+        ticket.save()
         
         # Handle file attachments
         files = request.FILES.getlist('file')
@@ -187,6 +243,7 @@ def ticket_create(request):
     context = {
         'parent_categories': parent_categories,
         'categories': categories,
+        'departments': departments,
         'branch_choices': Ticket.Branch.choices,
         'priority_choices': Ticket.Priority.choices,
     }
@@ -203,6 +260,7 @@ def ticket_update(request, pk):
 
     parent_categories = Category.objects.filter(parent__isnull=True)
     categories = Category.objects.all()
+    departments = Department.objects.all().prefetch_related('subdepartments')
     
     if request.method == 'POST':
         # Process the form data
@@ -212,8 +270,9 @@ def ticket_update(request, pk):
         branch = request.POST.get('branch')
         priority = request.POST.get('priority')
         status = request.POST.get('status')
-        office_door_number = request.POST.get('office_door_number')  # Get the new field
-
+        office_door_number = request.POST.get('office_door_number')
+        department_id = request.POST.get('department')
+        subdepartment_id = request.POST.get('subdepartment')
         
         # Validate required fields
         if not title or not description:
@@ -222,6 +281,7 @@ def ticket_update(request, pk):
                 'ticket': ticket,
                 'parent_categories': parent_categories,
                 'categories': categories,
+                'departments': departments,
                 'branch_choices': Ticket.Branch.choices,
                 'priority_choices': Ticket.Priority.choices,
                 'status_choices': Ticket.Status.choices,
@@ -254,6 +314,54 @@ def ticket_update(request, pk):
                                 str(new_category)))
             except Category.DoesNotExist:
                 pass
+
+        # Department changes
+        old_department = ticket.department
+        if department_id and (not old_department or str(old_department.id) != department_id):
+            try:
+                new_department = Department.objects.get(id=department_id)
+                ticket.department = new_department
+                changes.append(('department', 
+                                str(old_department) if old_department else 'None', 
+                                str(new_department)))
+                
+                # If department changes, reset subdepartment unless it belongs to the new department
+                if ticket.subdepartment and ticket.subdepartment.department_id != new_department.id:
+                    old_subdept = ticket.subdepartment
+                    ticket.subdepartment = None
+                    changes.append(('subdepartment', 
+                                    str(old_subdept) if old_subdept else 'None', 
+                                    'None'))
+            except Department.DoesNotExist:
+                pass
+        elif not department_id and old_department:
+            # Removing department assignment
+            changes.append(('department', str(old_department), 'None'))
+            ticket.department = None
+            
+            # Also remove subdepartment if department is removed
+            if ticket.subdepartment:
+                old_subdept = ticket.subdepartment
+                ticket.subdepartment = None
+                changes.append(('subdepartment', str(old_subdept), 'None'))
+
+        # Subdepartment changes
+        old_subdepartment = ticket.subdepartment
+        if subdepartment_id and (not old_subdepartment or str(old_subdepartment.id) != subdepartment_id):
+            try:
+                new_subdepartment = SubDepartment.objects.get(id=subdepartment_id)
+                # Make sure the subdepartment belongs to the selected department
+                if ticket.department and new_subdepartment.department_id == ticket.department.id:
+                    ticket.subdepartment = new_subdepartment
+                    changes.append(('subdepartment', 
+                                    str(old_subdepartment) if old_subdepartment else 'None', 
+                                    str(new_subdepartment)))
+            except SubDepartment.DoesNotExist:
+                pass
+        elif not subdepartment_id and old_subdepartment:
+            # Removing subdepartment assignment
+            changes.append(('subdepartment', str(old_subdepartment), 'None'))
+            ticket.subdepartment = None
 
         if ticket.branch != branch:
             changes.append(('branch', ticket.get_branch_display(), dict(Ticket.Branch.choices)[branch]))
@@ -312,6 +420,7 @@ def ticket_update(request, pk):
         'ticket': ticket,
         'parent_categories': parent_categories,
         'categories': categories,
+        'departments': departments,
         'branch_choices': Ticket.Branch.choices,
         'priority_choices': Ticket.Priority.choices,
         'status_choices': Ticket.Status.choices,
@@ -545,3 +654,8 @@ def get_subcategories(request, parent_id):
     """API endpoint to get subcategories for a parent category"""
     subcategories = Category.objects.filter(parent_id=parent_id).values('id', 'name')
     return JsonResponse(list(subcategories), safe=False)
+
+def get_subdepartments(request, department_id):
+    """API endpoint to get subdepartments for a department"""
+    subdepartments = SubDepartment.objects.filter(department_id=department_id).values('id', 'name')
+    return JsonResponse(list(subdepartments), safe=False)

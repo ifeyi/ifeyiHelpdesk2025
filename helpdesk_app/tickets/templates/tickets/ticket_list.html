@@ -49,6 +49,30 @@
                     </select>
                 </div>
                 <div class="col-md-3">
+                    <label for="department" class="form-label">{% trans "Department" %}</label>
+                    <select name="department" id="department" class="form-select">
+                        <option value="all">{% trans "All Departments" %}</option>
+                        {% for department in departments %}
+                            <option value="{{ department.id }}" {% if current_department == department.id|stringformat:"i" %}selected{% endif %}>{{ department.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="subdepartment" class="form-label">{% trans "Sub-department" %}</label>
+                    <select name="subdepartment" id="subdepartment" class="form-select" {% if not current_department %}disabled{% endif %}>
+                        <option value="all">{% trans "All Sub-departments" %}</option>
+                        {% if current_department %}
+                            {% for department in departments %}
+                                {% if current_department == department.id|stringformat:"i" %}
+                                    {% for subdept in department.subdepartments.all %}
+                                        <option value="{{ subdept.id }}" {% if current_subdepartment == subdept.id|stringformat:"i" %}selected{% endif %}>{{ subdept.name }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="col-md-3">
                     <label for="category" class="form-label">{% trans "Category" %}</label>
                     <select name="category" id="category" class="form-select">
                         <option value="all">{% trans "All Categories" %}</option>
@@ -82,6 +106,7 @@
                         <th>ID</th>
                         <th>{% trans "Title" %}</th>
                         <th>{% trans "Status" %}</th>
+                        <th>{% trans "Department" %}</th>
                         <th>{% trans "Branch" %}</th>
                         <th>{% trans "Priority" %}</th>
                         <th>{% trans "Category" %}</th>
@@ -107,6 +132,16 @@
                                     <span class="badge bg-success">{% trans "Resolved" %}</span>
                                 {% elif ticket.status == 'closed' %}
                                     <span class="badge bg-dark">{% trans "Closed" %}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if ticket.department %}
+                                    <span>{{ ticket.department.name }}</span>
+                                    {% if ticket.subdepartment %}
+                                        <small class="d-block text-muted">{{ ticket.subdepartment.name }}</small>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="text-muted">—</span>
                                 {% endif %}
                             </td>
                             <td>
@@ -170,10 +205,10 @@
             <ul class="pagination justify-content-center">
                 {% if page_obj.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_branch %}&branch={{ current_branch }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if request.GET.light %}&light={{ request.GET.light }}{% endif %}">&laquo; {% trans "First" %}</a>
+                        <a class="page-link" href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_branch %}&branch={{ current_branch }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_department %}&department={{ current_department }}{% endif %}{% if current_subdepartment %}&subdepartment={{ current_subdepartment }}{% endif %}{% if request.GET.light %}&light={{ request.GET.light }}{% endif %}">&laquo; {% trans "First" %}</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_branch %}&branch={{ current_branch }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if request.GET.light %}&light={{ request.GET.light }}{% endif %}">{% trans "Previous" %}</a>
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_branch %}&branch={{ current_branch }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_department %}&department={{ current_department }}{% endif %}{% if current_subdepartment %}&subdepartment={{ current_subdepartment }}{% endif %}{% if request.GET.light %}&light={{ request.GET.light }}{% endif %}">{% trans "Previous" %}</a>
                     </li>
                 {% endif %}
                 
@@ -184,17 +219,17 @@
                         </li>
                     {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
                         <li class="page-item">
-                            <a class="page-link" href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_branch %}&branch={{ current_branch }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if request.GET.light %}&light={{ request.GET.light }}{% endif %}">{{ num }}</a>
+                            <a class="page-link" href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_branch %}&branch={{ current_branch }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_department %}&department={{ current_department }}{% endif %}{% if current_subdepartment %}&subdepartment={{ current_subdepartment }}{% endif %}{% if request.GET.light %}&light={{ request.GET.light }}{% endif %}">{{ num }}</a>
                         </li>
                     {% endif %}
                 {% endfor %}
                 
                 {% if page_obj.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_branch %}&branch={{ current_branch }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if request.GET.light %}&light={{ request.GET.light }}{% endif %}">{% trans "Next" %}</a>
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_branch %}&branch={{ current_branch }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_department %}&department={{ current_department }}{% endif %}{% if current_subdepartment %}&subdepartment={{ current_subdepartment }}{% endif %}{% if request.GET.light %}&light={{ request.GET.light }}{% endif %}">{% trans "Next" %}</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_branch %}&branch={{ current_branch }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if request.GET.light %}&light={{ request.GET.light }}{% endif %}">{% trans "Last" %} &raquo;</a>
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_branch %}&branch={{ current_branch }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_department %}&department={{ current_department }}{% endif %}{% if current_subdepartment %}&subdepartment={{ current_subdepartment }}{% endif %}{% if request.GET.light %}&light={{ request.GET.light }}{% endif %}">{% trans "Last" %} &raquo;</a>
                     </li>
                 {% endif %}
             </ul>
@@ -228,6 +263,37 @@
                 
                 window.location.href = url.toString();
             });
+        });
+        
+        // Department and subdepartment handling
+        const departmentSelect = document.getElementById('department');
+        const subdepartmentSelect = document.getElementById('subdepartment');
+        
+        departmentSelect.addEventListener('change', function() {
+            const departmentId = this.value;
+            
+            // Clear current options
+            subdepartmentSelect.innerHTML = '<option value="all">-- {% trans "All Sub-departments" %} --</option>';
+            
+            if (departmentId && departmentId !== 'all') {
+                // Enable subdepartment select
+                subdepartmentSelect.disabled = false;
+                
+                // Fetch subdepartments via AJAX
+                fetch(`/tickets/api/subdepartments/${departmentId}/`)
+                    .then(response => response.json())
+                    .then(subdepartments => {
+                        subdepartments.forEach(function(subdept) {
+                            const option = document.createElement('option');
+                            option.value = subdept.id;
+                            option.textContent = subdept.name;
+                            subdepartmentSelect.appendChild(option);
+                        });
+                    });
+            } else {
+                // Disable if no department selected
+                subdepartmentSelect.disabled = true;
+            }
         });
         
         // Auto-submit form when filters change

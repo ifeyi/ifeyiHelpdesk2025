@@ -97,6 +97,26 @@
                                 </span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
+                                <span>{% trans "Department" %}</span>
+                                <span>
+                                    {% if ticket.department %}
+                                        <span>{{ ticket.department.name }}</span>
+                                    {% else %}
+                                        <span class="text-muted">{% trans "Unassigned" %}</span>
+                                    {% endif %}
+                                </span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>{% trans "Sub-department" %}</span>
+                                <span>
+                                    {% if ticket.subdepartment %}
+                                        <span>{{ ticket.subdepartment.name }}</span>
+                                    {% else %}
+                                        <span class="text-muted">{% trans "Unassigned" %}</span>
+                                    {% endif %}
+                                </span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
                                 <span>{% trans "Branch" %}</span>
                                 <span>
                                     {% if ticket.branch == 'siege' %}

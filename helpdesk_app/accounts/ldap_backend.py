@@ -1,11 +1,16 @@
-# Create this file at: accounts/ldap_backend.py
+# accounts/ldap_backend.py
 
 import ldap
 import logging
 from django.dispatch import receiver
 from django_auth_ldap.backend import LDAPBackend, populate_user
 from django.contrib.auth import get_user_model
-from .models import AgentProfile, CustomerProfile
+try:
+    from .models import AgentProfile, CustomerProfile
+except ImportError:
+    # Handle case where models aren't loaded yet
+    AgentProfile = None
+    CustomerProfile = None
 
 User = get_user_model()
 logger = logging.getLogger('accounts.ldap_backend')
@@ -21,12 +26,22 @@ def process_ldap_user(sender, user=None, ldap_user=None, **kwargs):
     
     logger.debug(f"Processing LDAP user: {user.username}")
     
+    # Set default user_type to prevent errors
+    if not hasattr(user, 'user_type') or user.user_type is None:
+        user.user_type = User.UserType.CUSTOMER  # Default to customer
+    
+    # Make user active by default
+    user.is_active = True
+    
     # Determine user type based on group membership
     # Mapping of user types to their corresponding AD groups
     user_type_mapping = {
-        User.UserType.ADMIN: ["CN=Super Users,OU=CFC-Users,DC=creditfoncier,DC=cm"],
-        User.UserType.AGENT: ["CN=Staff Users,OU=CFC-Users,DC=creditfoncier,DC=cm"],
-        User.UserType.CUSTOMER: ["CN=Active Users,OU=CFC-Users,DC=creditfoncier,DC=cm"],
+        User.UserType.ADMIN: ["CN=Super Users,OU=CFC-Users,DC=creditfoncier,DC=cm", 
+                              "CN=Domain Admins,CN=Users,DC=creditfoncier,DC=cm"],
+        User.UserType.AGENT: ["CN=Staff Users,OU=CFC-Users,DC=creditfoncier,DC=cm",
+                              "CN=IT-ADMIN,OU=CFC-Users,DC=creditfoncier,DC=cm"],
+        User.UserType.CUSTOMER: ["CN=Active Users,OU=CFC-Users,DC=creditfoncier,DC=cm",
+                                "CN=Domain Users,CN=Users,DC=creditfoncier,DC=cm"],
     }
     
     # Get group DNs for this user
@@ -44,73 +59,157 @@ def process_ldap_user(sender, user=None, ldap_user=None, **kwargs):
             # Default to customer if no matching groups
             user.user_type = User.UserType.CUSTOMER
             logger.debug("No matching groups found, defaulting to Customer")
+            
+        # Set staff and superuser status based on user_type
+        if user.user_type == User.UserType.ADMIN:
+            user.is_staff = True
+            user.is_superuser = True
+        elif user.user_type == User.UserType.AGENT:
+            user.is_staff = True
+            user.is_superuser = False
     
     # Extract department from LDAP if available
     if hasattr(ldap_user, 'attrs'):
         if 'department' in ldap_user.attrs:
-            user.department = ldap_user.attrs['department'][0].decode('utf-8')
+            try:
+                user.department = ldap_user.attrs['department'][0].decode('utf-8')
+            except (IndexError, AttributeError):
+                logger.warning(f"Could not decode department attribute for {user.username}")
         
         if 'telephoneNumber' in ldap_user.attrs:
-            user.phone = ldap_user.attrs['telephoneNumber'][0].decode('utf-8')
+            try:
+                user.phone = ldap_user.attrs['telephoneNumber'][0].decode('utf-8')
+            except (IndexError, AttributeError):
+                logger.warning(f"Could not decode telephoneNumber attribute for {user.username}")
     
     # Save the user after modifications
-    user.save()
+    try:
+        user.save()
+    except Exception as e:
+        logger.error(f"Error saving user {user.username}: {str(e)}")
+        return
+    
+    # Import models here to avoid circular imports
+    try:
+        from .models import AgentProfile, CustomerProfile
+    except ImportError:
+        logger.error("Could not import profile models")
+        return
     
     # Create appropriate profile based on user_type if it doesn't exist
-    if user.user_type == User.UserType.AGENT and not hasattr(user, 'agent_profile'):
-        AgentProfile.objects.get_or_create(user=user)
-        logger.debug(f"Created agent profile for {user.username}")
+    if user.user_type == User.UserType.AGENT:
+        try:
+            if not hasattr(user, 'agent_profile') or user.agent_profile is None:
+                AgentProfile.objects.get_or_create(user=user)
+                logger.debug(f"Created agent profile for {user.username}")
+        except Exception as e:
+            logger.error(f"Error creating agent profile for {user.username}: {str(e)}")
     
-    elif user.user_type == User.UserType.CUSTOMER and not hasattr(user, 'customer_profile'):
-        # For customers, try to extract company/account info from LDAP
-        company = ""
-        account_id = ""
-        support_level = "Standard"
-        
-        if hasattr(ldap_user, 'attrs'):
-            if 'company' in ldap_user.attrs:
-                company = ldap_user.attrs['company'][0].decode('utf-8')
+    elif user.user_type == User.UserType.CUSTOMER:
+        try:
+            if not hasattr(user, 'customer_profile') or user.customer_profile is None:
+                # For customers, try to extract company/account info from LDAP
+                company = ""
+                account_id = ""
+                support_level = "Standard"
                 
-            # You might use custom AD attributes for account_id and support_level
-            if 'extensionAttribute1' in ldap_user.attrs:  # Example custom attribute for account_id
-                account_id = ldap_user.attrs['extensionAttribute1'][0].decode('utf-8')
+                if hasattr(ldap_user, 'attrs'):
+                    if 'company' in ldap_user.attrs:
+                        try:
+                            company = ldap_user.attrs['company'][0].decode('utf-8')
+                        except (IndexError, AttributeError):
+                            pass
+                            
+                    # You might use custom AD attributes for account_id and support_level
+                    if 'extensionAttribute1' in ldap_user.attrs:
+                        try:
+                            account_id = ldap_user.attrs['extensionAttribute1'][0].decode('utf-8')
+                        except (IndexError, AttributeError):
+                            pass
+                            
+                    if 'extensionAttribute2' in ldap_user.attrs:
+                        try:
+                            support_level = ldap_user.attrs['extensionAttribute2'][0].decode('utf-8')
+                        except (IndexError, AttributeError):
+                            pass
                 
-            if 'extensionAttribute2' in ldap_user.attrs:  # Example custom attribute for support_level
-                support_level = ldap_user.attrs['extensionAttribute2'][0].decode('utf-8')
-        
-        CustomerProfile.objects.get_or_create(
-            user=user,
-            defaults={
-                'company': company,
-                'account_id': account_id,
-                'support_level': support_level
-            }
-        )
-        logger.debug(f"Created customer profile for {user.username}")
+                CustomerProfile.objects.get_or_create(
+                    user=user,
+                    defaults={
+                        'company': company,
+                        'account_id': account_id,
+                        'support_level': support_level
+                    }
+                )
+                logger.debug(f"Created customer profile for {user.username}")
+        except Exception as e:
+            logger.error(f"Error creating customer profile for {user.username}: {str(e)}")
+
 
 class CustomLDAPBackend(LDAPBackend):
     """
-    Custom LDAP backend that properly handles existing users.
+    Custom LDAP backend that properly handles existing users and multiple username formats.
     """
-    def authenticate(self, request, username=None, password=None, **kwargs):
-        # First check if this user already exists in our database
-        try:
-            existing_user = User.objects.get(username=username)
-            logger.debug(f"Found existing user in database: {username}")
+    def authenticate(self, request=None, username=None, password=None, **kwargs):
+        if not username or not password:
+            logger.debug("Missing username or password")
+            return None
             
-            # If user exists, authenticate against LDAP but don't try to create a new user
-            if self._authenticate_user_dn(existing_user.username, password):
-                logger.debug(f"LDAP authentication successful for existing user: {username}")
-                return existing_user
-            else:
-                logger.debug(f"LDAP authentication failed for existing user: {username}")
-                return None
+        logger.debug(f"Attempting authentication for username: {username}")
+        
+        # Try different username formats
+        username_formats = [
+            username,  # Original format
+            f"{username}@creditfoncier.cm",  # UPN format
+            f"CREDITFONCIER\\{username}"  # DOMAIN\username format
+        ]
+        
+        # Remove duplicates (in case user already entered a formatted username)
+        unique_formats = []
+        for fmt in username_formats:
+            if fmt not in unique_formats:
+                unique_formats.append(fmt)
+        
+        # Try each format
+        for username_fmt in unique_formats:
+            logger.debug(f"Trying authentication with username format: {username_fmt}")
+            
+            # First check if this user already exists in our database
+            try:
+                # Look for exact username match or the stripped username
+                base_username = username_fmt.split('@')[0].split('\\')[-1]
+                existing_user = User.objects.filter(username__iexact=base_username).first()
                 
-        except User.DoesNotExist:
-            # If user doesn't exist yet, use the standard LDAP backend to create them
-            logger.debug(f"User {username} doesn't exist yet, using standard LDAP backend")
-            return super().authenticate(request, username=username, password=password, **kwargs)
-    
+                if existing_user:
+                    logger.debug(f"Found existing user in database: {existing_user.username}")
+                    
+                    # Authenticate against LDAP without creating a new user
+                    if self._authenticate_user_dn(existing_user.username, password):
+                        logger.debug(f"LDAP authentication successful for existing user: {existing_user.username}")
+                        # Update last_login and save
+                        from django.utils import timezone
+                        existing_user.last_login = timezone.now()
+                        existing_user.save(update_fields=['last_login'])
+                        return existing_user
+                    else:
+                        logger.debug(f"LDAP authentication failed for existing user: {existing_user.username}")
+                        continue  # Try next format
+                
+                # If user doesn't exist yet, use the standard LDAP backend
+                logger.debug(f"User {username_fmt} doesn't exist yet, using standard LDAP backend")
+                user = super().authenticate(request, username=username_fmt, password=password, **kwargs)
+                if user:
+                    logger.debug(f"Created and authenticated new user: {user.username}")
+                    return user
+                    
+            except Exception as e:
+                logger.error(f"Error during authentication for {username_fmt}: {str(e)}")
+                continue  # Try next format
+        
+        # If we've tried all formats and none worked, authentication failed
+        logger.debug(f"All authentication attempts failed for: {username}")
+        return None
+        
     def _authenticate_user_dn(self, username, password):
         """
         Attempt to bind with the user's DN and password.
@@ -122,44 +221,63 @@ class CustomLDAPBackend(LDAPBackend):
             bind_dn = settings.AUTH_LDAP_BIND_DN
             bind_password = settings.AUTH_LDAP_BIND_PASSWORD
             
-            # Connect with service account
+            # Set up connection
             connection = ldap.initialize(server_uri)
             for opt, value in settings.AUTH_LDAP_CONNECTION_OPTIONS.items():
                 connection.set_option(opt, value)
             
             # Bind with service account
-            connection.simple_bind_s(bind_dn, bind_password)
+            try:
+                connection.simple_bind_s(bind_dn, bind_password)
+                logger.debug(f"Successfully bound with service account")
+            except ldap.INVALID_CREDENTIALS:
+                logger.error("Invalid service account credentials")
+                return False
+            except Exception as e:
+                logger.error(f"Error binding with service account: {str(e)}")
+                return False
             
-            # Search for the user
-            search_base = "OU=CFC-Users,DC=creditfoncier,DC=cm"  # Use same base as in settings
+            # Use a wider search base to find the user
+            search_base = "DC=creditfoncier,DC=cm"  # Search from domain root
             search_filter = f"(sAMAccountName={username})"
             
             # Find the user's DN
-            results = connection.search_s(search_base, ldap.SCOPE_SUBTREE, search_filter, ['dn'])
-            connection.unbind_s()  # Close the service account connection
-            
-            if not results:
-                logger.error(f"User {username} not found in LDAP")
-                return False
+            try:
+                results = connection.search_s(search_base, ldap.SCOPE_SUBTREE, search_filter, ['dn'])
                 
-            user_dn = results[0][0]  # Extract the DN
+                if not results:
+                    logger.error(f"User {username} not found in LDAP")
+                    connection.unbind_s()
+                    return False
+                    
+                user_dn = results[0][0]  # Extract the DN
+                logger.debug(f"Found user DN: {user_dn}")
+                connection.unbind_s()  # Close the service account connection
+            except Exception as e:
+                logger.error(f"Error searching for user {username}: {str(e)}")
+                connection.unbind_s()
+                return False
             
             # Try to bind with the user's credentials
-            user_connection = ldap.initialize(server_uri)
-            for opt, value in settings.AUTH_LDAP_CONNECTION_OPTIONS.items():
-                user_connection.set_option(opt, value)
+            try:
+                user_connection = ldap.initialize(server_uri)
+                for opt, value in settings.AUTH_LDAP_CONNECTION_OPTIONS.items():
+                    user_connection.set_option(opt, value)
+                    
+                # Try to bind - this validates the password
+                user_connection.simple_bind_s(user_dn, password)
+                user_connection.unbind_s()  # Clean up
                 
-            # Try to bind - this validates the password
-            user_connection.simple_bind_s(user_dn, password)
-            user_connection.unbind_s()  # Clean up
-            
-            # If we get here, authentication was successful
-            logger.debug(f"Successfully authenticated {username} with DN: {user_dn}")
-            return True
-            
-        except ldap.INVALID_CREDENTIALS:
-            logger.error(f"Invalid credentials for user: {username}")
-            return False
+                # If we get here, authentication was successful
+                logger.debug(f"Successfully authenticated {username} with DN: {user_dn}")
+                return True
+            except ldap.INVALID_CREDENTIALS:
+                logger.error(f"Invalid credentials for user: {username}")
+                return False
+            except Exception as e:
+                logger.error(f"Error binding as user {username}: {str(e)}")
+                return False
+                
         except Exception as e:
             logger.error(f"LDAP authentication error for {username}: {str(e)}")
             return False

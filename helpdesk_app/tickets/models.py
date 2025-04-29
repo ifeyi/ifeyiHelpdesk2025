@@ -3,6 +3,60 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 
+class Department(models.Model):
+    """
+    Departments for organization structure.
+    """
+    name = models.CharField(_('Name'), max_length=100)
+    description = models.TextField(_('Description'), blank=True)
+    code = models.CharField(_('Code'), max_length=20, blank=True, help_text=_('Department code or abbreviation'))
+    manager = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='managed_departments',
+        verbose_name=_('Department Manager')
+    )
+    
+    class Meta:
+        verbose_name = _('Department')
+        verbose_name_plural = _('Departments')
+        ordering = ['name']
+    
+    def __str__(self):
+        return self.name
+
+class SubDepartment(models.Model):
+    """
+    Sub-departments within main departments.
+    """
+    name = models.CharField(_('Name'), max_length=100)
+    description = models.TextField(_('Description'), blank=True)
+    code = models.CharField(_('Code'), max_length=20, blank=True, help_text=_('Sub-department code or abbreviation'))
+    department = models.ForeignKey(
+        Department,
+        on_delete=models.CASCADE,
+        related_name='subdepartments',
+        verbose_name=_('Department')
+    )
+    manager = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='managed_subdepartments',
+        verbose_name=_('Sub-department Manager')
+    )
+    
+    class Meta:
+        verbose_name = _('Sub-department')
+        verbose_name_plural = _('Sub-departments')
+        ordering = ['department__name', 'name']
+    
+    def __str__(self):
+        return f"{self.department.name} > {self.name}"
+
 class Category(models.Model):
     """
     Categories for tickets to organize them by department or topic.
@@ -94,6 +148,24 @@ class Ticket(models.Model):
         db_index=True
     )
     
+    # Department fields
+    department = models.ForeignKey(
+        Department,
+        on_delete=models.SET_NULL,
+        related_name='tickets',
+        verbose_name=_('Department'),
+        null=True,
+        blank=True
+    )
+    subdepartment = models.ForeignKey(
+        SubDepartment,
+        on_delete=models.SET_NULL,
+        related_name='tickets',
+        verbose_name=_('Sub-department'),
+        null=True,
+        blank=True
+    )
+    
     # Relationships
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -144,6 +216,7 @@ class Ticket(models.Model):
             models.Index(fields=['created_at']),
             models.Index(fields=['due_date']),
             models.Index(fields=['assigned_to']),
+            models.Index(fields=['department', 'subdepartment']),
         ]
     
     def __str__(self):

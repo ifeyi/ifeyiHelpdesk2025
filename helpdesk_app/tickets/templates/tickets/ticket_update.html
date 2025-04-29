@@ -32,6 +32,29 @@
                 </div>
 
                 <div class="row mb-3">
+                    <!-- Department and Subdepartment selections -->
+                    <div class="col-md-4">
+                        <label for="department" class="form-label">{% trans "Department" %}</label>
+                        <select class="form-select" id="department" name="department">
+                            <option value="">-- {% trans "Select Department" %} --</option>
+                            {% for department in departments %}
+                                <option value="{{ department.id }}" {% if ticket.department and ticket.department.id == department.id %}selected{% endif %}>{{ department.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="subdepartment" class="form-label">{% trans "Sub-department" %}</label>
+                        <select class="form-select" id="subdepartment" name="subdepartment" {% if not ticket.department %}disabled{% endif %}>
+                            <option value="">-- {% trans "Select Sub-department" %} --</option>
+                            {% if ticket.department %}
+                                {% for subdept in ticket.department.subdepartments.all %}
+                                    <option value="{{ subdept.id }}" {% if ticket.subdepartment and ticket.subdepartment.id == subdept.id %}selected{% endif %}>{{ subdept.name }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                    
+                    <!-- Category selections -->
                     <div class="col-md-4">
                         <label for="parent_category" class="form-label">{% trans "Main Category" %}</label>
                         <select class="form-select" id="parent_category" name="parent_category">
@@ -123,19 +146,9 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Category handling
     const parentCategorySelect = document.getElementById('parent_category');
     const subCategorySelect = document.getElementById('sub_category');
-    
-    // Category data structure
-    const categoryData = {
-        {% for category in parent_categories %}
-            "{{ category.id }}": [
-                {% for subcategory in category.subcategories.all %}
-                    {id: "{{ subcategory.id }}", name: "{{ subcategory.name }}"},
-                {% endfor %}
-            ],
-        {% endfor %}
-    };
     
     parentCategorySelect.addEventListener('change', function() {
         const parentId = this.value;
@@ -161,6 +174,37 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             // Disable if no parent selected
             subCategorySelect.disabled = true;
+        }
+    });
+    
+    // Department and Subdepartment handling
+    const departmentSelect = document.getElementById('department');
+    const subdepartmentSelect = document.getElementById('subdepartment');
+    
+    departmentSelect.addEventListener('change', function() {
+        const departmentId = this.value;
+        
+        // Clear current options
+        subdepartmentSelect.innerHTML = '<option value="">-- {% trans "Select Sub-department" %} --</option>';
+        
+        if (departmentId) {
+            // Enable subdepartment select
+            subdepartmentSelect.disabled = false;
+            
+            // Fetch subdepartments via AJAX
+            fetch(`/tickets/api/subdepartments/${departmentId}/`)
+                .then(response => response.json())
+                .then(subdepartments => {
+                    subdepartments.forEach(function(subdept) {
+                        const option = document.createElement('option');
+                        option.value = subdept.id;
+                        option.textContent = subdept.name;
+                        subdepartmentSelect.appendChild(option);
+                    });
+                });
+        } else {
+            // Disable if no department selected
+            subdepartmentSelect.disabled = true;
         }
     });
 });
