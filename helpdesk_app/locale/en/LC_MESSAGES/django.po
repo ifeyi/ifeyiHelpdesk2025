@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-29 13:32+0000\n"
+"POT-Creation-Date: 2025-04-29 17:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,28 +34,28 @@ msgstr ""
 msgid "Important dates"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:12
+#: helpdesk_app/accounts/models.py:8
 msgid "Admin"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:13
+#: helpdesk_app/accounts/models.py:9
 #: helpdesk_app/core/templates/dashboard.html:118
 msgid "Agent"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:14
+#: helpdesk_app/accounts/models.py:10
 msgid "Customer"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:16
+#: helpdesk_app/accounts/models.py:12
 msgid "Email address"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:18
+#: helpdesk_app/accounts/models.py:14
 msgid "User type"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:23 helpdesk_app/tickets/models.py:23
+#: helpdesk_app/accounts/models.py:19 helpdesk_app/tickets/models.py:23
 #: helpdesk_app/tickets/models.py:41 helpdesk_app/tickets/models.py:156
 #: helpdesk_app/tickets/templates/tickets/ticket_create.html:40
 #: helpdesk_app/tickets/templates/tickets/ticket_detail.html:100
@@ -65,60 +65,60 @@ msgstr ""
 msgid "Department"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:24
+#: helpdesk_app/accounts/models.py:20
 msgid "Phone number"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:26
+#: helpdesk_app/accounts/models.py:22
 msgid "Profile picture"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:36 helpdesk_app/articles/models.py:179
+#: helpdesk_app/accounts/models.py:32 helpdesk_app/articles/models.py:179
 #: helpdesk_app/tickets/models.py:279
 msgid "User"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:37
+#: helpdesk_app/accounts/models.py:33
 msgid "Users"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:66
+#: helpdesk_app/accounts/models.py:62
 msgid "Biography"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:67
+#: helpdesk_app/accounts/models.py:63
 msgid "Available"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:68
+#: helpdesk_app/accounts/models.py:64
 msgid "Maximum tickets"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:71
+#: helpdesk_app/accounts/models.py:67
 msgid "Agent Profile"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:72
+#: helpdesk_app/accounts/models.py:68
 msgid "Agent Profiles"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:88
+#: helpdesk_app/accounts/models.py:84
 msgid "Company"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:89
+#: helpdesk_app/accounts/models.py:85
 msgid "Account ID"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:90
+#: helpdesk_app/accounts/models.py:86
 msgid "Support Level"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:93
+#: helpdesk_app/accounts/models.py:89
 msgid "Customer Profile"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:94
+#: helpdesk_app/accounts/models.py:90
 msgid "Customer Profiles"
 msgstr ""
 
@@ -195,15 +195,15 @@ msgstr ""
 msgid "Contact IT support if you continue to experience issues"
 msgstr ""
 
-#: helpdesk_app/accounts/views.py:33
+#: helpdesk_app/accounts/views.py:30
 msgid "You have successfully logged in."
 msgstr ""
 
-#: helpdesk_app/accounts/views.py:38
+#: helpdesk_app/accounts/views.py:35
 msgid "Invalid username or password."
 msgstr ""
 
-#: helpdesk_app/accounts/views.py:40
+#: helpdesk_app/accounts/views.py:37
 msgid "Please provide both username and password."
 msgstr ""
 
@@ -1707,11 +1707,11 @@ msgstr ""
 msgid "Email settings updated successfully."
 msgstr ""
 
-#: helpdesk_app/helpdesk/settings.py:157
+#: helpdesk_app/helpdesk/settings.py:169
 msgid "English"
 msgstr ""
 
-#: helpdesk_app/helpdesk/settings.py:158
+#: helpdesk_app/helpdesk/settings.py:170
 msgid "Français"
 msgstr ""
 

@@ -1,8 +1,5 @@
 echo "===== Setting up the Helpdesk Application ====="
 
-echo "Applying migrations..."
-docker-compose exec django python helpdesk_app/manage.py migrate
-
 echo "Creating superuser..."
 docker-compose exec -T django python helpdesk_app/manage.py shell -c "
 from django.contrib.auth import get_user_model;

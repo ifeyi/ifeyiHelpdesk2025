@@ -234,13 +234,12 @@ CSRF_COOKIE_SECURE = False
 # LDAP server URI
 AUTH_LDAP_SERVER_URI = read_secret('LDAP_SERVER_URI', "ldap://192.168.6.90")
 
-# Service account for LDAP queries
 AUTH_LDAP_BIND_DN = read_secret('LDAP_BIND_DN', "CN=Ifeyi BATINDEK BATOANEN admin,OU=IT-ADMIN,OU=CFC-Users,DC=creditfoncier,DC=cm")
 AUTH_LDAP_BIND_PASSWORD = read_secret('LDAP_BIND_PASSWORD', '')
 
 # User search configuration - adjust the search base to match your AD structure
 AUTH_LDAP_USER_SEARCH = LDAPSearch(
-    read_secret('LDAP_SEARCH_BASE', "OU=CFC-Users,DC=creditfoncier,DC=cm"),  # Base DN
+    read_secret('LDAP_SEARCH_BASE', "DC=creditfoncier,DC=cm"),  # Base DN
     ldap.SCOPE_SUBTREE,
     "(sAMAccountName=%(user)s)",  # Filter to find the user
 )
@@ -251,13 +250,15 @@ AUTH_LDAP_CONNECTION_OPTIONS = {
     ldap.OPT_X_TLS_REQUIRE_CERT: ldap.OPT_X_TLS_NEVER,  # Skip certificate validation
     ldap.OPT_NETWORK_TIMEOUT: 10,  # Prevent hanging on network issues
     ldap.OPT_TIMEOUT: 15,          # General timeout
+    # Add debugging option to see full LDAP operations
+    ldap.OPT_DEBUG_LEVEL: 255,     # Maximum debug information
 }
 
 AUTH_LDAP_USER_ATTR_MAP = {
     "first_name": "givenName",
     "last_name": "sn",
     "email": "mail",
-    "username": "sAMAccountName", 
+    "username": "sAMAccountName",
 }
 
 AUTH_LDAP_GROUP_SEARCH = LDAPSearch(

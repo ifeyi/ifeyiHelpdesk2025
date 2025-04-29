@@ -4,10 +4,6 @@ from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
-    """
-    Custom User model extending Django's AbstractUser.
-    Adds additional fields for helpdesk users.
-    """
     class UserType(models.TextChoices):
         ADMIN = 'admin', _('Admin')
         AGENT = 'agent', _('Agent')
@@ -29,8 +25,8 @@ class User(AbstractUser):
         null=True
     )
     
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
     
     class Meta:
         verbose_name = _('User')

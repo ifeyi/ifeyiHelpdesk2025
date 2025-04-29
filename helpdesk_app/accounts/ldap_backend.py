@@ -17,10 +17,7 @@ logger = logging.getLogger('accounts.ldap_backend')
 
 @receiver(populate_user)
 def process_ldap_user(sender, user=None, ldap_user=None, **kwargs):
-    """
-    Process the user after LDAP authentication and before saving to the database.
-    This hook allows us to set the user_type and create appropriate profiles.
-    """
+
     if not user or not ldap_user:
         return
     
@@ -147,9 +144,7 @@ def process_ldap_user(sender, user=None, ldap_user=None, **kwargs):
 
 
 class CustomLDAPBackend(LDAPBackend):
-    """
-    Custom LDAP backend that properly handles existing users and multiple username formats.
-    """
+
     def authenticate(self, request=None, username=None, password=None, **kwargs):
         if not username or not password:
             logger.debug("Missing username or password")
@@ -157,14 +152,28 @@ class CustomLDAPBackend(LDAPBackend):
             
         logger.debug(f"Attempting authentication for username: {username}")
         
+        # Clean the username to remove domain prefixes/suffixes if present
+        if '\\' in username:
+            # Format is DOMAIN\username
+            domain, clean_username = username.split('\\', 1)
+            logger.debug(f"Extracted username '{clean_username}' from DOMAIN\\username format")
+            username = clean_username
+        elif '@' in username:
+            # Format is username@domain
+            clean_username, domain = username.split('@', 1)
+            logger.debug(f"Extracted username '{clean_username}' from username@domain format")
+            username = clean_username
+        
+        logger.debug(f"Using cleaned username for authentication: {username}")
+        
         # Try different username formats
         username_formats = [
-            username,  # Original format
+            username,  # Cleaned username
             f"{username}@creditfoncier.cm",  # UPN format
             f"CREDITFONCIER\\{username}"  # DOMAIN\username format
         ]
         
-        # Remove duplicates (in case user already entered a formatted username)
+        # Remove duplicates
         unique_formats = []
         for fmt in username_formats:
             if fmt not in unique_formats:
@@ -174,17 +183,18 @@ class CustomLDAPBackend(LDAPBackend):
         for username_fmt in unique_formats:
             logger.debug(f"Trying authentication with username format: {username_fmt}")
             
+            # Extract base username for database lookup
+            base_username = username_fmt.split('@')[0].split('\\')[-1]
+            
             # First check if this user already exists in our database
             try:
-                # Look for exact username match or the stripped username
-                base_username = username_fmt.split('@')[0].split('\\')[-1]
                 existing_user = User.objects.filter(username__iexact=base_username).first()
                 
                 if existing_user:
                     logger.debug(f"Found existing user in database: {existing_user.username}")
                     
-                    # Authenticate against LDAP without creating a new user
-                    if self._authenticate_user_dn(existing_user.username, password):
+                    # Authenticate against LDAP
+                    if self._authenticate_user_dn(base_username, password):  # Pass clean username here
                         logger.debug(f"LDAP authentication successful for existing user: {existing_user.username}")
                         # Update last_login and save
                         from django.utils import timezone
@@ -210,74 +220,85 @@ class CustomLDAPBackend(LDAPBackend):
         logger.debug(f"All authentication attempts failed for: {username}")
         return None
         
-    def _authenticate_user_dn(self, username, password):
-        """
-        Attempt to bind with the user's DN and password.
-        """
+def _authenticate_user_dn(self, username, password):
+
+    try:
+        # Initialize a new connection to LDAP
+        from django.conf import settings
+        server_uri = settings.AUTH_LDAP_SERVER_URI
+        bind_dn = settings.AUTH_LDAP_BIND_DN
+        bind_password = settings.AUTH_LDAP_BIND_PASSWORD
+        
+        logger.debug(f"Attempting LDAP authentication for {username}")
+        logger.debug(f"Server URI: {server_uri}")
+        # Don't log the full bind_dn and password for security
+        logger.debug(f"Using service account: {bind_dn[:20]}...")
+        
+        if not bind_password:
+            logger.error("Service account password is empty, check your secrets")
+            return False
+        
+        # Set up connection
+        connection = ldap.initialize(server_uri)
+        for opt, value in settings.AUTH_LDAP_CONNECTION_OPTIONS.items():
+            connection.set_option(opt, value)
+        
+        # Bind with service account
         try:
-            # Initialize a new connection to LDAP
-            from django.conf import settings
-            server_uri = settings.AUTH_LDAP_SERVER_URI
-            bind_dn = settings.AUTH_LDAP_BIND_DN
-            bind_password = settings.AUTH_LDAP_BIND_PASSWORD
+            connection.simple_bind_s(bind_dn, bind_password)
+            logger.debug(f"Successfully bound with service account")
+        except ldap.INVALID_CREDENTIALS:
+            logger.error("Invalid service account credentials")
+            return False
+        except Exception as e:
+            logger.error(f"Error binding with service account: {str(e)}")
+            return False
+        
+        # Use a wider search base to find the user
+        search_base = "DC=creditfoncier,DC=cm"  # Search from domain root
+        search_filter = f"(sAMAccountName={ldap.dn.escape_dn_chars(username)})"
+        
+        logger.debug(f"Searching for user with filter: {search_filter}")
+        logger.debug(f"Search base: {search_base}")
+        
+        # Find the user's DN
+        try:
+            results = connection.search_s(search_base, ldap.SCOPE_SUBTREE, search_filter, ['dn'])
             
-            # Set up connection
-            connection = ldap.initialize(server_uri)
-            for opt, value in settings.AUTH_LDAP_CONNECTION_OPTIONS.items():
-                connection.set_option(opt, value)
-            
-            # Bind with service account
-            try:
-                connection.simple_bind_s(bind_dn, bind_password)
-                logger.debug(f"Successfully bound with service account")
-            except ldap.INVALID_CREDENTIALS:
-                logger.error("Invalid service account credentials")
-                return False
-            except Exception as e:
-                logger.error(f"Error binding with service account: {str(e)}")
-                return False
-            
-            # Use a wider search base to find the user
-            search_base = "DC=creditfoncier,DC=cm"  # Search from domain root
-            search_filter = f"(sAMAccountName={username})"
-            
-            # Find the user's DN
-            try:
-                results = connection.search_s(search_base, ldap.SCOPE_SUBTREE, search_filter, ['dn'])
-                
-                if not results:
-                    logger.error(f"User {username} not found in LDAP")
-                    connection.unbind_s()
-                    return False
-                    
-                user_dn = results[0][0]  # Extract the DN
-                logger.debug(f"Found user DN: {user_dn}")
-                connection.unbind_s()  # Close the service account connection
-            except Exception as e:
-                logger.error(f"Error searching for user {username}: {str(e)}")
+            if not results:
+                logger.error(f"User {username} not found in LDAP")
                 connection.unbind_s()
                 return False
-            
-            # Try to bind with the user's credentials
-            try:
-                user_connection = ldap.initialize(server_uri)
-                for opt, value in settings.AUTH_LDAP_CONNECTION_OPTIONS.items():
-                    user_connection.set_option(opt, value)
-                    
-                # Try to bind - this validates the password
-                user_connection.simple_bind_s(user_dn, password)
-                user_connection.unbind_s()  # Clean up
                 
-                # If we get here, authentication was successful
-                logger.debug(f"Successfully authenticated {username} with DN: {user_dn}")
-                return True
-            except ldap.INVALID_CREDENTIALS:
-                logger.error(f"Invalid credentials for user: {username}")
-                return False
-            except Exception as e:
-                logger.error(f"Error binding as user {username}: {str(e)}")
-                return False
-                
+            user_dn = results[0][0]  # Extract the DN
+            logger.debug(f"Found user DN: {user_dn}")
+            connection.unbind_s()  # Close the service account connection
         except Exception as e:
-            logger.error(f"LDAP authentication error for {username}: {str(e)}")
+            logger.error(f"Error searching for user {username}: {str(e)}")
+            connection.unbind_s()
             return False
+        
+        # Try to bind with the user's credentials
+        try:
+            user_connection = ldap.initialize(server_uri)
+            for opt, value in settings.AUTH_LDAP_CONNECTION_OPTIONS.items():
+                user_connection.set_option(opt, value)
+                
+            # Try to bind - this validates the password
+            logger.debug(f"Attempting to bind as user: {user_dn}")
+            user_connection.simple_bind_s(user_dn, password)
+            user_connection.unbind_s()  # Clean up
+            
+            # If we get here, authentication was successful
+            logger.debug(f"Successfully authenticated {username} with DN: {user_dn}")
+            return True
+        except ldap.INVALID_CREDENTIALS:
+            logger.error(f"Invalid credentials for user: {username}")
+            return False
+        except Exception as e:
+            logger.error(f"Error binding as user {username}: {str(e)}")
+            return False
+            
+    except Exception as e:
+        logger.error(f"LDAP authentication error for {username}: {str(e)}")
+        return False

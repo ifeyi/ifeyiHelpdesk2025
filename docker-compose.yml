@@ -17,6 +17,8 @@ services:
       - ALLOWED_HOSTS=*      
       - DJANGO_SECRET_KEY_FILE=/run/secrets/django_secret_key
       - DB_PASSWORD_FILE=/run/secrets/db_password
+      - LDAP_BIND_PASSWORD_FILE=/secrets/ldap_bind_password
+      - EMAIL_PASSWORD_FILE=/secrets/email_password
       - DB_HOST=postgres
       - DB_NAME=cfchelpdeskdb
       - DB_USER=cfchelpdeskuser
@@ -128,3 +130,7 @@ secrets:
     file: ./secrets/django_secret_key.txt
   db_password:
     file: ./secrets/db_password.txt
+  ldap_bind_password:
+    file: ./secrets/ldap_bind_password.txt
+  email_password:
+    file: ./secrets/email_password.txt

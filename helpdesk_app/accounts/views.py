@@ -7,10 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.http import url_has_allowed_host_and_scheme
 
 def ldap_login(request):
-    """
-    LDAP authentication view for the helpdesk system.
-    Handles redirecting to the original requested page after login.
-    """
+
     next_url = request.GET.get('next', '/')
     
     is_safe_url = url_has_allowed_host_and_scheme(
