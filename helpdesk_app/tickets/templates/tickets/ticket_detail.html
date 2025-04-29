@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}Ticket #{{ ticket.id }} - Helpdesk{% endblock %}
+{% block title %}{% trans "Ticket" %} #{{ ticket.id }} - Helpdesk{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -9,10 +9,15 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">{% trans "Home" %}</a></li>
-                <li class="breadcrumb-item"><a href="/tickets/">{% trans "Tickets" %}</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'tickets:ticket-list' %}">{% trans "Tickets" %}</a></li>
                 <li class="breadcrumb-item active">{% trans "Ticket" %} #{{ ticket.id }}</li>
             </ol>
         </nav>
+    </div>
+
+    <!-- Offline indicator -->
+    <div class="alert alert-warning offline-indicator" style="display: none;">
+        <i class="bi bi-wifi-off"></i> {% trans "You are currently offline. Some features may be limited." %}
     </div>
 
     <div class="card mb-4">
@@ -20,9 +25,24 @@
             <h5 class="mb-0">{{ ticket.title }}</h5>
             <div>
                 {% if user.is_staff or user.is_agent %}
-                    <a href="/tickets/{{ ticket.id }}/update" class="btn btn-sm btn-outline-primary me-2">{% trans "Edit" %}</a>
+                    <a href="{% url 'tickets:ticket-update' ticket.id %}" class="btn btn-sm btn-outline-primary me-2">
+                        <i class="bi bi-pencil"></i> {% trans "Edit" %}
+                    </a>
                 {% endif %}
-                <a href="/tickets/" class="btn btn-sm btn-outline-secondary">{% trans "Back to List" %}</a>
+                <a href="{% url 'tickets:ticket-list' %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> {% trans "Back to List" %}
+                </a>
+                
+                <!-- Light mode toggle -->
+                {% if request.GET.light == '1' %}
+                    <a href="{% url 'tickets:ticket-detail' ticket.id %}" class="btn btn-sm btn-outline-info ms-2">
+                        <i class="bi bi-lightning"></i> {% trans "Full Mode" %}
+                    </a>
+                {% else %}
+                    <a href="{% url 'tickets:ticket-detail' ticket.id %}?light=1" class="btn btn-sm btn-outline-secondary ms-2">
+                        <i class="bi bi-lightning"></i> {% trans "Light Mode" %}
+                    </a>
+                {% endif %}
             </div>
         </div>
         <div class="card-body">
@@ -39,7 +59,8 @@
                             {% for attachment in ticket.attachments.all %}
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <span>{{ attachment.file.name|truncatechars:30 }}</span>
-                                    <a href="{{ attachment.file.url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                    <a href="{{ attachment.file.url }}" class="btn btn-sm btn-outline-primary" target="_blank" 
+                                       download="{{ attachment.description|default:attachment.file.name }}">
                                         <i class="bi bi-download"></i> {% trans "Download" %}
                                     </a>
                                 </li>
@@ -137,7 +158,7 @@
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>{% trans "Assigned To" %}</span>
-                                <span>{{ ticket.assigned_to.get_full_name|default:"Unassigned" }}</span>
+                                <span>{{ ticket.assigned_to.get_full_name|default:_("Unassigned") }}</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>{% trans "Created" %}</span>
@@ -150,23 +171,6 @@
                                     {{ last_edit.timestamp|date:"M d, Y H:i" }} 
                                     {% trans "by" %} {{ last_edit.user.get_full_name|default:last_edit.user.email }}
                                 </span>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span>{% trans "Last Edit" %}</span>
-                                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#lastEditDetails" aria-expanded="false" aria-controls="lastEditDetails">
-                                        <i class="bi bi-info-circle"></i>
-                                    </button>
-                                </div>
-                                <div class="collapse mt-2" id="lastEditDetails">
-                                    <div class="card card-body bg-light">
-                                        <p class="mb-1"><strong>{% trans "Editor" %}:</strong> {{ last_edit.user.get_full_name|default:last_edit.user.email }}</p>
-                                        <p class="mb-1"><strong>{% trans "Date" %}:</strong> {{ last_edit.timestamp|date:"M d, Y H:i" }}</p>
-                                        <p class="mb-1"><strong>{% trans "Changed" %}:</strong> {{ last_edit.field_changed }}</p>
-                                        <p class="mb-1"><strong>{% trans "From" %}:</strong> {{ last_edit.old_value }}</p>
-                                        <p class="mb-0"><strong>{% trans "To" %}:</strong> {{ last_edit.new_value }}</p>
-                                    </div>
-                                </div>
                             </li>
                             {% endif %}
                             {% if ticket.due_date %}
@@ -182,14 +186,13 @@
         </div>
     </div>
 
-
-<!-- Add this in the ticket details section -->
-<div class="card mb-3">
-    <div class="card-header">
-        <h6 class="mb-0">{% trans "Assignment" %}</h6>
-    </div>
-    <div class="card-body">
-        {% if user.is_staff or user.is_admin %}
+    <!-- Assignment Section -->
+    {% if user.is_staff or user.is_admin %}
+    <div class="card mb-3">
+        <div class="card-header">
+            <h6 class="mb-0">{% trans "Assignment" %}</h6>
+        </div>
+        <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     {% if ticket.assigned_to %}
@@ -212,158 +215,228 @@
                     </a>
                 </div>
             </div>
-        {% else %}
-            <div>
-                {% if ticket.assigned_to %}
-                    <span class="badge bg-primary me-2">{% trans "Assigned" %}</span>
-                    <strong>{{ ticket.assigned_to.get_full_name|default:ticket.assigned_to.email }}</strong>
-                {% else %}
-                    <span class="badge bg-secondary me-2">{% trans "Unassigned" %}</span>
-                    <span class="text-muted">{% trans "No agent assigned yet" %}</span>
-                {% endif %}
-            </div>
-        {% endif %}
+        </div>
     </div>
-</div>
 
-<!-- Agent Assignment Modal -->
-{% if user.is_staff or user.is_admin %}
-<div class="modal fade" id="assignAgentModal" tabindex="-1" aria-labelledby="assignAgentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="post" action="{% url 'tickets:ticket-assign' pk=ticket.pk %}">
-                {% csrf_token %}
-                <div class="modal-header">
-                    <h5 class="modal-title" id="assignAgentModalLabel">{% trans "Assign Ticket to Agent" %}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="agent" class="form-label">{% trans "Select Agent" %}</label>
-                        <select class="form-select" id="agent" name="agent">
-                            <option value="">-- {% trans "Unassign Ticket" %} --</option>
-                            {% for agent in agents %}
-                                <option value="{{ agent.id }}" {% if ticket.assigned_to.id == agent.id %}selected{% endif %}>
-                                    {{ agent.get_full_name|default:agent.email }} 
-                                    ({{ agent.assigned_tickets.count }}/{{ agent.agent_profile.max_tickets }} {% trans "tickets" %})
-                                    {% if agent.agent_profile.expertise.all %}
-                                        - {% trans "Expertise" %}: 
-                                        {% for category in agent.agent_profile.expertise.all %}
-                                            {{ category.name }}{% if not forloop.last %}, {% endif %}
-                                        {% endfor %}
+    <!-- Agent Assignment Modal -->
+    <div class="modal fade" id="assignAgentModal" tabindex="-1" aria-labelledby="assignAgentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" action="{% url 'tickets:ticket-assign' pk=ticket.pk %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="assignAgentModalLabel">{% trans "Assign Ticket to Agent" %}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="agent" class="form-label">{% trans "Select Agent" %}</label>
+                            <select class="form-select" id="agent" name="agent">
+                                <option value="">-- {% trans "Unassign Ticket" %} --</option>
+                                {% for agent in agents %}
+                                    <option value="{{ agent.id }}" {% if ticket.assigned_to.id == agent.id %}selected{% endif %}>
+                                        {{ agent.get_full_name|default:agent.email }} 
+                                        ({{ agent.assigned_tickets.count }}/{{ agent.agent_profile.max_tickets }} {% trans "tickets" %})
+                                        {% if agent.agent_profile.expertise.all %}
+                                            - {% trans "Expertise" %}: 
+                                            {% for category in agent.agent_profile.expertise.all %}
+                                                {{ category.name }}{% if not forloop.last %}, {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                        <button type="submit" class="btn btn-primary">{% trans "Assign" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Comments Section -->
+    <div class="card mt-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">{% trans "Comments" %}</h5>
+            <span class="badge bg-secondary">{{ comments.count }}</span>
+        </div>
+        <div class="card-body">
+            {% if comments %}
+                <div class="comments-list">
+                    {% for comment in comments %}
+                        <div class="comment-item card mb-3 {% if comment.is_internal %}border-warning{% endif %}">
+                            <div class="card-header d-flex justify-content-between align-items-center {% if comment.is_internal %}bg-warning bg-opacity-25{% endif %}">
+                                <div>
+                                    <strong>{{ comment.author.get_full_name|default:comment.author.email }}</strong>
+                                    <span class="text-muted ms-2">{{ comment.created_at|date:"M d, Y H:i" }}</span>
+                                    {% if comment.is_internal %}
+                                        <span class="badge bg-warning text-dark ms-2">{% trans "Internal" %}</span>
                                     {% endif %}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
-                    <button type="submit" class="btn btn-primary">{% trans "Assign" %}</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-{% endif %}
-
-<!-- Comments Section -->
-<div class="card mt-4">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">{% trans "Comments" %}</h5>
-        <span class="badge bg-secondary">{{ comments.count }}</span>
-    </div>
-    <div class="card-body">
-        {% if comments %}
-            <div class="comments-list">
-                {% for comment in comments %}
-                    <div class="comment-item card mb-3 {% if comment.is_internal %}border-warning{% endif %}">
-                        <div class="card-header d-flex justify-content-between align-items-center {% if comment.is_internal %}bg-warning bg-opacity-25{% endif %}">
-                            <div>
-                                <strong>{{ comment.author.get_full_name|default:comment.author.email }}</strong>
-                                <span class="text-muted ms-2">{{ comment.created_at|date:"M d, Y H:i" }}</span>
-                                {% if comment.is_internal %}
-                                    <span class="badge bg-warning text-dark ms-2">{% trans "Internal" %}</span>
-                                {% endif %}
-                                {% if comment.is_edited %}
-                                    <small class="text-muted ms-2">({% trans "edited" %})</small>
-                                {% endif %}
-                            </div>
-                            {% if user == comment.author or user.is_staff or user.is_agent %}
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="comment{{ comment.id }}Menu" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-three-dots"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="comment{{ comment.id }}Menu">
-                                        <li>
-                                            <form action="{% url 'comments:delete-comment' comment_id=comment.id %}" method="post" onsubmit="return confirm(_('Are you sure you want to delete this comment?'));">
-                                                {% csrf_token %}
-                                                <button type="submit" class="dropdown-item text-danger">
-                                                    <i class="bi bi-trash me-1"></i> {% trans "Delete" %}
-                                                </button>
-                                            </form>
-                                        </li>
-                                    </ul>
+                                    {% if comment.is_edited %}
+                                        <small class="text-muted ms-2">({% trans "edited" %})</small>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
-                        </div>
-                        <div class="card-body">
-                            <div class="comment-text mb-3">
-                                {{ comment.text|linebreaks }}
-                            </div>
-                            
-                            {% if comment.attachments.exists %}
-                                <div class="comment-attachments">
-                                    <h6>{% trans "Attachments" %}</h6>
-                                    <ul class="list-group">
-                                        {% for attachment in comment.attachments.all %}
-                                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                <span>{{ attachment.file.name|truncatechars:30 }}</span>
-                                                <a href="{{ attachment.file.url }}" class="btn btn-sm btn-outline-primary" target="_blank">
-                                                    <i class="bi bi-download"></i> {% trans "Download" %}
-                                                </a>
+                                {% if user == comment.author or user.is_staff or user.is_agent %}
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="comment{{ comment.id }}Menu" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bi bi-three-dots"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="comment{{ comment.id }}Menu">
+                                            <li>
+                                                <form action="{% url 'comments:delete-comment' comment_id=comment.id %}" method="post" onsubmit="return confirm(_('Are you sure you want to delete this comment?'));">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="dropdown-item text-danger">
+                                                        <i class="bi bi-trash me-1"></i> {% trans "Delete" %}
+                                                    </button>
+                                                </form>
                                             </li>
-                                        {% endfor %}
-                                    </ul>
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="card-body">
+                                <div class="comment-text mb-3">
+                                    {{ comment.text|linebreaks }}
                                 </div>
-                            {% endif %}
+                                
+                                {% if comment.attachments.exists %}
+                                    <div class="comment-attachments">
+                                        <h6>{% trans "Attachments" %}</h6>
+                                        <ul class="list-group">
+                                            {% for attachment in comment.attachments.all %}
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <span>{{ attachment.file.name|truncatechars:30 }}</span>
+                                                    <a href="{{ attachment.file.url }}" class="btn btn-sm btn-outline-primary" target="_blank" download>
+                                                        <i class="bi bi-download"></i> {% trans "Download" %}
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="alert alert-info">
-                <p class="mb-0">{% trans "No comments yet." %}</p>
-            </div>
-        {% endif %}
-        
-        <!-- Comment Form -->
-        <div class="mt-4">
-            <h6>{% trans "Add a Comment" %}</h6>
-            <form action="{% url 'comments:add-comment' model_name='ticket' object_id=ticket.id %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <textarea class="form-control" id="comment_text" name="comment_text" rows="3" required placeholder="{% trans "Write your comment here..." %}"></textarea>
+                    {% endfor %}
                 </div>
-                
-                {% if user_is_staff %}
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="is_internal" name="is_internal">
-                        <label class="form-check-label" for="is_internal">
-                            {% trans "Internal Comment" %} <small class="text-muted">({% trans "Only visible to staff" %})</small>
-                        </label>
-                    </div>
-                {% endif %}
-                
-                <div class="mb-3">
-                    <label for="file" class="form-label">{% trans "Attachments" %}</label>
-                    <input class="form-control" type="file" id="file" name="file" multiple>
+            {% else %}
+                <div class="alert alert-info">
+                    <p class="mb-0">{% trans "No comments yet." %}</p>
                 </div>
-                
-                <button type="submit" class="btn btn-primary">{% trans "Post Comment" %}</button>
-            </form>
+            {% endif %}
+            
+            <!-- Comment Form -->
+            <div class="mt-4">
+                <h6>{% trans "Add a Comment" %}</h6>
+                <form action="{% url 'comments:add-comment' model_name='ticket' object_id=ticket.id %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <textarea class="form-control" id="comment_text" name="comment_text" rows="3" required placeholder="{% trans "Write your comment here..." %}"></textarea>
+                    </div>
+                    
+                    {% if user_is_staff %}
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="is_internal" name="is_internal">
+                            <label class="form-check-label" for="is_internal">
+                                {% trans "Internal Comment" %} <small class="text-muted">({% trans "Only visible to staff" %})</small>
+                            </label>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label for="file" class="form-label">{% trans "Attachments" %}</label>
+                        <input class="form-control" type="file" id="file" name="file" multiple>
+                        <div class="form-text">{% trans "Maximum file size: 10MB per file" %}</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">{% trans "Post Comment" %}</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check connection status
+        function updateConnectionStatus() {
+            const offlineIndicator = document.querySelector('.offline-indicator');
+            if (!navigator.onLine && offlineIndicator) {
+                offlineIndicator.style.display = 'block';
+                
+                // Disable comment form when offline
+                const commentForm = document.querySelector('form[action*="add-comment"]');
+                if (commentForm) {
+                    const submitBtn = commentForm.querySelector('button[type="submit"]');
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '{% trans "Offline - Cannot Submit" %}';
+                }
+            } else if (offlineIndicator) {
+                offlineIndicator.style.display = 'none';
+                
+                // Re-enable comment form
+                const commentForm = document.querySelector('form[action*="add-comment"]');
+                if (commentForm) {
+                    const submitBtn = commentForm.querySelector('button[type="submit"]');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '{% trans "Post Comment" %}';
+                }
+            }
+        }
+        
+        // Initial check
+        updateConnectionStatus();
+        
+        // Listen for connection changes
+        window.addEventListener('online', updateConnectionStatus);
+        window.addEventListener('offline', updateConnectionStatus);
+        
+        // Add file size validation
+        const fileInput = document.getElementById('file');
+        if (fileInput) {
+            fileInput.addEventListener('change', function() {
+                const maxSize = 10 * 1024 * 1024; // 10MB
+                let tooLarge = false;
+                let largeFiles = [];
+                
+                for (let i = 0; i < this.files.length; i++) {
+                    if (this.files[i].size > maxSize) {
+                        tooLarge = true;
+                        largeFiles.push(this.files[i].name);
+                    }
+                }
+                
+                if (tooLarge) {
+                    alert('{% trans "The following files exceed the 10MB limit and will not be uploaded" %}: ' + largeFiles.join(', '));
+                    this.value = '';
+                }
+            });
+        }
+        
+        // Check for slow connection and recommend light mode
+        if (navigator.connection && 
+            (navigator.connection.saveData || 
+             navigator.connection.effectiveType === 'slow-2g' || 
+             navigator.connection.effectiveType === '2g')) {
+            
+            // If not already in light mode, show recommendation
+            if (new URLSearchParams(window.location.search).get('light') !== '1') {
+                const lightModeAlert = document.createElement('div');
+                lightModeAlert.className = 'alert alert-info alert-dismissible fade show mt-3';
+                lightModeAlert.innerHTML = `
+                    <strong>{% trans "Slow connection detected!" %}</strong> 
+                    {% trans "Switch to Light Mode for better performance?" %}
+                    <a href="?light=1" class="btn btn-sm btn-info ms-2">{% trans "Switch to Light Mode" %}</a>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                document.querySelector('.container').prepend(lightModeAlert);
+            }
+        }
+    });
+</script>
+{% endblock %}
 {% endblock %}

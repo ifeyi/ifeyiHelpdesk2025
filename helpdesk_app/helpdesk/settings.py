@@ -301,12 +301,12 @@ EMAIL_HOST = 'mail.creditfoncier.cm'
 EMAIL_PORT = 587  
 EMAIL_USE_TLS = True  
 EMAIL_HOST_USER = 'cfc_cloud@creditfoncier.cm'  
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', 'Pa$$w0rd')  
-DEFAULT_FROM_EMAIL = 'CFC Helpdesk <helpdesk@creditfoncier.cm>'
+EMAIL_HOST_PASSWORD = 'Pa$$w0rd'  
+DEFAULT_FROM_EMAIL = 'cfc_cloud@creditfoncier.cm'
+SITE_URL = 'http://192.168.6.38'
 
 # For development/testing, you can use the console backend to see emails in the console
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 # Add this to the TEMPLATES section in settings.py
 # Replace the existing context_processors with this updated one

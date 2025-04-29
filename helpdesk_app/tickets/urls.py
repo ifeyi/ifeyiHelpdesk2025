@@ -4,12 +4,9 @@ from . import views
 
 app_name = 'tickets'
 
-# You can create a router for ViewSets
 router = DefaultRouter()
-# router.register('', views.TicketViewSet)  # Uncomment when you have ViewSets
 
 urlpatterns = [
-    # Basic URL patterns - implement the views as needed
     path('', views.ticket_list, name='ticket-list'),
     path('<int:pk>/', views.ticket_detail, name='ticket-detail'),
     path('create/', views.ticket_create, name='ticket-create'),

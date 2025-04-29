@@ -8,4 +8,3 @@ class CategoryAdmin(TranslationAdmin):
     search_fields = ('name', 'description')
 
 admin.site.register(Category, CategoryAdmin)
-# Register other models as needed

@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, Count, F
-from django.db import models  # Add this import
+from django.db import models
 from .models import Ticket, Category, Tag, TicketAttachment, TicketHistory
 from accounts.models import User
 from django.utils.translation import gettext as _

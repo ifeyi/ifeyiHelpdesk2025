@@ -10,4 +10,4 @@ class TicketsConfig(AppConfig):
     def ready(self):
         # Import signals to register them
         import tickets.signals
-        import tickets.translation  # This ensures translation.py is loaded
+        import tickets.translation 

@@ -5,9 +5,17 @@
 
 {% block meta_title %}{% block title %}{% endblock %} - {% trans "Knowledge Base" %}{% endblock %}
 
+<link rel="stylesheet" href="{% static 'helpdeskassets/helpdeskstyles/article-browser-fixes.css' %}">
+
 {% block extra_css %}
-  <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+{% if 'article-form' in request.path or 'article-create' in request.path or 'article-update' in request.path %}
+  <link rel="stylesheet" href="{% static 'tinymce/js/tinymce/skins/ui/oxide/skin.min.css' %}">
+{% endif %}
 {% endblock %}
+
+<div class="offline-indicator" style="display: none;">
+  {% trans "You are currently offline. Some features may be limited." %}
+</div>
 
 {% block sidebar %}
 <div class="sidebar-nav">
@@ -63,9 +71,11 @@
   
   {% if user.is_authenticated %}
     <div class="mt-4">
-      <a href="{% url 'articles:article-create' %}" class="btn btn-success btn-sm">
-        <i class="fa fa-plus"></i> {% trans "New Article" %}
-      </a>
+      {% if user.is_staff or user.is_agent %}
+        <a href="{% url 'articles:article-create' %}" class="btn btn-primary">
+          <i class="fas fa-plus-circle"></i> {% trans "New Article" %}
+        </a>
+      {% endif %}
       
       <a href="{% url 'articles:article-drafts' %}" class="btn btn-outline-secondary btn-sm mt-2">
         <i class="fa fa-file"></i> {% trans "My Drafts" %}
@@ -82,7 +92,26 @@
 {% endblock %}
 
 {% block extra_js %}
-  <script src="{% static 'helpdeskassets/helpdeskscripts/helpdeskarticles.js' %}?v=0.02"></script>
-  <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
-  <script src="{% static 'helpdeskassets/helpdeskscripts/markdown-editor.js' %}?v=0.01"></script>
+<!-- Self-hosted JavaScript -->
+<script src="{% static 'helpdeskassets/helpdeskscripts/browser-detection.min.js' %}"></script>
+<!-- Conditionally load TinyMCE only when needed -->
+{% if '/articles/new/' in request.path or '/edit/' in request.path %}
+<script src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}?v=0.03"></script>
+<script src="{% static 'helpdeskassets/helpdeskscripts/article-editor.js' %}?v=0.03"></script>
+{% endif %}
+
+<!-- Conditionally load PDF.js for PDF preview if needed -->
+{% if 'article-detail' in request.path and article.attachments.exists %}
+<script src="{% static 'pdf-js/pdf.min.js' %}"></script>
+<script>
+    // Initialize PDF viewer if there are PDF attachments
+    document.addEventListener('DOMContentLoaded', function() {
+        const pdfLinks = document.querySelectorAll('a[href$=".pdf"]');
+        if (pdfLinks.length > 0) {
+            // Initialize PDF.js for previews if links exist
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = '{% static "pdf-js/pdf.worker.min.js" %}';
+        }
+    });
+</script>
+{% endif %}
 {% endblock %}

@@ -1,4 +1,3 @@
-# tickets/management/commands/setup_categories.py
 from django.core.management.base import BaseCommand
 from tickets.models import Category
 
@@ -6,7 +5,6 @@ class Command(BaseCommand):
     help = 'Sets up initial ticket categories'
 
     def handle(self, *args, **kwargs):
-        # Create main categories
         hardware, created = Category.objects.get_or_create(
             name='Hardware',
             defaults={
@@ -89,5 +87,3 @@ class Command(BaseCommand):
         )
         if created:
             self.stdout.write(self.style.SUCCESS(f'Created subcategory: {outlook.name}'))
-            
-        # Add other subcategories as needed

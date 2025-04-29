@@ -6,22 +6,51 @@
 
 {% block meta_description %}{{ article.summary }}{% endblock %}
 
+{% block extra_css %}
+{{ block.super }}
+<!-- Add print styles for better article printing -->
+<style media="print">
+  .sidebar-nav, .article-actions, .article-feedback-form, .navbar, footer {
+    display: none !important;
+  }
+  .article-content {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+</style>
+{% endblock %}
+
 {% block article_content %}
   <article class="kb-article">
     <div class="article-header mb-4">
       <div class="d-flex justify-content-between align-items-center">
         <h1 class="article-title">{{ article.title }}</h1>
         
-        {% if user.is_authenticated and user == article.author or user.is_staff %}
-          <div class="article-actions">
+        <!-- Article Actions -->
+        <div class="article-actions">
+          {% if user.is_authenticated and user == article.author or user.is_staff %}
             <a href="{% url 'articles:article-update' article.slug %}" class="btn btn-sm btn-outline-primary">
               <i class="fas fa-edit"></i> {% trans "Edit" %}
             </a>
             <a href="{% url 'articles:article-delete' article.slug %}" class="btn btn-sm btn-outline-danger">
               <i class="fas fa-trash"></i> {% trans "Delete" %}
             </a>
-          </div>
-        {% endif %}
+          {% endif %}
+          
+          <!-- Print Button -->
+          <button class="btn btn-sm btn-outline-secondary print-article">
+            <i class="fas fa-print"></i> {% trans "Print" %}
+          </button>
+          
+          <!-- Save Offline Button (for modern browsers) -->
+          <button class="btn btn-sm btn-outline-info save-offline" style="display: none;">
+            <i class="fas fa-download"></i> {% trans "Save Offline" %}
+          </button>
+        </div>
       </div>
       
       <div class="article-meta text-muted mt-2">
@@ -73,9 +102,26 @@
       </div>
     {% endif %}
     
+    <!-- Main Article Content -->
     <div class="article-content">
-      <!--{{ article.content|safe }}-->
-      {{ article_html|safe }}
+      <!-- Fallback content for very old browsers -->
+      <noscript>
+        <div class="p-3 border rounded mb-3">
+          {{ article.content|linebreaks }}
+        </div>
+      </noscript>
+      
+      <!-- Rendered HTML content -->
+      <div class="rendered-content">
+        {% if article_html %}
+          {{ article_html|safe }}
+        {% else %}
+          <!-- Fallback for when article_html is not provided -->
+          <div id="article-content-container">
+            {{ article.content|safe }}
+          </div>
+        {% endif %}
+      </div>
     </div>
     
     {% if article.attachments.exists %}
@@ -86,7 +132,8 @@
             <li class="list-group-item d-flex justify-content-between align-items-center">
               <div>
                 <i class="fas fa-paperclip"></i>
-                <a href="{{ attachment.file.url }}" target="_blank">
+                <a href="{{ attachment.file.url }}" target="_blank" class="attachment-link" 
+                   data-type="{{ attachment.file.url|lower|slice:"-3:" }}">
                   {{ attachment.title }}
                 </a>
                 {% if attachment.description %}
@@ -97,6 +144,27 @@
             </li>
           {% endfor %}
         </ul>
+      </div>
+      
+      <!-- PDF Preview Modal (for modern browsers) -->
+      <div class="modal fade" id="pdfPreviewModal" tabindex="-1" role="dialog" aria-labelledby="pdfPreviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="pdfPreviewModalLabel">{% trans "PDF Preview" %}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div id="pdf-container" style="height: 500px;"></div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans "Close" %}</button>
+              <a href="#" class="btn btn-primary" id="download-pdf" target="_blank">{% trans "Download" %}</a>
+            </div>
+          </div>
+        </div>
       </div>
     {% endif %}
     
@@ -142,4 +210,119 @@
       </form>
     </div>
   </article>
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Print functionality
+      const printBtn = document.querySelector('.print-article');
+      if (printBtn) {
+        printBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.print();
+        });
+      }
+      
+      // Save offline functionality (for modern browsers)
+      const saveOfflineBtn = document.querySelector('.save-offline');
+      if (saveOfflineBtn && 'caches' in window) {
+        saveOfflineBtn.style.display = 'inline-block';
+        saveOfflineBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          // Create content to save
+          const title = document.querySelector('.article-title').textContent;
+          const content = document.querySelector('.article-content').innerHTML;
+          
+          // Build a simple HTML page
+          const htmlContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>${title} - Offline</title>
+              <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; max-width: 800px; margin: 0 auto; }
+                h1 { margin-top: 0; }
+              </style>
+            </head>
+            <body>
+              <h1>${title}</h1>
+              <div class="content">${content}</div>
+            </body>
+            </html>
+          `;
+          
+          // Create a blob and download it
+          const blob = new Blob([htmlContent], {type: 'text/html'});
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = title.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.html';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          
+          alert('{% trans "Article saved for offline viewing. You can find it in your downloads folder." %}');
+        });
+      }
+      
+      // PDF Preview for modern browsers
+      const pdfLinks = document.querySelectorAll('.attachment-link[data-type="pdf"]');
+      if (pdfLinks.length > 0 && 'PDFObject' in window) {
+        pdfLinks.forEach(function(link) {
+          link.addEventListener('click', function(e) {
+            // Skip PDF preview for older browsers or when PDF.js isn't available
+            if (!window.pdfjsLib) return;
+            
+            e.preventDefault();
+            const pdfUrl = this.href;
+            const pdfTitle = this.textContent.trim();
+            
+            // Update modal title and download link
+            document.getElementById('pdfPreviewModalLabel').textContent = pdfTitle;
+            document.getElementById('download-pdf').href = pdfUrl;
+            
+            // Load the PDF
+            const loadingTask = pdfjsLib.getDocument(pdfUrl);
+            loadingTask.promise.then(function(pdf) {
+              // Get the first page
+              pdf.getPage(1).then(function(page) {
+                const scale = 1.5;
+                const viewport = page.getViewport({scale: scale});
+                
+                // Prepare canvas using PDF page dimensions
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                // Clear previous content
+                const container = document.getElementById('pdf-container');
+                container.innerHTML = '';
+                container.appendChild(canvas);
+                
+                // Render PDF page into canvas context
+                const renderContext = {
+                  canvasContext: context,
+                  viewport: viewport
+                };
+                page.render(renderContext).promise.then(function() {
+                  $('#pdfPreviewModal').modal('show');
+                });
+              });
+            }).catch(function(error) {
+              console.error('Error loading PDF:', error);
+              // Fallback to normal download on error
+              window.location.href = pdfUrl;
+            });
+          });
+        });
+      }
+    });
+  </script>
 {% endblock %}

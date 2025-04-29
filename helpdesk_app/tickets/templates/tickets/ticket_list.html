@@ -6,16 +6,21 @@
 {% block content %}
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Tickets</h1>
-        <a href="/tickets/create/" class="btn btn-primary">
+        <h1>{% trans "Tickets" %}</h1>
+        <a href="{% url 'tickets:ticket-create' %}" class="btn btn-primary">
             <i class="bi bi-plus-lg"></i> {% trans "New Ticket" %}
         </a>
+    </div>
+    
+    <!-- Connection status indicator (visible when offline) -->
+    <div class="alert alert-warning offline-indicator" style="display: none;">
+        <i class="bi bi-wifi-off"></i> {% trans "You are currently offline. Some features may be limited." %}
     </div>
     
     <!-- Filters -->
     <div class="card mb-4">
         <div class="card-body">
-            <form method="get" class="row g-3">
+            <form method="get" class="row g-3" id="filter-form">
                 <div class="col-md-3">
                     <label for="status" class="form-label">{% trans "Status" %}</label>
                     <select name="status" id="status" class="form-select">
@@ -61,6 +66,9 @@
                         </button>
                     </div>
                 </div>
+                
+                <!-- Hidden field for light mode toggle -->
+                <input type="hidden" name="light" id="light-mode" value="{{ request.GET.light|default:'0' }}">
             </form>
         </div>
     </div>
@@ -83,12 +91,12 @@
                 </thead>
                 <tbody>
                     {% for ticket in tickets %}
-                        <tr class="clickable-row" data-href="/tickets/{{ ticket.id }}/">
+                        <tr class="clickable-row" data-href="{% url 'tickets:ticket-detail' ticket.id %}">
                             <td>#{{ ticket.id }}</td>
                             <td>{{ ticket.title }}</td>
                             <td>
                                 {% if ticket.status == 'new' %}
-                                    <span class="badge bg-info">New</span>
+                                    <span class="badge bg-info">{% trans "New" %}</span>
                                 {% elif ticket.status == 'open' %}
                                     <span class="badge bg-primary">{% trans "Open" %}</span>
                                 {% elif ticket.status == 'in_progress' %}
@@ -103,7 +111,7 @@
                             </td>
                             <td>
                                 {% if ticket.branch == 'siege' %}
-                                    <span >{% trans "Headquarters" %}</span>
+                                    <span>{% trans "Headquarters" %}</span>
                                 {% elif ticket.branch == 'yaounde' %}
                                     <span>{% trans "Yaounde" %}</span>
                                 {% elif ticket.branch == 'douala' %}
@@ -145,7 +153,7 @@
                                         {{ ticket.category.name }}
                                     {% endif %}
                                 {% else %}
-                                    {% trans 'Uncategorized' %}
+                                    {% trans "Uncategorized" %}
                                 {% endif %}
                             </td>
                             <td>{{ ticket.created_at|date:"d M Y" }}</td>
@@ -155,6 +163,44 @@
                 </tbody>
             </table>
         </div>
+        
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <nav aria-label="Ticket pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_branch %}&branch={{ current_branch }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if request.GET.light %}&light={{ request.GET.light }}{% endif %}">&laquo; {% trans "First" %}</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_branch %}&branch={{ current_branch }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if request.GET.light %}&light={{ request.GET.light }}{% endif %}">{% trans "Previous" %}</a>
+                    </li>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_branch %}&branch={{ current_branch }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if request.GET.light %}&light={{ request.GET.light }}{% endif %}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_branch %}&branch={{ current_branch }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if request.GET.light %}&light={{ request.GET.light }}{% endif %}">{% trans "Next" %}</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}{% if current_branch %}&branch={{ current_branch }}{% endif %}{% if current_priority %}&priority={{ current_priority }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if request.GET.light %}&light={{ request.GET.light }}{% endif %}">{% trans "Last" %} &raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        
     {% else %}
         <div class="alert alert-info">
             <p class="mb-0">{% trans "No tickets found matching your criteria" %}.</p>
@@ -165,21 +211,64 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Make table rows clickable
         const rows = document.querySelectorAll('.clickable-row');
         rows.forEach(row => {
             row.addEventListener('click', function() {
-                window.location.href = this.dataset.href;
+                const url = new URL(this.dataset.href, window.location.origin);
+                
+                // If we're in light mode or on a slow connection, pass that to the detail page
+                if (document.getElementById('light-mode').value === '1' || 
+                    (navigator.connection && 
+                     (navigator.connection.saveData || 
+                      navigator.connection.effectiveType === 'slow-2g' || 
+                      navigator.connection.effectiveType === '2g'))) {
+                    url.searchParams.set('light', '1');
+                }
+                
+                window.location.href = url.toString();
             });
         });
         
         // Auto-submit form when filters change
-        const filterForm = document.querySelector('form');
+        const filterForm = document.getElementById('filter-form');
         const selects = filterForm.querySelectorAll('select');
         selects.forEach(select => {
             select.addEventListener('change', function() {
                 filterForm.submit();
             });
         });
+        
+        // Check connection status
+        function updateConnectionStatus() {
+            const offlineIndicator = document.querySelector('.offline-indicator');
+            if (!navigator.onLine && offlineIndicator) {
+                offlineIndicator.style.display = 'block';
+            } else if (offlineIndicator) {
+                offlineIndicator.style.display = 'none';
+            }
+        }
+        
+        // Initial check
+        updateConnectionStatus();
+        
+        // Listen for connection changes
+        window.addEventListener('online', updateConnectionStatus);
+        window.addEventListener('offline', updateConnectionStatus);
+        
+        // Check for slow connection and set light mode
+        if (navigator.connection && 
+            (navigator.connection.saveData || 
+             navigator.connection.effectiveType === 'slow-2g' || 
+             navigator.connection.effectiveType === '2g')) {
+            
+            document.getElementById('light-mode').value = '1';
+            
+            // If not already in light mode, reload to use it
+            if (new URLSearchParams(window.location.search).get('light') !== '1') {
+                filterForm.submit();
+            }
+        }
     });
 </script>
 {% endblock %}

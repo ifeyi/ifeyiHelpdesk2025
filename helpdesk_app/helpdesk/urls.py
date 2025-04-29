@@ -42,7 +42,6 @@ urlpatterns += i18n_patterns(
     path(_('health/'), health_check, name='health_check'),
     path(_('metrics/'), include('django_prometheus.urls')),
     path(_('api/docs/'), schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path(_('core/'), include('core.urls')),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),  
     path(_('comments/'), include('comments.urls', namespace='comments')),
     prefix_default_language=True, 

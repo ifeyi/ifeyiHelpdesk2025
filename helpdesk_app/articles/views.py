@@ -1,23 +1,22 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Q
-
-from .models import Article, ArticleCategory, ArticleTag
-from .forms import ArticleForm, ArticleFeedbackForm
+from django.http import JsonResponse
+from django.utils.safestring import mark_safe
+import os
+import uuid
+import bleach
 import markdown
 
-def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    # Convert Markdown to HTML
-    context['article_html'] = markdown.markdown(
-        self.object.content,
-        extensions=['extra', 'codehilite']
-    )
-    return context
+from .models import Article, ArticleCategory, ArticleTag, ArticleAttachment, ArticleFeedback
+from .forms import ArticleForm, ArticleFeedbackForm
+
 
 class ArticleListView(ListView):
     """Display a list of published articles."""
@@ -62,6 +61,18 @@ class ArticleListView(ListView):
             status=Article.Status.PUBLISHED
         )[:5]
         
+        # Process articles to include excerpts for cleaner display
+        articles_with_excerpts = []
+        for article in context['articles']:
+            articles_with_excerpts.append({
+                'article': article,
+                'excerpt': article.get_excerpt(200) if hasattr(article, 'get_excerpt') else (
+                    article.summary or article.content[:200] + ('...' if len(article.content) > 200 else '')
+                )
+            })
+        
+        context['articles_with_excerpts'] = articles_with_excerpts
+        
         # Add category and tag context if filtering
         if 'category_slug' in self.kwargs:
             context['current_category'] = get_object_or_404(
@@ -93,6 +104,41 @@ class ArticleDetailView(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
+        # Convert content to HTML based on format (support both TinyMCE and Markdown)
+        if hasattr(self.object, 'get_rendered_content'):
+            context['article_html'] = self.object.get_rendered_content()
+        else:
+            # Fallback to basic markdown rendering
+            import re
+            if re.search(r'<[^>]*>', self.object.content):
+                # Content appears to be HTML, sanitize it
+                allowed_tags = [
+                    'a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li', 'ol', 'p',
+                    'strong', 'ul', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'hr', 'br', 
+                    'table', 'thead', 'tbody', 'tr', 'th', 'td', 'img'
+                ]
+                allowed_attrs = {
+                    '*': ['class'],
+                    'a': ['href', 'title', 'target'],
+                    'img': ['src', 'alt', 'width', 'height']
+                }
+                
+                context['article_html'] = mark_safe(
+                    bleach.clean(
+                        self.object.content,
+                        tags=allowed_tags,
+                        attributes=allowed_attrs,
+                        strip=True
+                    )
+                )
+            else:
+                # Assume it's markdown
+                context['article_html'] = mark_safe(markdown.markdown(
+                    self.object.content,
+                    extensions=['extra', 'codehilite']
+                ))
+        
         context['feedback_form'] = ArticleFeedbackForm()
         context['related_articles'] = self.object.related_articles.filter(
             status=Article.Status.PUBLISHED
@@ -142,8 +188,23 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
         if form.instance.status == Article.Status.PUBLISHED:
             form.instance.published_at = timezone.now()
             
+        # Save the article first to get an ID if it's new
+        response = super().form_valid(form)
+        
+        # Handle file uploads
+        files = self.request.FILES.getlist('attachments')
+        for uploaded_file in files:
+            # Create attachment
+            attachment = ArticleAttachment(
+                article=self.object,
+                file=uploaded_file,
+                title=uploaded_file.name,
+                uploaded_by=self.request.user
+            )
+            attachment.save()
+        
         messages.success(self.request, "Article created successfully!")
-        return super().form_valid(form)
+        return response
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -166,9 +227,32 @@ class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         # Set published_at if status changed to published
         if form.instance.status == Article.Status.PUBLISHED and not form.instance.published_at:
             form.instance.published_at = timezone.now()
+        
+        # Save the article first
+        response = super().form_valid(form)
+        
+        # Handle file uploads
+        files = self.request.FILES.getlist('attachments')
+        for uploaded_file in files:
+            # Create attachment
+            attachment = ArticleAttachment(
+                article=self.object,
+                file=uploaded_file,
+                title=uploaded_file.name,
+                uploaded_by=self.request.user
+            )
+            attachment.save()
+        
+        # Handle attachment deletions
+        attachment_ids_to_delete = self.request.POST.getlist('delete_attachment')
+        if attachment_ids_to_delete:
+            ArticleAttachment.objects.filter(
+                id__in=attachment_ids_to_delete, 
+                article=self.object
+            ).delete()
             
         messages.success(self.request, "Article updated successfully!")
-        return super().form_valid(form)
+        return response
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -227,6 +311,18 @@ class CategoryArticleListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category'] = self.category
+        
+        # Process articles to include excerpts
+        articles_with_excerpts = []
+        for article in context['articles']:
+            articles_with_excerpts.append({
+                'article': article,
+                'excerpt': article.get_excerpt(200) if hasattr(article, 'get_excerpt') else (
+                    article.summary or article.content[:200] + ('...' if len(article.content) > 200 else '')
+                )
+            })
+        
+        context['articles_with_excerpts'] = articles_with_excerpts
         return context
 
 
@@ -243,7 +339,117 @@ def search_articles(request):
         Q(tags__name__icontains=query)
     ).distinct()
     
+    # Process articles to include excerpts
+    articles_with_excerpts = []
+    for article in articles:
+        articles_with_excerpts.append({
+            'article': article,
+            'excerpt': article.get_excerpt(200) if hasattr(article, 'get_excerpt') else (
+                article.summary or article.content[:200] + ('...' if len(article.content) > 200 else '')
+            )
+        })
+    
     return render(request, 'articles/search_results.html', {
         'articles': articles,
+        'articles_with_excerpts': articles_with_excerpts,
         'query': query
+    })
+
+
+@login_required
+@require_POST
+def upload_file(request):
+    """
+    Handler for TinyMCE file uploads.
+    Supports PDF, images, and other document types.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Only POST method is allowed'})
+    
+    # Check if file is present
+    if 'file' not in request.FILES:
+        return JsonResponse({'success': False, 'error': 'No file uploaded'})
+    
+    uploaded_file = request.FILES['file']
+    
+    # Validate file size (10MB max)
+    if uploaded_file.size > 10 * 1024 * 1024:
+        return JsonResponse({'success': False, 'error': 'File too large. Maximum size is 10MB'})
+    
+    # Get file extension and validate
+    file_extension = os.path.splitext(uploaded_file.name)[1].lower()
+    
+    # List of allowed extensions
+    allowed_extensions = [
+        # Documents
+        '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt',
+        # Images
+        '.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg',
+    ]
+    
+    if file_extension not in allowed_extensions:
+        return JsonResponse({
+            'success': False, 
+            'error': f'Unsupported file type. Allowed types: {", ".join(allowed_extensions)}'
+        })
+    
+    # Create a unique filename to avoid collisions
+    unique_filename = f"{uuid.uuid4().hex}{file_extension}"
+    
+    # Determine upload directory based on file type
+    if file_extension in ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt']:
+        upload_dir = 'article_attachments/documents'
+    else:
+        upload_dir = 'article_attachments/images'
+    
+    # Full path relative to MEDIA_ROOT
+    from django.conf import settings
+    relative_path = os.path.join(upload_dir, unique_filename)
+    full_path = os.path.join(settings.MEDIA_ROOT, relative_path)
+    
+    # Create directory if it doesn't exist
+    os.makedirs(os.path.dirname(full_path), exist_ok=True)
+    
+    # Save the file
+    try:
+        with open(full_path, 'wb+') as destination:
+            for chunk in uploaded_file.chunks():
+                destination.write(chunk)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': f'Error saving file: {str(e)}'})
+    
+    # Create attachment record
+    try:
+        article_id = request.POST.get('article_id')
+        article = None
+        
+        if article_id and article_id != 'undefined' and article_id != 'null':
+            try:
+                article = Article.objects.get(pk=article_id)
+            except (Article.DoesNotExist, ValueError):
+                pass
+        
+        attachment = ArticleAttachment(
+            file=relative_path,
+            title=uploaded_file.name,
+            uploaded_by=request.user
+        )
+        
+        if article:
+            attachment.article = article
+            
+        attachment.save()
+    except Exception as e:
+        # If we can't save to the database, we can still return the URL
+        # The file is already saved on disk
+        pass
+    
+    # Generate the URL to the uploaded file
+    url = f"{settings.MEDIA_URL}{relative_path}"
+    
+    # Return success response with file URL
+    return JsonResponse({
+        'success': True,
+        'url': url,
+        'title': uploaded_file.name
     })

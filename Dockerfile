@@ -24,10 +24,12 @@ RUN apt-get update && \
         which msguniq || echo "WARNING: msguniq still not found"; } && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-    
+
+RUN pip install --upgrade pip
+
 # Install Python dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip --default-timeout=600 install --no-cache-dir -r requirements.txt
 
 # Create directories for static and media files
 RUN mkdir -p /app/static /app/media

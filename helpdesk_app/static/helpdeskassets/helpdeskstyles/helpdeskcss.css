@@ -406,3 +406,219 @@ a.btn-primary:hover, a.btn-primary:focus, a.btn-primary:active, .btn-primary:act
 .clickable-row{
     cursor:  pointer!important;
 }
+
+
+/**
+ * CSS fixes for older browsers in article section
+ * Place in helpdesk_app/static/helpdeskassets/helpdeskstyles/
+ */
+
+/* IE8 and IE9 fixes */
+.lt-ie10 .article-tags {
+    display: block;
+    margin-top: 10px;
+}
+
+.lt-ie10 .badge {
+    display: inline-block;
+    padding: 3px 7px;
+    font-size: 12px;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 10px;
+    background-color: #6c757d;
+    margin-right: 5px;
+}
+
+.lt-ie10 .badge-pill {
+    border-radius: 10px;
+}
+
+/* Old Firefox fixes */
+@-moz-document url-prefix() {
+    .firefox-old .article-content img {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    .firefox-old .mce-tinymce {
+        border: 1px solid #ced4da;
+    }
+}
+
+/* Fix for TinyMCE in old Safari */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    .safari-old .mce-btn button {
+        padding: 4px 6px;
+    }
+    
+    .safari-old .tox-toolbar__group {
+        padding: 0 3px;
+    }
+}
+
+/* General older browser fixes */
+.article-content table {
+    max-width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+}
+
+.article-content table td,
+.article-content table th {
+    border: 1px solid #dee2e6;
+    padding: 8px;
+}
+
+/* Offline mode indicator */
+.offline-indicator {
+    display: none;
+    padding: 8px 16px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+html.is-offline .offline-indicator {
+    display: block;
+}
+
+/* Reduced layout for slower connections */
+@media (max-width: 768px), (prefers-reduced-data: reduce) {
+    .article-related, .article-feedback-form {
+        display: none;
+    }
+    
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    /* Hide TinyMCE advanced features */
+    .tox-toolbar__group:nth-child(n+4):nth-child(-n+7) {
+        display: none !important;
+    }
+}
+
+/* Print styles - additional to what's in article_detail.html */
+@media print {
+    .article-content {
+        font-size: 12pt;
+    }
+    
+    .article-content a {
+        text-decoration: underline;
+    }
+    
+    .article-content img {
+        max-width: 100%;
+        page-break-inside: avoid;
+    }
+    
+    .article-content table {
+        page-break-inside: avoid;
+    }
+    
+    .article-content h2, .article-content h3 {
+        page-break-after: avoid;
+    }
+}
+
+/* TinyMCE custom styling */
+.tox-tinymce {
+    border: 1px solid #ced4da !important;
+    border-radius: 0.25rem !important;
+}
+
+.tox-statusbar {
+    border-top: 1px solid #ced4da !important;
+}
+
+/* Content styles - match the look/feel of your site */
+.article-content h1, .article-content h2, .article-content h3, 
+.article-content h4, .article-content h5, .article-content h6 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.article-content p, .article-content ul, .article-content ol {
+    margin-bottom: 1rem;
+}
+
+.article-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 1rem 0;
+}
+
+.article-content blockquote {
+    border-left: 4px solid #ced4da;
+    padding-left: 1rem;
+    margin-left: 0;
+    color: #6c757d;
+}
+
+.article-content pre, .article-content code {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 0.2rem 0.4rem;
+}
+
+.article-content pre {
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+.article-content table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+}
+
+.article-content table th {
+    background-color: #f8f9fa;
+}
+
+.article-content .table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Focus mode for editors (helps on slower devices) */
+.editor-focus-mode .tox-sidebar-wrap {
+    display: none !important;
+}
+
+.editor-focus-mode .tox-toolbar-overlord {
+    display: none !important;
+}
+
+.editor-focus-mode .tox-statusbar {
+    display: none !important;
+}
+
+.editor-focus-mode .tox-editor-container {
+    background: #fff !important;
+}
+
+/* Focus toggle button */
+.focus-mode-toggle {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 1001;
+    background: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+}

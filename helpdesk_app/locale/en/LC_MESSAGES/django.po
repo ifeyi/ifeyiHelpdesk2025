@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-06 13:20+0000\n"
+"POT-Creation-Date: 2025-04-10 12:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,7 +67,7 @@ msgstr ""
 msgid "Profile picture"
 msgstr ""
 
-#: helpdesk_app/accounts/models.py:36 helpdesk_app/articles/models.py:182
+#: helpdesk_app/accounts/models.py:36 helpdesk_app/articles/models.py:179
 #: helpdesk_app/tickets/models.py:206
 msgid "User"
 msgstr ""
@@ -116,11 +116,11 @@ msgstr ""
 msgid "Customer Profiles"
 msgstr ""
 
-#: helpdesk_app/accounts/signals.py:128
+#: helpdesk_app/accounts/signals.py:124
 msgid "Welcome to CFC Helpdesk System"
 msgstr ""
 
-#: helpdesk_app/accounts/signals.py:138
+#: helpdesk_app/accounts/signals.py:134
 msgid ""
 "\n"
 "Hello {user.get_full_name() or user.username},\n"
@@ -169,15 +169,15 @@ msgstr ""
 msgid "Your AD password"
 msgstr ""
 
-#: helpdesk_app/accounts/views.py:46
+#: helpdesk_app/accounts/views.py:33
 msgid "You have successfully logged in."
 msgstr ""
 
-#: helpdesk_app/accounts/views.py:52
+#: helpdesk_app/accounts/views.py:38
 msgid "Invalid username or password."
 msgstr ""
 
-#: helpdesk_app/accounts/views.py:54
+#: helpdesk_app/accounts/views.py:40
 msgid "Please provide both username and password."
 msgstr ""
 
@@ -210,7 +210,7 @@ msgid "Tell us why this was or wasn't helpful..."
 msgstr ""
 
 #: helpdesk_app/articles/forms.py:67
-#: helpdesk_app/articles/templates/articles/article_detail.html:124
+#: helpdesk_app/articles/templates/articles/article_detail.html:192
 msgid "Was this article helpful?"
 msgstr ""
 
@@ -218,24 +218,24 @@ msgstr ""
 msgid "Comments (optional)"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:12 helpdesk_app/articles/models.py:150
+#: helpdesk_app/articles/models.py:12 helpdesk_app/articles/models.py:148
 #: helpdesk_app/tickets/models.py:10 helpdesk_app/tickets/models.py:226
 #: helpdesk_app/tickets/models.py:242
 msgid "Name"
 msgstr ""
 
 #: helpdesk_app/articles/models.py:13 helpdesk_app/articles/models.py:53
-#: helpdesk_app/articles/models.py:151
+#: helpdesk_app/articles/models.py:149
 msgid "Slug"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:14 helpdesk_app/articles/models.py:129
+#: helpdesk_app/articles/models.py:14 helpdesk_app/articles/models.py:128
 #: helpdesk_app/comments/models.py:68 helpdesk_app/core/admin.py:65
 #: helpdesk_app/core/models.py:67 helpdesk_app/tickets/models.py:11
 #: helpdesk_app/tickets/models.py:73 helpdesk_app/tickets/models.py:181
 #: helpdesk_app/tickets/models.py:243
 #: helpdesk_app/tickets/templates/tickets/ticket_create.html:32
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:31
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:51
 #: helpdesk_app/tickets/templates/tickets/ticket_update.html:29
 msgid "Description"
 msgstr ""
@@ -272,11 +272,11 @@ msgstr ""
 msgid "Archived"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:52 helpdesk_app/articles/models.py:128
-#: helpdesk_app/articles/templates/articles/draft_article_list.html:22
+#: helpdesk_app/articles/models.py:52 helpdesk_app/articles/models.py:127
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:24
 #: helpdesk_app/tickets/models.py:72
 #: helpdesk_app/tickets/templates/tickets/ticket_create.html:27
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:75
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:83
 #: helpdesk_app/tickets/templates/tickets/ticket_update.html:25
 msgid "Title"
 msgstr ""
@@ -292,16 +292,16 @@ msgstr ""
 #: helpdesk_app/articles/models.py:57 helpdesk_app/core/admin.py:32
 #: helpdesk_app/core/models.py:37 helpdesk_app/tickets/models.py:76
 #: helpdesk_app/tickets/templates/tickets/ticket_delete.html:34
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:61
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:20
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:76
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:82
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:25
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:84
 #: helpdesk_app/tickets/templates/tickets/ticket_update.html:79
 msgid "Status"
 msgstr ""
 
 #: helpdesk_app/articles/models.py:68
-#: helpdesk_app/articles/templates/articles/base_articles.html:27
-#: helpdesk_app/articles/templates/articles/draft_article_list.html:24
+#: helpdesk_app/articles/templates/articles/base_articles.html:35
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:26
 #: helpdesk_app/tickets/models.py:25
 msgid "Categories"
 msgstr ""
@@ -315,7 +315,7 @@ msgstr ""
 msgid "Related articles"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:83 helpdesk_app/articles/models.py:188
+#: helpdesk_app/articles/models.py:83 helpdesk_app/articles/models.py:185
 #: helpdesk_app/comments/models.py:29 helpdesk_app/tickets/models.py:122
 msgid "Created at"
 msgstr ""
@@ -345,8 +345,8 @@ msgstr ""
 msgid "Not helpful votes"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:95 helpdesk_app/articles/models.py:125
-#: helpdesk_app/articles/models.py:176
+#: helpdesk_app/articles/models.py:95 helpdesk_app/articles/models.py:124
+#: helpdesk_app/articles/models.py:173
 msgid "Article"
 msgstr ""
 
@@ -355,57 +355,57 @@ msgstr ""
 msgid "Articles"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:127 helpdesk_app/comments/models.py:66
+#: helpdesk_app/articles/models.py:126 helpdesk_app/comments/models.py:66
 #: helpdesk_app/tickets/models.py:173
 msgid "File"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:134 helpdesk_app/tickets/models.py:178
+#: helpdesk_app/articles/models.py:133 helpdesk_app/tickets/models.py:178
 #: helpdesk_app/tickets/templates/tickets/ticket_update.html:102
 msgid "Uploaded by"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:136 helpdesk_app/comments/models.py:67
+#: helpdesk_app/articles/models.py:135 helpdesk_app/comments/models.py:67
 #: helpdesk_app/tickets/models.py:180
 msgid "Uploaded at"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:139
+#: helpdesk_app/articles/models.py:138
 msgid "Article Attachment"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:140
+#: helpdesk_app/articles/models.py:139
 msgid "Article Attachments"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:152 helpdesk_app/tickets/models.py:21
+#: helpdesk_app/articles/models.py:150 helpdesk_app/tickets/models.py:21
 #: helpdesk_app/tickets/models.py:227
 msgid "Color"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:155
+#: helpdesk_app/articles/models.py:153
 msgid "Article Tag"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:156
+#: helpdesk_app/articles/models.py:154
 msgid "Article Tags"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:186
+#: helpdesk_app/articles/models.py:183
 msgid "Was helpful"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:187 helpdesk_app/comments/models.py:41
+#: helpdesk_app/articles/models.py:184 helpdesk_app/comments/models.py:41
 #: helpdesk_app/comments/models.py:64
 #: helpdesk_app/comments/templates/comments/delete_comment.html:19
 msgid "Comment"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:189
+#: helpdesk_app/articles/models.py:186
 msgid "IP Address"
 msgstr ""
 
-#: helpdesk_app/articles/models.py:192 helpdesk_app/articles/models.py:193
+#: helpdesk_app/articles/models.py:189 helpdesk_app/articles/models.py:190
 msgid "Article Feedback"
 msgstr ""
 
@@ -433,134 +433,205 @@ msgid "This is a published article that may be viewed by users"
 msgstr ""
 
 #: helpdesk_app/articles/templates/articles/article_confirm_delete.html:33
-#: helpdesk_app/articles/templates/articles/article_form.html:155
+#: helpdesk_app/articles/templates/articles/article_form.html:204
 #: helpdesk_app/comments/templates/comments/delete_comment.html:30
 #: helpdesk_app/tickets/templates/tickets/ticket_create.html:84
 #: helpdesk_app/tickets/templates/tickets/ticket_delete.html:62
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:261
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:252
 #: helpdesk_app/tickets/templates/tickets/ticket_update.html:113
 msgid "Cancel"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_detail.html:18
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:23
+#: helpdesk_app/articles/templates/articles/article_detail.html:37
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:29
 msgid "Edit"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_detail.html:21
+#: helpdesk_app/articles/templates/articles/article_detail.html:40
 #: helpdesk_app/comments/templates/comments/delete_comment.html:29
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:302
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:293
 #: helpdesk_app/tickets/templates/tickets/ticket_update.html:114
 msgid "Delete"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_detail.html:37
-#: helpdesk_app/articles/templates/articles/article_list.html:48
-#: helpdesk_app/articles/templates/articles/article_list.html:81
+#: helpdesk_app/articles/templates/articles/article_detail.html:46
+msgid "Print"
+msgstr ""
+
+#: helpdesk_app/articles/templates/articles/article_detail.html:51
+msgid "Save Offline"
+msgstr ""
+
+#: helpdesk_app/articles/templates/articles/article_detail.html:66
+#: helpdesk_app/articles/templates/articles/article_list.html:21
 #: helpdesk_app/articles/templates/articles/category_article_list.html:89
 msgid "views"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_detail.html:83
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:37
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:317
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:359
+#: helpdesk_app/articles/templates/articles/article_detail.html:129
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:57
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:308
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:350
 msgid "Attachments"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_detail.html:105
+#: helpdesk_app/articles/templates/articles/article_detail.html:154
+msgid "PDF Preview"
+msgstr ""
+
+#: helpdesk_app/articles/templates/articles/article_detail.html:163
+msgid "Close"
+msgstr ""
+
+#: helpdesk_app/articles/templates/articles/article_detail.html:164
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:64
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:314
+msgid "Download"
+msgstr ""
+
+#: helpdesk_app/articles/templates/articles/article_detail.html:173
 msgid "Related Articles"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_detail.html:141
+#: helpdesk_app/articles/templates/articles/article_detail.html:209
 msgid "Submit Feedback"
 msgstr ""
 
+#: helpdesk_app/articles/templates/articles/article_detail.html:270
+msgid ""
+"Article saved for offline viewing. You can find it in your downloads folder."
+msgstr ""
+
 #: helpdesk_app/articles/templates/articles/article_form.html:6
-#: helpdesk_app/articles/templates/articles/article_form.html:15
+#: helpdesk_app/articles/templates/articles/article_form.html:11
 msgid "Edit Article"
 msgstr ""
 
 #: helpdesk_app/articles/templates/articles/article_form.html:6
-#: helpdesk_app/articles/templates/articles/article_list.html:22
-#: helpdesk_app/articles/templates/articles/base_articles.html:67
-#: helpdesk_app/articles/templates/articles/draft_article_list.html:13
+#: helpdesk_app/articles/templates/articles/base_articles.html:76
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:14
 msgid "New Article"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_form.html:15
+#: helpdesk_app/articles/templates/articles/article_form.html:11
 msgid "Create New Article"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_form.html:153
+#: helpdesk_app/articles/templates/articles/article_form.html:63
+msgid ""
+"JavaScript is required for the rich text editor. If you can't enable "
+"JavaScript, you can still write your article using basic markdown syntax."
+msgstr ""
+
+#: helpdesk_app/articles/templates/articles/article_form.html:78
+msgid "File Attachments"
+msgstr ""
+
+#: helpdesk_app/articles/templates/articles/article_form.html:81
+#: helpdesk_app/articles/templates/articles/article_form.html:236
+msgid "Choose files..."
+msgstr ""
+
+#: helpdesk_app/articles/templates/articles/article_form.html:84
+msgid ""
+"Supported file types: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, GIF "
+"(Max size: 10MB per file)"
+msgstr ""
+
+#: helpdesk_app/articles/templates/articles/article_form.html:90
+#: helpdesk_app/tickets/templates/tickets/ticket_update.html:95
+msgid "Current Attachments"
+msgstr ""
+
+#: helpdesk_app/articles/templates/articles/article_form.html:202
+msgid "Update Article"
+msgstr ""
+
+#: helpdesk_app/articles/templates/articles/article_form.html:202
 msgid "Create Article"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_list.html:5
-#: helpdesk_app/articles/templates/articles/article_list.html:16
-#: helpdesk_app/articles/templates/articles/base_articles.html:6
-#: helpdesk_app/articles/templates/articles/base_articles.html:14
-#: helpdesk_app/articles/templates/articles/category_article_list.html:23
-#: helpdesk_app/core/templates/base.html:39
-#: helpdesk_app/core/templates/index.html:200
-msgid "Knowledge Base"
+#: helpdesk_app/articles/templates/articles/article_form.html:210
+msgid "Offline Mode"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_list.html:35
-msgid "Featured Articles"
+#: helpdesk_app/articles/templates/articles/article_form.html:212
+msgid "Changes will be saved locally"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_list.html:87
+#: helpdesk_app/articles/templates/articles/article_form.html:265
+msgid "Are you sure you want to remove this attachment?"
+msgstr ""
+
+#: helpdesk_app/articles/templates/articles/article_list.html:27
 #: helpdesk_app/articles/templates/articles/category_article_list.html:95
 msgid "helpful"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_list.html:121
+#: helpdesk_app/articles/templates/articles/article_list.html:61
 #: helpdesk_app/articles/templates/articles/category_article_list.html:118
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:173
 msgid "First"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_list.html:124
+#: helpdesk_app/articles/templates/articles/article_list.html:64
 #: helpdesk_app/articles/templates/articles/category_article_list.html:121
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:176
 msgid "Previous"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_list.html:142
+#: helpdesk_app/articles/templates/articles/article_list.html:82
 #: helpdesk_app/articles/templates/articles/category_article_list.html:139
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:194
 msgid "Next"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_list.html:145
+#: helpdesk_app/articles/templates/articles/article_list.html:85
 #: helpdesk_app/articles/templates/articles/category_article_list.html:142
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:197
 msgid "Last"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_list.html:155
+#: helpdesk_app/articles/templates/articles/article_list.html:95
 msgid "No articles found matching"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_list.html:157
+#: helpdesk_app/articles/templates/articles/article_list.html:97
 msgid "No articles found in this category"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_list.html:159
+#: helpdesk_app/articles/templates/articles/article_list.html:99
 msgid "No articles found with this tag"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/article_list.html:161
+#: helpdesk_app/articles/templates/articles/article_list.html:101
 #: helpdesk_app/core/templates/index.html:164
 msgid "No articles have been published yet"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/base_articles.html:19
+#: helpdesk_app/articles/templates/articles/base_articles.html:6
+#: helpdesk_app/articles/templates/articles/base_articles.html:22
+#: helpdesk_app/articles/templates/articles/category_article_list.html:23
+#: helpdesk_app/core/templates/base.html:42
+#: helpdesk_app/core/templates/index.html:200
+msgid "Knowledge Base"
+msgstr ""
+
+#: helpdesk_app/articles/templates/articles/base_articles.html:17
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:20
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:17
+msgid "You are currently offline. Some features may be limited."
+msgstr ""
+
+#: helpdesk_app/articles/templates/articles/base_articles.html:27
 msgid "Search articles..."
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/base_articles.html:54
+#: helpdesk_app/articles/templates/articles/base_articles.html:62
 msgid "Popular Tags"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/base_articles.html:71
+#: helpdesk_app/articles/templates/articles/base_articles.html:81
 msgid "My Drafts"
 msgstr ""
 
@@ -581,24 +652,24 @@ msgstr ""
 msgid "Draft Articles"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/draft_article_list.html:23
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:25
 msgid "Last Updated"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/draft_article_list.html:25
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:27
 msgid "Actions"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/draft_article_list.html:39
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:41
 #: helpdesk_app/tickets/views.py:243 helpdesk_app/tickets/views.py:244
 msgid "None"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/draft_article_list.html:57
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:59
 msgid "You don't have any draft articles"
 msgstr ""
 
-#: helpdesk_app/articles/templates/articles/draft_article_list.html:58
+#: helpdesk_app/articles/templates/articles/draft_article_list.html:60
 msgid "Create your first article"
 msgstr ""
 
@@ -611,7 +682,7 @@ msgid "Search articles"
 msgstr ""
 
 #: helpdesk_app/articles/templates/articles/search_results.html:17
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:56
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:61
 msgid "Search"
 msgstr ""
 
@@ -660,7 +731,7 @@ msgid "Edited"
 msgstr ""
 
 #: helpdesk_app/comments/models.py:42
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:273
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:264
 msgid "Comments"
 msgstr ""
 
@@ -686,7 +757,6 @@ msgid "Are you sure you want to delete this comment?"
 msgstr ""
 
 #: helpdesk_app/comments/templates/comments/delete_comment.html:18
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:164
 msgid "Date"
 msgstr ""
 
@@ -763,7 +833,7 @@ msgid "Comment Added"
 msgstr ""
 
 #: helpdesk_app/core/models.py:15
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:353
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:344
 msgid "Internal Comment"
 msgstr ""
 
@@ -912,7 +982,7 @@ msgstr ""
 msgid "Sign out"
 msgstr ""
 
-#: helpdesk_app/core/templates/base.html:31
+#: helpdesk_app/core/templates/base.html:34
 #: helpdesk_app/tickets/templates/tickets/ticket_create.html:11
 #: helpdesk_app/tickets/templates/tickets/ticket_delete.html:10
 #: helpdesk_app/tickets/templates/tickets/ticket_detail.html:11
@@ -920,28 +990,29 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: helpdesk_app/core/templates/base.html:35 helpdesk_app/tickets/apps.py:8
+#: helpdesk_app/core/templates/base.html:38 helpdesk_app/tickets/apps.py:8
 #: helpdesk_app/tickets/models.py:135
 #: helpdesk_app/tickets/templates/tickets/ticket_create.html:12
 #: helpdesk_app/tickets/templates/tickets/ticket_delete.html:11
 #: helpdesk_app/tickets/templates/tickets/ticket_detail.html:12
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:9
 #: helpdesk_app/tickets/templates/tickets/ticket_update.html:11
 msgid "Tickets"
 msgstr ""
 
-#: helpdesk_app/core/templates/base.html:50
+#: helpdesk_app/core/templates/base.html:53
 msgid "Profile"
 msgstr ""
 
-#: helpdesk_app/core/templates/base.html:56
+#: helpdesk_app/core/templates/base.html:59
 msgid "Log Out"
 msgstr ""
 
-#: helpdesk_app/core/templates/base.html:62
+#: helpdesk_app/core/templates/base.html:65
 msgid "Log In"
 msgstr ""
 
-#: helpdesk_app/core/templates/base.html:115
+#: helpdesk_app/core/templates/base.html:118
 msgid "All rights reserved."
 msgstr ""
 
@@ -986,8 +1057,7 @@ msgid "Agent Performance"
 msgstr ""
 
 #: helpdesk_app/core/templates/dashboard.html:119
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:196
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:218
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:199
 msgid "Assigned"
 msgstr ""
 
@@ -996,8 +1066,8 @@ msgstr ""
 #: helpdesk_app/core/templates/dashboard.html:272
 #: helpdesk_app/core/templates/dashboard.html:385
 #: helpdesk_app/core/templates/index.html:63 helpdesk_app/tickets/models.py:49
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:72
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:99
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:93
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:107
 msgid "Resolved"
 msgstr ""
 
@@ -1021,9 +1091,9 @@ msgstr ""
 #: helpdesk_app/tickets/models.py:83
 #: helpdesk_app/tickets/templates/tickets/ticket_create.html:54
 #: helpdesk_app/tickets/templates/tickets/ticket_delete.html:40
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:79
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:29
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:77
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:100
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:34
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:85
 #: helpdesk_app/tickets/templates/tickets/ticket_update.html:56
 msgid "Branch"
 msgstr ""
@@ -1045,7 +1115,7 @@ msgid "ago"
 msgstr ""
 
 #: helpdesk_app/core/templates/dashboard.html:210
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:151
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:172
 msgid "by"
 msgstr ""
 
@@ -1063,9 +1133,9 @@ msgid "Assigned to"
 msgstr ""
 
 #: helpdesk_app/core/templates/dashboard.html:242
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:202
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:221
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:152
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:161
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:205
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:160
 msgid "Unassigned"
 msgstr ""
 
@@ -1075,35 +1145,36 @@ msgstr ""
 
 #: helpdesk_app/core/templates/dashboard.html:268
 #: helpdesk_app/core/templates/index.html:39 helpdesk_app/tickets/models.py:45
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:64
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:85
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:99
 msgid "New"
 msgstr ""
 
 #: helpdesk_app/core/templates/dashboard.html:269
 #: helpdesk_app/core/templates/index.html:45 helpdesk_app/tickets/models.py:46
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:66
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:93
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:87
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:101
 msgid "Open"
 msgstr ""
 
 #: helpdesk_app/core/templates/dashboard.html:270
 #: helpdesk_app/core/templates/index.html:51 helpdesk_app/tickets/models.py:47
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:68
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:95
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:89
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:103
 msgid "In Progress"
 msgstr ""
 
 #: helpdesk_app/core/templates/dashboard.html:271
 #: helpdesk_app/core/templates/index.html:57
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:70
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:97
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:91
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:105
 msgid "Waiting"
 msgstr ""
 
 #: helpdesk_app/core/templates/dashboard.html:273
 #: helpdesk_app/tickets/models.py:50
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:74
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:101
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:95
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:109
 msgid "Closed"
 msgstr ""
 
@@ -1113,8 +1184,8 @@ msgstr ""
 
 #: helpdesk_app/core/templates/dashboard.html:371
 #: helpdesk_app/tickets/templates/tickets/ticket_delete.html:52
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:143
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:80
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:164
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:88
 msgid "Created"
 msgstr ""
 
@@ -1638,18 +1709,14 @@ msgstr ""
 msgid "api/docs/"
 msgstr ""
 
-#: helpdesk_app/helpdesk/urls.py:45
-msgid "core/"
-msgstr ""
-
-#: helpdesk_app/helpdesk/urls.py:47
+#: helpdesk_app/helpdesk/urls.py:46
 msgid "comments/"
 msgstr ""
 
 #: helpdesk_app/tickets/models.py:24 helpdesk_app/tickets/models.py:116
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:121
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:47
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:79
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:142
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:52
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:87
 msgid "Category"
 msgstr ""
 
@@ -1658,8 +1725,8 @@ msgid "Waiting on Customer"
 msgstr ""
 
 #: helpdesk_app/tickets/models.py:53
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:82
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:106
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:103
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:114
 msgid "Headquarters"
 msgstr ""
 
@@ -1668,86 +1735,86 @@ msgid "Yaoundé"
 msgstr ""
 
 #: helpdesk_app/tickets/models.py:55
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:86
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:110
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:107
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:118
 msgid "Douala"
 msgstr ""
 
 #: helpdesk_app/tickets/models.py:56
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:94
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:118
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:115
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:126
 msgid "Buea"
 msgstr ""
 
 #: helpdesk_app/tickets/models.py:57
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:102
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:126
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:123
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:134
 msgid "Bamenda"
 msgstr ""
 
 #: helpdesk_app/tickets/models.py:58
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:100
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:124
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:121
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:132
 msgid "Ngaoundere"
 msgstr ""
 
 #: helpdesk_app/tickets/models.py:59
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:98
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:122
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:119
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:130
 msgid "Garoua"
 msgstr ""
 
 #: helpdesk_app/tickets/models.py:60
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:96
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:120
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:117
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:128
 msgid "Maroua"
 msgstr ""
 
 #: helpdesk_app/tickets/models.py:61
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:92
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:116
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:113
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:124
 msgid "Bafoussam"
 msgstr ""
 
 #: helpdesk_app/tickets/models.py:62
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:90
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:114
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:111
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:122
 msgid "Ebolowa"
 msgstr ""
 
 #: helpdesk_app/tickets/models.py:63
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:88
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:112
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:109
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:120
 msgid "Bertoua"
 msgstr ""
 
 #: helpdesk_app/tickets/models.py:66
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:110
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:131
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:131
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:139
 msgid "Low"
 msgstr ""
 
 #: helpdesk_app/tickets/models.py:67
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:112
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:133
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:133
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:141
 msgid "Medium"
 msgstr ""
 
 #: helpdesk_app/tickets/models.py:68
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:114
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:135
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:135
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:143
 msgid "High"
 msgstr ""
 
 #: helpdesk_app/tickets/models.py:69
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:116
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:137
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:137
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:145
 msgid "Critical"
 msgstr ""
 
 #: helpdesk_app/tickets/models.py:74
 #: helpdesk_app/tickets/templates/tickets/ticket_create.html:70
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:57
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:78
 #: helpdesk_app/tickets/templates/tickets/ticket_update.html:72
 msgid "Office Door Number"
 msgstr ""
@@ -1759,9 +1826,9 @@ msgstr ""
 #: helpdesk_app/tickets/models.py:90
 #: helpdesk_app/tickets/templates/tickets/ticket_create.html:62
 #: helpdesk_app/tickets/templates/tickets/ticket_delete.html:46
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:107
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:38
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:78
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:128
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:43
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:86
 #: helpdesk_app/tickets/templates/tickets/ticket_update.html:64
 msgid "Priority"
 msgstr ""
@@ -1793,6 +1860,7 @@ msgstr ""
 #: helpdesk_app/tickets/models.py:134 helpdesk_app/tickets/models.py:171
 #: helpdesk_app/tickets/models.py:200
 #: helpdesk_app/tickets/templates/tickets/ticket_delete.html:12
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:4
 #: helpdesk_app/tickets/templates/tickets/ticket_detail.html:13
 #: helpdesk_app/tickets/templates/tickets/ticket_update.html:12
 msgid "Ticket"
@@ -1968,171 +2036,175 @@ msgstr ""
 msgid "Confirm Delete"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:25
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:33
 msgid "Back to List"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:43
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:323
-msgid "Download"
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:39
+msgid "Full Mode"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:53
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:43
+msgid "Light Mode"
+msgstr ""
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:74
 msgid "Ticket Details"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:58
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:79
 msgid "Not specified"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:84
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:108
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:105
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:116
 msgid "Yaounde"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:130
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:148
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:151
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:156
 msgid "Uncategorized"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:135
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:156
 msgid "Created By"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:139
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:81
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:160
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:89
 msgid "Assigned To"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:148
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:169
 msgid "Last Edited"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:156
-msgid "Last Edit"
-msgstr ""
-
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:163
-msgid "Editor"
-msgstr ""
-
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:165
-msgid "Changed"
-msgstr ""
-
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:166
-msgid "From"
-msgstr ""
-
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:167
-msgid "To"
-msgstr ""
-
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:174
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:178
 msgid "Due Date"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:189
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:193
 msgid "Assignment"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:199
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:202
 msgid "tickets assigned"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:203
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:206
 msgid "No agent assigned to this ticket"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:208
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:211
 msgid "Assign Agent"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:211
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:214
 msgid "Auto-Assign"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:222
-msgid "No agent assigned yet"
-msgstr ""
-
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:237
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:228
 msgid "Assign Ticket to Agent"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:242
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:233
 msgid "Select Agent"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:244
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:235
 msgid "Unassign Ticket"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:248
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:239
 msgid "tickets"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:250
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:241
 msgid "Expertise"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:262
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:253
 msgid "Assign"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:286
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:277
 msgid "Internal"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:289
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:280
 msgid "edited"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:336
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:327
 msgid "No comments yet."
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:342
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:333
 msgid "Add a Comment"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:346
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:337
 msgid "Write your comment here..."
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:353
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:344
 msgid "Only visible to staff"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:363
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:352
+msgid "Maximum file size: 10MB per file"
+msgstr ""
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:355
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:386
 msgid "Post Comment"
+msgstr ""
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:376
+msgid "Offline - Cannot Submit"
+msgstr ""
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:414
+msgid "The following files exceed the 10MB limit and will not be uploaded"
+msgstr ""
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:431
+msgid "Slow connection detected!"
+msgstr ""
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:432
+msgid "Switch to Light Mode for better performance?"
+msgstr ""
+
+#: helpdesk_app/tickets/templates/tickets/ticket_detail.html:433
+msgid "Switch to Light Mode"
 msgstr ""
 
 #: helpdesk_app/tickets/templates/tickets/ticket_list.html:11
 msgid "New Ticket"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:22
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:27
 msgid "All Statuses"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:31
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:36
 msgid "All Branches"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:40
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:45
 msgid "All Priorities"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:49
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:54
 msgid "All Categories"
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:58
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:63
 msgid "Search tickets..."
 msgstr ""
 
-#: helpdesk_app/tickets/templates/tickets/ticket_list.html:160
+#: helpdesk_app/tickets/templates/tickets/ticket_list.html:206
 msgid "No tickets found matching your criteria"
 msgstr ""
 
@@ -2143,10 +2215,6 @@ msgstr ""
 
 #: helpdesk_app/tickets/templates/tickets/ticket_update.html:89
 msgid "Add Attachments (Optional)"
-msgstr ""
-
-#: helpdesk_app/tickets/templates/tickets/ticket_update.html:95
-msgid "Current Attachments"
 msgstr ""
 
 #: helpdesk_app/tickets/templates/tickets/ticket_update.html:116

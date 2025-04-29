@@ -6,15 +6,11 @@
   {% if form.instance.pk %}{% trans "Edit Article" %}{% else %}{% trans "New Article" %}{% endif %}
 {% endblock %}
 
-{% block extra_css %}
-  {{ block.super }}
-{% endblock %}
-
 {% block article_content %}
   <div class="article-form-container">
     <h1>{% if form.instance.pk %}{% trans "Edit Article" %}{% else %}{% trans "Create New Article" %}{% endif %}</h1>
     
-    <form method="post" class="mt-4">
+    <form method="post" enctype="multipart/form-data" class="mt-4">
       {% csrf_token %}
       
       {% if form.non_field_errors %}
@@ -54,13 +50,64 @@
       
       <div class="form-group">
         <label for="{{ form.content.id_for_label }}" class="font-weight-bold">{{ form.content.label }}</label>
-        {{ form.content }}
+        <!-- Add data attribute for article ID if editing -->
+        {% if form.instance.pk %}
+        <textarea name="content" id="id_content" data-article-id="{{ form.instance.pk }}">{{ form.instance.content }}</textarea>
+        {% else %}
+        <textarea name="content" id="id_content" data-article-id="new">{{ form.instance.content }}</textarea>
+        {% endif %}
+        
+        <!-- Fallback instructions for older browsers or slow connections -->
+        <noscript>
+          <div class="alert alert-warning mt-2">
+            {% trans "JavaScript is required for the rich text editor. If you can't enable JavaScript, you can still write your article using basic markdown syntax." %}
+          </div>
+        </noscript>
+        
         {% if form.content.errors %}
           <div class="invalid-feedback d-block">
             {% for error in form.content.errors %}
               {{ error }}
             {% endfor %}
           </div>
+        {% endif %}
+      </div>
+      
+      <!-- File Attachment Section -->
+      <div class="form-group">
+        <label class="font-weight-bold">{% trans "File Attachments" %}</label>
+        <div class="custom-file">
+          <input type="file" name="attachments" multiple class="custom-file-input" id="article-attachments">
+          <label class="custom-file-label" for="article-attachments">{% trans "Choose files..." %}</label>
+        </div>
+        <small class="form-text text-muted">
+          {% trans "Supported file types: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, GIF (Max size: 10MB per file)" %}
+        </small>
+        
+        <!-- Display existing attachments when editing -->
+        {% if form.instance.pk and form.instance.attachments.exists %}
+        <div class="mt-3">
+          <h6>{% trans "Current Attachments" %}</h6>
+          <ul class="list-group">
+            {% for attachment in form.instance.attachments.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <i class="fas fa-paperclip"></i>
+                <a href="{{ attachment.file.url }}" target="_blank">{{ attachment.title }}</a>
+                {% if attachment.description %}
+                <small class="text-muted d-block">{{ attachment.description }}</small>
+                {% endif %}
+              </div>
+              <div>
+                <span class="badge badge-primary badge-pill">{{ attachment.file.size|filesizeformat }}</span>
+                <button type="button" class="btn btn-sm btn-danger ml-2 remove-attachment" data-id="{{ attachment.id }}">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
         {% endif %}
       </div>
       
@@ -148,11 +195,22 @@
         {% endif %}
       </div>
       
-      <div class="form-actions mt-4">
-        <button type="submit" class="btn btn-primary">
-          {% if form.instance.pk %}Update Article{% else %}{% trans "Create Article" %}{% endif %}
-        </button>
-        <a href="{% url 'articles:article-list' %}" class="btn btn-outline-secondary ml-2">{% trans "Cancel" %}</a>
+      <!-- Form submit and cancel buttons with offline indicator -->
+      <div class="form-actions mt-4 d-flex justify-content-between align-items-center">
+        <div>
+          <button type="submit" class="btn btn-primary">
+            {% if form.instance.pk %}{% trans "Update Article" %}{% else %}{% trans "Create Article" %}{% endif %}
+          </button>
+          <a href="{% url 'articles:article-list' %}" class="btn btn-outline-secondary ml-2">{% trans "Cancel" %}</a>
+        </div>
+        
+        <!-- Offline status indicator -->
+        <div class="connection-status d-none">
+          <span class="badge badge-warning">
+            <i class="fas fa-exclamation-triangle"></i> {% trans "Offline Mode" %}
+          </span>
+          <small class="text-muted ml-2">{% trans "Changes will be saved locally" %}</small>
+        </div>
       </div>
     </form>
   </div>
@@ -160,33 +218,63 @@
 
 {% block extra_js %}
   {{ block.super }}
+  <!-- File upload handler script (for older browsers) -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Initialize markdown editor
-      // if (document.querySelector('.rich-text-editor')) {
-        // initMarkdownEditor('.rich-text-editor');
-      // }
+      // Check if custom file input exists
+      const fileInput = document.getElementById('article-attachments');
+      if (!fileInput) return;
       
-      // Status change warning
-      const statusSelect = document.getElementById('{{ form.status.id_for_label }}');
-      const originalStatus = statusSelect.value;
-      
-      statusSelect.addEventListener('change', function() {
-        if (originalStatus === 'published' && this.value !== 'published') {
-          if (!confirm('Changing the status from Published will make this article unavailable to users. Continue?')) {
-            this.value = originalStatus;
-          }
+      // Update label with file name(s) when files are selected
+      fileInput.addEventListener('change', function() {
+        const label = this.nextElementSibling;
+        if (this.files.length > 1) {
+          label.textContent = this.files.length + ' files selected';
+        } else if (this.files.length === 1) {
+          label.textContent = this.files[0].name;
+        } else {
+          label.textContent = "{% trans 'Choose files...' %}";
         }
       });
-    });
-  </script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Remove required attribute from content field
-      const contentTextarea = document.querySelector('textarea[name="content"]');
-      if (contentTextarea) {
-        contentTextarea.removeAttribute('required');
+      
+      // Check connection status and show indicator if offline
+      function updateConnectionStatus() {
+        const statusDiv = document.querySelector('.connection-status');
+        if (!statusDiv) return;
+        
+        if (navigator.onLine === false) {
+          statusDiv.classList.remove('d-none');
+        } else {
+          statusDiv.classList.add('d-none');
+        }
       }
+      
+      // Initial check
+      updateConnectionStatus();
+      
+      // Listen for connection changes
+      window.addEventListener('online', updateConnectionStatus);
+      window.addEventListener('offline', updateConnectionStatus);
+      
+      // Handle attachment removal (if any exist)
+      const removeButtons = document.querySelectorAll('.remove-attachment');
+      removeButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          const attachmentId = this.dataset.id;
+          if (confirm('{% trans "Are you sure you want to remove this attachment?" %}')) {
+            // Create hidden input to mark attachment for deletion
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'delete_attachment';
+            input.value = attachmentId;
+            this.closest('form').appendChild(input);
+            
+            // Visually remove the attachment from the list
+            this.closest('li').remove();
+          }
+        });
+      });
     });
   </script>
 {% endblock %}

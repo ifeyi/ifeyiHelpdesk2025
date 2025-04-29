@@ -13,7 +13,6 @@ from accounts.models import User
 from comments.models import Comment
 from core.models import EmailLog, EmailSetting
 
-
 def get_email_settings():
     """
     Get the email settings, creating default settings if they don't exist

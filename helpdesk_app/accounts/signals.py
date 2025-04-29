@@ -23,14 +23,10 @@ def set_user_type_from_groups(sender, user=None, ldap_user=None, **kwargs):
 
     logger.debug(f"Processing LDAP user: {user.username}")
     
-    # Check if this is a new user (no ID yet) or has never been configured
     is_new_user = user.pk is None
 
-    # Only update user_type if it's a new user or we've never manually set it
-    # If the user already exists in DB and has a non-default user_type, preserve it
     if is_new_user:
         logger.debug(f"New user {user.username}, setting up user type based on AD groups")
-        # Get group DNs for this user
         user_groups = []
         if hasattr(ldap_user, 'group_dns'):
             user_groups = ldap_user.group_dns

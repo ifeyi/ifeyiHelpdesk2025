@@ -259,7 +259,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'helpdeskassets/helpdeskscripts/chart.js' %}?v=0.03"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Tickets by Status Chart

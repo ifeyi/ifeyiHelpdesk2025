@@ -6,4 +6,4 @@ class AccountsConfig(AppConfig):
     
     def ready(self):
         """Import signal handlers when the app is ready."""
-        import accounts.signals  # This imports our signal handlers
+        import accounts.signals

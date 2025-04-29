@@ -1,4 +1,3 @@
-# helpdesk_app/tickets/forms.py
 from django import forms
 from .models import Ticket, TicketAttachment, Category
 from django.utils.translation import gettext_lazy as _
@@ -10,7 +9,7 @@ class TicketForm(forms.ModelForm):
         fields = ['title', 'description', 'category', 'branch', 'priority', 'due_date', 'tags']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 5}),
-            'due_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}), # Use datetime-local
+            'due_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -19,7 +18,6 @@ class TicketForm(forms.ModelForm):
         self.fields['category'].widget.attrs.update({'class': 'form-select'})
         self.fields['branch'].widget.attrs.update({'class': 'form-select'})
         self.fields['priority'].widget.attrs.update({'class': 'form-select'})
-        # If you have a LOT of categories, consider an alternative widget (e.g., django-autocomplete-light)
         self.fields['category'].queryset = Category.objects.all()
 
 
@@ -46,7 +44,6 @@ class TicketUpdateForm(forms.ModelForm):
         self.fields['assigned_to'].widget.attrs.update({'class': 'form-select'})
         self.fields['status'].widget.attrs.update({'class': 'form-select'})
         self.fields['category'].queryset = Category.objects.all()
-        # Limit assigned_to to users who are staff or agents (assuming you have an agent_profile)
         from django.contrib.auth import get_user_model
         User = get_user_model()
         self.fields['assigned_to'].queryset = User.objects.filter(Q(is_staff=True) | Q(agent_profile__isnull=False))
@@ -58,7 +55,7 @@ from .models import Comment
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['content']  # Only the content field is needed in the form.
+        fields = ['content'] 
         widgets = {
             'content': forms.Textarea(attrs={'rows': 4, 'class': 'form-control', 'placeholder': 'Add a comment...'}),
         }

@@ -1,0 +1,37 @@
+CACHE MANIFEST
+# v1.0.0 - 2024-04-10
+
+CACHE:
+# HTML
+/
+/tickets/
+/comments/
+/core/
+/articles/
+/accounts/
+
+# CSS Files
+/static/helpdeskassets/helpdeskstyles/bootstrap.min.css
+/static/helpdeskassets/helpdeskstyles/bootstrap-icons.css
+/static/helpdeskassets/helpdeskstyles/helpdeskcss.css
+
+# JavaScript Files
+/static/helpdeskassets/helpdeskscripts/jquery-3.6.0.min.js
+/static/helpdeskassets/helpdeskscripts/bootstrap.bundle.min.js
+/static/helpdeskassets/helpdeskscripts/promise-polyfill.min.js
+/static/helpdeskassets/helpdeskscripts/chart.min.js
+/static/helpdeskassets/helpdeskscripts/helpdeskmain.js
+
+# Fonts
+/static/helpdeskassets/helpdeskstyles/fonts/bootstrap-icons.woff
+/static/helpdeskassets/helpdeskstyles/fonts/bootstrap-icons.woff2
+
+# Images
+/media/helpdeskimg/helpdesklogo/logo-cfc-no-bg.png
+/media/helpdeskimg/cfcimg.jpg
+
+NETWORK:
+*
+
+FALLBACK:
+/ /offline.html

@@ -113,7 +113,6 @@ class Article(models.Model):
     def get_absolute_url(self):
         return reverse('articles:article-detail', kwargs={'slug': self.slug})
 
-
 class ArticleAttachment(models.Model):
     """
     Files attached to articles.
@@ -142,7 +141,6 @@ class ArticleAttachment(models.Model):
     def __str__(self):
         return self.title
 
-
 class ArticleTag(models.Model):
     """
     Tags for articles to facilitate searching and categorization.
@@ -163,7 +161,6 @@ class ArticleTag(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
-
 
 class ArticleFeedback(models.Model):
     """
@@ -195,3 +192,112 @@ class ArticleFeedback(models.Model):
     
     def __str__(self):
         return f"{self.article.title} - {'Helpful' if self.helpful else 'Not helpful'}"
+    
+# Add these methods to your Article model class
+
+def get_rendered_content(self):
+    """
+    Renders content based on its format (Markdown or HTML from TinyMCE)
+    """
+    from django.utils.safestring import mark_safe
+    import re
+    import bleach
+    import markdown
+    
+    # Check if content appears to be HTML (from TinyMCE)
+    if re.search(r'<[^>]*>', self.content):
+        # Clean the HTML to prevent XSS
+        allowed_tags = [
+            'a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li', 'ol', 'p',
+            'strong', 'ul', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'hr', 'br',
+            'table', 'thead', 'tbody', 'tr', 'th', 'td', 'img', 'figure', 'figcaption',
+            'pre', 'cite', 'dl', 'dt', 'dd', 'del', 'ins', 'sup', 'sub', 'small'
+        ]
+        allowed_attrs = {
+            '*': ['class', 'style'],
+            'a': ['href', 'title', 'target'],
+            'img': ['src', 'alt', 'width', 'height', 'style'],
+            'table': ['border', 'cellpadding', 'cellspacing', 'width']
+        }
+        allowed_styles = [
+            'font-family', 'font-size', 'font-weight', 'text-align', 'text-decoration',
+            'color', 'background-color', 'width', 'height', 'margin', 'padding', 'border'
+        ]
+        
+        cleaned_content = bleach.clean(
+            self.content,
+            tags=allowed_tags,
+            attributes=allowed_attrs,
+            styles=allowed_styles,
+            strip=True
+        )
+        return mark_safe(cleaned_content)
+    else:
+        # Handle as Markdown for backward compatibility
+        return mark_safe(markdown.markdown(
+            self.content,
+            extensions=['extra', 'codehilite', 'nl2br', 'tables']
+        ))
+
+def get_excerpt(self, length=150):
+    """
+    Returns a plain-text excerpt for display in listings
+    """
+    import re
+    from django.utils.html import strip_tags
+    
+    # Use summary if available
+    if self.summary:
+        return self.summary
+    
+    # Otherwise create from content
+    # First, strip all HTML tags
+    plain_content = strip_tags(self.content)
+    
+    # Remove multiple spaces and newlines
+    plain_content = re.sub(r'\s+', ' ', plain_content).strip()
+    
+    # Truncate to desired length
+    if len(plain_content) > length:
+        return plain_content[:length] + '...'
+    return plain_content
+
+def save(self, *args, **kwargs):
+    """
+    Override save method to handle special cases
+    """
+    # If not set already, generate slug from title
+    if not self.slug:
+        from django.utils.text import slugify
+        self.slug = slugify(self.title)
+    
+    # Set published date when status changes to published
+    from django.utils import timezone
+    if self.status == self.Status.PUBLISHED and not self.published_at:
+        self.published_at = timezone.now()
+    
+    # Clean content before saving (optional)
+    # self.content = self.clean_html_content()
+    
+    super().save(*args, **kwargs)
+
+def clean_html_content(self):
+    """
+    Cleans HTML content to ensure it's safe and consistent
+    For additional security beyond bleach in get_rendered_content
+    """
+    import bleach
+    import re
+    
+    # Skip if content doesn't appear to be HTML
+    if not re.search(r'<[^>]*>', self.content):
+        return self.content
+    
+    # Additional HTML cleaning logic if needed
+    # For example, fix common HTML issues, normalize styles, etc.
+    
+    # Fix common issues with copy-pasted content
+    content = re.sub(r'<o:p>.*?</o:p>', '', self.content)  # Remove Office XML tags
+    content = re.sub(r'style="[^"]*mso-[^"]*"', '', content)  # Remove MSO styles
+    
+    return content
